@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/pages/subject_screen.dart';
+import 'package:smart_college/app/pages/login_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -7,11 +7,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Meu App Flutter',
+      title: 'SmartCollege',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
       ),
-      home: const SubjectScreen(),
+      // home: ResetPasswordModal(token: '', email: ''),
+      home: const LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }

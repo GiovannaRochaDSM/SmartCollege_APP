@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/data/http/exceptions.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
+import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/data/repositories/subject_repository.dart';
 
 class SubjectStore {
@@ -17,8 +17,6 @@ class SubjectStore {
     try {
       final result = await repository.getSubjects();
       state.value = result;
-    } on NotFoundException catch (e) {
-      error.value = e.message;
     } catch (e) {
       error.value = e.toString();
     } finally {
@@ -30,10 +28,11 @@ class SubjectStore {
     isLoading.value = true;
     error.value = '';
     try {
-      await repository.deleteSubject(subjectId);
-      await getSubjects();
+      String? token = await AppStrings.secureStorage.read(key: 'token');
+      await repository.deleteSubject(subjectId, token);
+      state.value = state.value.where((subject) => subject.id != subjectId).toList();
     } catch (e) {
-      error.value = 'Erro ao excluir matéria: $e';
+      error.value = e.toString();
     } finally {
       isLoading.value = false;
     }

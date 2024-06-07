@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
-import 'package:smart_college/app/data/repositories/subject_repository.dart';
+import 'package:smart_college/app/services/auth_service.dart';
 import 'package:smart_college/app/data/stores/subject_store.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
-import 'package:smart_college/app/widgets/modals/subject/new_subject_modal.dart';
-import 'package:smart_college/app/widgets/modals/subject/view_subject_modal.dart';
-import 'package:smart_college/app/widgets/modals/subject/edit_subject_modal.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
+import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
+import 'package:smart_college/app/common/constants/app_strings.dart';
+import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
+import 'package:smart_college/app/data/repositories/subject_repository.dart';
+import 'package:smart_college/app/common/widgets/modals/subject/new_subject_modal.dart';
+import 'package:smart_college/app/common/widgets/modals/subject/view_subject_modal.dart';
+import 'package:smart_college/app/common/widgets/modals/subject/edit_subject_modal.dart';
 
-class SubjectScreen extends StatefulWidget {
-  const SubjectScreen({super.key});
+class SubjectPage extends StatefulWidget {
+  const SubjectPage({super.key});
 
   @override
-  State<SubjectScreen> createState() => _SubjectScreenState();
+  State<SubjectPage> createState() => _SubjectPageState();
 }
 
-class _SubjectScreenState extends State<SubjectScreen> {
+class _SubjectPageState extends State<SubjectPage> {
+  late Future<List<SubjectModel>> futureSubjects;
   final SubjectStore store = SubjectStore(
     repository: SubjectRepository(
       client: HttpClient(),
@@ -25,6 +33,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
   void initState() {
     super.initState();
     store.getSubjects();
+    futureSubjects = SubjectHelper.fetchSubjects();
   }
 
   @override
@@ -39,6 +48,8 @@ class _SubjectScreenState extends State<SubjectScreen> {
           ),
         ),
       ),
+      // TO DO: Descomentar posteriormente
+      // drawer: const CustomDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -58,27 +69,26 @@ class _SubjectScreenState extends State<SubjectScreen> {
                 IconButton(
                   icon: const Icon(Icons.add),
                   color: const Color(0xFF4B61C2),
-                  onPressed: () {
-                    _showAddModal();
+                  onPressed: () async {
+                    String? token = await AuthService.getToken();
+                    if (token != null) {
+                      AppStrings.authorizationToken += token;
+                      _showAddModal(token);
+                    }
                   },
                 ),
               ],
             ),
           ),
-          AnimatedBuilder(
-            animation: Listenable.merge([
-              store.isLoading,
-              store.error,
-              store.state,
-            ]),
-            builder: (context, child) {
-              if (store.isLoading.value) {
-                return const CircularProgressIndicator();
-              }
-              if (store.error.value.isNotEmpty) {
+          FutureBuilder<List<SubjectModel>>(
+            future: futureSubjects,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
                 return Center(
                   child: Text(
-                    store.error.value,
+                    'Erro ao carregar matérias: ${snapshot.error}',
                     style: const TextStyle(
                       color: Colors.black54,
                       fontWeight: FontWeight.w600,
@@ -87,106 +97,123 @@ class _SubjectScreenState extends State<SubjectScreen> {
                     textAlign: TextAlign.center,
                   ),
                 );
-              }
-              if (store.state.value.isEmpty) {
-                return const Center(
-                  child: Text(
-                    'Nenhuma matéria cadastrada.',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
+              } else if (snapshot.hasData) {
+                List<SubjectModel> subjects = snapshot.data!;
+                if (subjects.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'Nenhuma matéria cadastrada.',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                );
+                  );
+                } else {
+                  return Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: subjects.length,
+                      itemBuilder: (_, index) {
+                        final item = subjects[index];
+                        return Card(
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 15),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  item.name,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () async {
+                                        String? token =
+                                            await AuthService.getToken();
+                                        if (token != null) {
+                                          AppStrings.authorizationToken +=
+                                              token;
+                                          _showEditModal(item, token);
+                                        }
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () async {
+                                        String? token = await AppStrings
+                                            .secureStorage
+                                            .read(key: 'token');
+                                        if (token != null) {
+                                          AppStrings.authorizationToken +=
+                                              token;
+                                          _confirmDeleteSubject(item, token);
+                                        }
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.visibility),
+                                      onPressed: () {
+                                        _showViewModal(item);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.acronym,
+                                  style: const TextStyle(
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 18,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Notas: ${item.grades?.join(', ')}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Faltas: ${item.abscence}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
               } else {
-                return Expanded(
-                  child: ListView.separated(
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 16),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: store.state.value.length,
-                    itemBuilder: (_, index) {
-                      final item = store.state.value[index];
-                      return Card(
-                        elevation: 4,
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 15),
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                item.name,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 22,
-                                ),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () {
-                                      _showEditModal(item);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      _confirmDeleteSubject(item);
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.visibility),
-                                    onPressed: () {
-                                      _showViewModal(item);
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.acronym,
-                                style: const TextStyle(
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 18,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Notas: ${item.grades?.join(', ')}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Faltas: ${item.abscence}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
+                return Container();
               }
             },
           ),
@@ -195,7 +222,33 @@ class _SubjectScreenState extends State<SubjectScreen> {
     );
   }
 
-  void _showEditModal(SubjectModel subject) {
+  Future<void> _updateAndReloadPage() async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SubjectPage(),
+      ),
+    );
+
+    setState(() {
+      store.getSubjects();
+    });
+  }
+
+  void _showAddModal(String? token) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return NewSubjectModal();
+      },
+    ).then((result) {
+      if (result != null && result == true) {
+        _updateAndReloadPage();
+      }
+    });
+  }
+
+  void _showEditModal(SubjectModel subject, String? token) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -203,9 +256,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
       },
     ).then((result) {
       if (result != null && result == true) {
-        setState(() {
-          store.getSubjects();
-        });
+        _updateAndReloadPage();
       }
     });
   }
@@ -219,39 +270,31 @@ class _SubjectScreenState extends State<SubjectScreen> {
     );
   }
 
-  void _showAddModal() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return NewSubjectModal();
-      },
-    ).then((result) {
-      if (result != null && result == true) {
-        store.getSubjects();
-      }
-    });
-  }
-
-  void _confirmDeleteSubject(SubjectModel subject) {
+  void _confirmDeleteSubject(SubjectModel subject, String? token) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Excluir matéria'),
-        content:
-            Text('Tem certeza que deseja excluir a matéria "${subject.name}?"'),
+        title: Text('Excluir matéria',
+            style:
+                AppTextStyles.smallText.copyWith(color: AppColors.titlePurple)),
+        content: Text(
+            'Tem certeza que deseja excluir a matéria "${subject.name}"?',
+            style: AppTextStyles.smallerText.copyWith(color: AppColors.gray)),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Cancelar'),
+            child: Text('Cancelar',
+                style: AppTextStyles.smallerText.copyWith(color: AppColors.titlePurple)),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               _deleteSubject(subject.id);
             },
-            child: const Text('Excluir'),
+            child: Text('Excluir',
+                style: AppTextStyles.smallerText.copyWith(color: AppColors.titlePurple)),
           ),
         ],
       ),
@@ -260,19 +303,12 @@ class _SubjectScreenState extends State<SubjectScreen> {
 
   void _deleteSubject(String subjectId) {
     store.deleteSubject(subjectId).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Matéria excluída com sucesso.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(AppSnackBar.subjectDeletedSuccess);
+      _updateAndReloadPage();
     }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Erro ao excluir matéria: $error'),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(AppSnackBar.subjectDeletedError);
     });
   }
 }

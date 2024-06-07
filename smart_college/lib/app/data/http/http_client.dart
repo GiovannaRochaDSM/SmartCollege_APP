@@ -1,49 +1,32 @@
 import 'package:http/http.dart' as http;
 
 abstract class IHttpClient {
-  Future<dynamic> get({required String url});
-  Future<dynamic> put({required String url, required String body});
-  Future<dynamic> post({required String url, required String body});
-  Future<dynamic> delete({required String url});
+  Future<http.Response> get({required String url, Map<String, String>? headers});
+  Future<http.Response> put({required String url, Map<String, String>? headers, Object? body});
+  Future<http.Response> post({required String url, Object? body, Map<String, String>? headers});
+  Future<http.Response> delete({required String url, Map<String, String>? headers});
 }
 
 class HttpClient implements IHttpClient {
   final http.Client client = http.Client();
 
   @override
-  Future<dynamic> get({required String url}) async {
-    return await client.get(Uri.parse(url));
+  Future<http.Response> get({required String url, Map<String, String>? headers}) async {
+    return await client.get(Uri.parse(url), headers: headers);
   }
 
   @override
-  Future<dynamic> put({required String url, required String body}) async {
-    return await client.put(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: body,
-    );
+  Future<http.Response> put({required String url, Map<String, String>? headers, Object? body}) async {
+    return await client.put(Uri.parse(url), headers: headers, body: body);
   }
 
   @override
-  Future<dynamic> post({required String url, required String body}) async {
-    return await client.post(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: body,
-    );
+  Future<http.Response> post({required String url, Object? body, Map<String, String>? headers}) async {
+    return await client.post(Uri.parse(url), headers: headers, body: body);
   }
 
   @override
-  Future<dynamic> delete({required String url}) async {
-    return await client.delete(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
+  Future<http.Response> delete({required String url, Map<String, String>? headers}) async {
+    return await client.delete(Uri.parse(url), headers: headers);
   }
 }
