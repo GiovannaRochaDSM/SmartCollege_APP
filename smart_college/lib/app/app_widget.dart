@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/pages/login_page.dart';
+import 'package:smart_college/app/pages/splash_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -11,8 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      // home: ResetPasswordModal(token: '', email: ''),
-      home: const LoginPage(),
+      home: const SplashPage(),
       debugShowCheckedModeBanner: false,
     );
   }

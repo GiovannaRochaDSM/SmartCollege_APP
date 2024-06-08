@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:smart_college/app/pages/login_page.dart';
+import 'package:smart_college/app/pages/onboarding_page.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/common/constants/app_routes.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
@@ -47,7 +47,7 @@ class AuthService {
       context,
       MaterialPageRoute(
         // TO DO: Direcionar para Onboarding
-        builder: (context) => const LoginPage(),
+        builder: (context) => const OnboardingPage(),
       ),
     );
   }

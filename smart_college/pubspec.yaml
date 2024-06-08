@@ -27,3 +27,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets: 
+    - assets/images/logo.png
+    - assets/images/man.png
+    - assets/images/woman.png
+
+  fonts:
+    - family: Codec-Cold
+      fonts:
+        - asset: assets/fonts/Codec-Cold-Regular-trial.ttf
