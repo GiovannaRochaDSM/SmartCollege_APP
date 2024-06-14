@@ -76,7 +76,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 );
               } else if (snapshot.hasData) {
                 final user = snapshot.data!;
-                final displayName = user.nickname ?? user.name;
+                final displayName = user.nickname;
 
                 return DrawerHeader(
                   decoration: const BoxDecoration(
