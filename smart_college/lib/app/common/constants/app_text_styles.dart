@@ -27,10 +27,10 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
   );
 
-  static const TextStyle largeText = TextStyle(
+  static const TextStyle smallTextBold = TextStyle(
   fontFamily: 'Codec-Cold',
-  fontSize: 25.0,
-  fontWeight: FontWeight.w600,
+  fontSize: 20.4,
+  fontWeight: FontWeight.w500,
 );
 
   static const TextStyle smallText = TextStyle(

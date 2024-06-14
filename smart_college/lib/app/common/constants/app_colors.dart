@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 
 class AppColors {
   AppColors._();
@@ -10,8 +10,11 @@ class AppColors {
   static const Color textButton = Color(0xFF312E5F);
   static const Color titlePurple = Color(0xFF6562DF);
   static const Color gray = Color(0xFF8F8E8E);
+  static const Color lightGray = Color(0xFFBEBEBE);
   static const Color filledTextField = Color(0xFFECECEC);
   static const Color inputText = Color(0xFF394C60);
   static const Color borderButton = Color(0xFFF46DBF);
   static const Color logoPink = Color(0xFFE3386A);
+  static const Color whiteSmoke = Color(0xFFF5F5F5);
+  static const Color lightBlack = Colors.black54;
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/widgets/texts/custom_text_field.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 import 'package:smart_college/app/pages/register_page.dart';
 import 'package:smart_college/app/pages/subject_screen.dart';
 import 'package:smart_college/app/services/auth_service.dart';
@@ -51,7 +51,7 @@ class _LoginPage extends State<LoginPage> {
                 const SizedBox(height: 5),
                 Container(
                   width: 300,
-                  child: CustomTextField(
+                  child: CustomTextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     validator: (email) {
@@ -75,7 +75,7 @@ class _LoginPage extends State<LoginPage> {
                 const SizedBox(height: 5),
                 Container(
                   width: 300,
-                  child: CustomTextField(
+                  child: CustomTextFormField(
                     controller: _passwordController,
                     keyboardType: TextInputType.text,
                     validator: (senha) {

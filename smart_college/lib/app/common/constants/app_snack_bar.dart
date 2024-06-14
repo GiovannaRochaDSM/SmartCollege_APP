@@ -46,6 +46,24 @@ class AppSnackBar {
     backgroundColor: Colors.redAccent,
   );
 
+  static const userDeletedSuccess = SnackBar(
+    content: Text(
+      'Usuário deletado com sucesso',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const userDeletedError = SnackBar(
+    content: Text(
+      'Erro ao deletar usuário',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
   static const subjectDeletedSuccess = SnackBar(
     content: Text(
       'Matéria excluída com sucesso',

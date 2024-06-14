@@ -6,7 +6,7 @@ import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/user_repository.dart';
 import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
-import 'package:smart_college/app/common/widgets/texts/custom_text_field.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
 
 class ForgotPasswordModal extends StatefulWidget {
@@ -45,7 +45,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            CustomTextField(
+            CustomTextFormField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               obscureText: false,

@@ -48,8 +48,7 @@ class _SubjectPageState extends State<SubjectPage> {
           ),
         ),
       ),
-      // TO DO: Descomentar posteriormente
-      // drawer: const CustomDrawer(),
+      drawer: const CustomDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
