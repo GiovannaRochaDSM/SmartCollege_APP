@@ -171,4 +171,76 @@ class AppSnackBar {
     duration: Duration(seconds: 2),
     backgroundColor: Colors.redAccent,
   );
+
+  static const invalidAuthCode = SnackBar(
+    content: Text(
+      'Código de autenticação inválido. Tente novamente.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const error = SnackBar(
+    content: Text(
+      'Erro interno. Tente novamente.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const taskDeletedSuccess = SnackBar(
+    content: Text(
+      'Matéria excluída com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const taskDeletedError = SnackBar(
+    content: Text(
+      'Erro ao excluir matéria.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const taskUpdatedSuccess = SnackBar(
+    content: Text(
+      'Matéria atualizada com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const taskUpdatedError = SnackBar(
+    content: Text(
+      'Erro ao atualizar matéria.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const taskAddSuccess = SnackBar(
+    content: Text(
+      'Matéria adicionada com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const taskAddError = SnackBar(
+    content: Text(
+      'Erro ao adicionar matéria.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
 }

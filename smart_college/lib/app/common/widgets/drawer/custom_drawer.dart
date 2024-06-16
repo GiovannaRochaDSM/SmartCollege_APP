@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/pages/subject_page.dart';
 import 'package:smart_college/app/pages/user_page.dart';
+import 'package:smart_college/app/pages/task_page.dart'; // Importa a página de tarefas
 import 'package:smart_college/app/services/auth_service.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/data/helpers/fetch_user.dart';
@@ -121,6 +123,30 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const UserPage(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('Tarefas',
+                style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TaskPage(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('Matérias',
+                style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SubjectPage(),
                 ),
               );
             },

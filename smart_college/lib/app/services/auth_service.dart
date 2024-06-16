@@ -46,7 +46,6 @@ class AuthService {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        // TO DO: Direcionar para Onboarding
         builder: (context) => const OnboardingPage(),
       ),
     );
@@ -61,7 +60,26 @@ class AuthService {
   }
 
   static Future<void> saveUserData(UserModel user) async {
-  await AppStrings.secureStorage.write(key: 'userData', value: jsonEncode(user.toMap()));
-}
-}
+    await AppStrings.secureStorage.write(key: 'userData', value: jsonEncode(user.toMap()));
+  }
 
+  static Future<bool> validateAuthCode(String authCode) async {
+    try {
+      var url = Uri.parse(AppRoutes.validateAuthCode);
+      var response = await http.post(
+        url,
+        body: jsonEncode({'authCode': authCode}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        await AppStrings.secureStorage.write(key: 'token', value: jsonDecode(response.body)['token']);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+}
