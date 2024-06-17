@@ -118,9 +118,9 @@ class AppSnackBar {
     backgroundColor: Colors.redAccent,
   );
 
-  static const emailResetPasswordSuccess = SnackBar(
+  static const emailSendCodeResetPasswordSuccess = SnackBar(
     content: Text(
-      'Um e-mail foi enviado para resetar sua senha',
+      'Um e-mail foi enviado para redefinir sua senha',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
@@ -136,9 +136,9 @@ class AppSnackBar {
     backgroundColor: Colors.redAccent,
   );
 
-  static const forgotPasswordError = SnackBar(
+  static const emailSendCodeResetPasswordError = SnackBar(
     content: Text(
-      'Erro ao redefinir senha. Por favor, tente novamente',
+      'Erro ao enviar email para redefinição de senha. Por favor, tente novamente.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
@@ -184,6 +184,33 @@ class AppSnackBar {
   static const error = SnackBar(
     content: Text(
       'Erro interno. Tente novamente.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const differentPasswordsFields = SnackBar(
+    content: Text(
+      'As senhas informadas não coincidem.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const passwordUpdatedSuccess = SnackBar(
+    content: Text(
+      'Senha alterada com sucesso. Entre novamente.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+    static const passwordUpdatedError = SnackBar(
+    content: Text(
+      'Erro ao alterar senha. Tente novamente.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),

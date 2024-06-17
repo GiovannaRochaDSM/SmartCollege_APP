@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/modals/user/reset_password_modal.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_field.dart';
 import 'package:smart_college/app/services/auth_service.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
@@ -144,6 +145,28 @@ class _UserPageState extends State<UserPage> {
           textAlign: TextAlign.right,
         ),
         backgroundColor: AppColors.purple,
+      actions: [
+          IconButton(
+            icon: const Icon(Icons.vpn_key),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                ),
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: ResetPasswordModal(),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       drawer: const CustomDrawer(),
       body: SingleChildScrollView(

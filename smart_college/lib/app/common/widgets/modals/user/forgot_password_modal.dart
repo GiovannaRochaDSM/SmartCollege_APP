@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/common/widgets/modals/user/auth_code_forgot.dart';
 import 'package:smart_college/app/pages/login_page.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
@@ -32,19 +33,19 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
               style: AppTextStyles.bigText.copyWith(color: AppColors.titlePurple),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 10),
             Text(
               'Digite seu e-mail cadastrado aqui na plataforma, vamos te ajudar a recuperar sua senha',
               style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 10),
             Text(
               'E-mail',
               style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             CustomTextFormField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
@@ -60,7 +61,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                 return null;
               },
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 12),
             PrimaryButton(
               text: 'Enviar',
               onPressed: () {
@@ -92,13 +93,13 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
     try {
       await _userRepository.forgotPassword(email);
       ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.emailResetPasswordSuccess);
+          .showSnackBar(AppSnackBar.emailSendCodeResetPasswordSuccess);
       Navigator.of(context).pop();
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
+          context, MaterialPageRoute(builder: (context) => AuthCodeForgotPage()));
     } catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.forgotPasswordError);
+          .showSnackBar(AppSnackBar.emailSendCodeResetPasswordError);
     }
   }
 }

@@ -86,16 +86,20 @@ class UserRepository implements IUserRepository {
   }
 
   @override
-  Future<void> resetPassword(
+  Future<bool> resetPassword(
       String token, String email, String password) async {
     try {
       final response = await client.post(
-        url: AppRoutes.resetPassword += token,
+        url: AppRoutes.resetPassword,
         body: jsonEncode({'email': email, 'password': password}),
+        headers: {'Content-Type': 'application/json'},
       );
 
-      if (response.statusCode != 200) {
-        throw Exception('Falha ao redefinir a senha.');
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception(
+            'Falha ao redefinir a senha. Status code: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Erro ao redefinir senha: $e');
