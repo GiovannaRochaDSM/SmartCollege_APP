@@ -11,6 +11,7 @@ import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/repositories/subject_repository.dart';
 import 'package:smart_college/app/data/stores/subject_store.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
+import 'package:smart_college/app/pages/schedule_page.dart';
 import 'package:smart_college/app/services/auth_service.dart';
 import 'package:smart_college/app/pages/task_page.dart'; // Importe o arquivo TaskPage
 
@@ -148,6 +149,13 @@ class _SubjectPageState extends State<SubjectPage> {
                                         icon: Icon(Icons.view_list),
                                         onPressed: () {
                                           _navigateToTasksPage(item.id);
+                                        },
+                                        color: AppColors.titlePurple,
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.schedule),
+                                        onPressed: () {
+                                          _navigateToSchedulesPage(item.id);
                                         },
                                         color: AppColors.titlePurple,
                                       ),
@@ -297,6 +305,15 @@ class _SubjectPageState extends State<SubjectPage> {
       context,
       MaterialPageRoute(
         builder: (context) => TaskPage(subjectId: subjectId),
+      ),
+    );
+  }
+
+  void _navigateToSchedulesPage(String subjectId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SchedulePage(subjectId: subjectId),
       ),
     );
   }

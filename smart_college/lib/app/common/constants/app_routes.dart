@@ -10,4 +10,5 @@ class AppRoutes {
   static String validateAuthCode = 'https://smartcollege-api.onrender.com/auth/validate_auth_code/';
   static String validateForgotCode = 'https://smartcollege-api.onrender.com/auth/validate_forgot_code/';
   static String task = 'https://smartcollege-api.onrender.com/task/';
+  static String schedules = 'https://smartcollege-api.onrender.com/schedule/';
 }

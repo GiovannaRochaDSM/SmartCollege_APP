@@ -270,4 +270,58 @@ class AppSnackBar {
     duration: Duration(seconds: 2),
     backgroundColor: Colors.redAccent,
   );
+
+  static const scheduleAddSuccess = SnackBar(
+    content: Text(
+      'Horário adicionado com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const scheduleAddError = SnackBar(
+    content: Text(
+      'Erro ao adicionar horário.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const scheduleUpdateSuccess = SnackBar(
+    content: Text(
+      'Horário adicionado com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const scheduleUpdateError = SnackBar(
+    content: Text(
+      'Erro ao adicionar horário.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+    static const scheduleDeleteSuccess = SnackBar(
+    content: Text(
+      'Horário excluído com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const scheduleDeleteError = SnackBar(
+    content: Text(
+      'Erro ao excluir horário.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
 }
