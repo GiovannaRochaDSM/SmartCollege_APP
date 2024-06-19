@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 import 'package:smart_college/app/pages/register_page.dart';
-import 'package:smart_college/app/pages/auth_code.dart';
+import 'package:smart_college/app/common/widgets/modals/user/auth_code.dart';
 import 'package:smart_college/app/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';

@@ -82,4 +82,24 @@ class AuthService {
       return false;
     }
   }
+
+  static Future<bool> validateForgotCode(String authCode) async {
+    try {
+      var url = Uri.parse(AppRoutes.validateForgotCode);
+      var response = await http.post(
+        url,
+        body: jsonEncode({'authCode': authCode}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        await AppStrings.secureStorage.write(key: 'token', value: jsonDecode(response.body)['token']);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

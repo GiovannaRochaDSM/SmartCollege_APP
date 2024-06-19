@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
+import 'package:smart_college/app/pages/task_page.dart';
+import 'package:smart_college/app/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/pages/task_page.dart';
-import 'package:smart_college/app/services/auth_service.dart';
+import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 
 class AuthCodePage extends StatefulWidget {
   const AuthCodePage({Key? key}) : super(key: key);
@@ -34,8 +34,13 @@ class _AuthCodePageState extends State<AuthCodePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  'Insira o código de autenticação enviado para o seu e-mail',
-                  style: AppTextStyles.mediumText,
+                  'AUTENTICAÇÃO',
+                  style: AppTextStyles.normalText,
+                  textAlign: TextAlign.center,
+                ),
+                const Text(
+                  'Insira o código enviado para autenticação.',
+                  style: AppTextStyles.smallText,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
