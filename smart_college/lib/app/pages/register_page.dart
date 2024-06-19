@@ -9,7 +9,6 @@ import 'package:smart_college/app/common/constants/app_routes.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
-import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 import 'package:smart_college/app/pages/login_page.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:smart_college/app/pages/onboarding_page.dart';
@@ -25,25 +24,19 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _studentRecordController =
-      TextEditingController(); // Novo campo
   final TextEditingController _nicknameController = TextEditingController();
   File? _imageFile;
   final _formKey = GlobalKey<FormState>();
+  final ImagePicker _imagePicker = ImagePicker();
+  bool _isPasswordVisible = false;
 
   Future<void> _register() async {
     final String name = _nameController.text.trim();
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
-    final String studentRecord =
-        _studentRecordController.text.trim(); // Novo campo
-    final String nickname = _nicknameController.text.trim(); // Novo campo
+    final String nickname = _nicknameController.text.trim();
 
-    if (name.isEmpty ||
-        email.isEmpty ||
-        password.isEmpty ||
-        studentRecord.isEmpty ||
-        nickname.isEmpty) {
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.fillFields);
       return;
     }
@@ -60,8 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
       'name': name,
       'email': email,
       'password': password,
-      'studentRecord': studentRecord, // Novo campo
-      'nickname': nickname, // Novo campo
+      'nickname': nickname,
     };
 
     if (base64Image != null) {
@@ -117,15 +109,25 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  Future<void> pickImage(ImageSource source) async {
+    final pickedFile = await _imagePicker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: AppColors.purple,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: AppColors.gray,
+            color: AppColors.white,
           ),
           onPressed: () {
             Navigator.pushReplacement(
@@ -136,83 +138,199 @@ class _RegisterPageState extends State<RegisterPage> {
             );
           },
         ),
+        title: Text('Cadastro',
+            style: AppTextStyles.normalText.copyWith(color: AppColors.white)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline_rounded, color: AppColors.white),
+            onPressed: _showPasswordPolicyAlert,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              GestureDetector(
-                onTap: _getImage,
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundImage:
-                      _imageFile != null ? FileImage(_imageFile!) : null,
-                  child: _imageFile == null
-                      ? const Icon(Icons.camera_alt, size: 50)
-                      : null,
-                ),
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.purple,
+                        width: 5,
+                      ),
+                    ),
+                    child: CircleAvatar(
+                      radius: 80,
+                      backgroundColor: Colors.grey[200],
+                      backgroundImage:
+                          _imageFile != null ? FileImage(_imageFile!) : null,
+                      child: _imageFile == null
+                          ? const Icon(
+                              Icons.camera_alt,
+                              size: 50,
+                              color: AppColors.purple,
+                            )
+                          : null,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: () {
+                        _showOptionsBottomSheet();
+                      },
+                      child: const CircleAvatar(
+                        backgroundColor: AppColors.purple,
+                        radius: 20,
+                        child: Icon(
+                          Icons.camera_alt_sharp,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 30),
-              Text(
-                'Nome',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
-                textAlign: TextAlign.center,
-              ),
-              CustomTextFormField(
-                controller: _nameController,
-                keyboardType: TextInputType.name,
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'E-mail',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
-                textAlign: TextAlign.center,
-              ),
-              CustomTextFormField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                validator: (email) {
-                  if (email == null || email.isEmpty) {
-                    return 'Por favor, digite seu e-mail';
-                  } else if (!RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                      .hasMatch(email)) {
-                    return 'Por favor, digite um e-mail correto';
-                  }
-                  return null;
-                },
-              ),
-              Text(
-                'RA',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
-                textAlign: TextAlign.center,
-              ),
-              CustomTextFormField(
-                controller: _studentRecordController,
-                keyboardType: TextInputType.name,
-              ),
-              Text(
-                'Nickname',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
-                textAlign: TextAlign.center,
-              ),
-              CustomTextFormField(
-                controller: _nicknameController,
-                keyboardType: TextInputType.name,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextFormField(
+                  controller: _nicknameController,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    labelText: 'Nickname',
+                    labelStyle: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray),
+                    prefixIcon: const Icon(Icons.alternate_email_rounded,
+                        color: AppColors.purple),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: AppColors.gray),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: AppColors.gray),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 20.0),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
-              Text(
-                'Senha',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
-                textAlign: TextAlign.center,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextFormField(
+                  controller: _nameController,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    labelText: 'Nome',
+                    labelStyle: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray),
+                    prefixIcon:
+                        const Icon(Icons.person, color: AppColors.purple),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: AppColors.gray),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: AppColors.gray),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 20.0),
+                  ),
+                ),
               ),
-              CustomTextFormField(
-                controller: _passwordController,
-                keyboardType: TextInputType.name,
-                obscureText: true,
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (email) {
+                    if (email == null || email.isEmpty) {
+                      return 'Por favor, digite seu e-mail';
+                    } else if (!RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(email)) {
+                      return 'Por favor, digite um e-mail correto';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'E-mail',
+                    labelStyle: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray),
+                    prefixIcon: const Icon(Icons.email_rounded,
+                        color: AppColors.purple),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: AppColors.gray),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: AppColors.gray),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 20.0),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextFormField(
+                  controller: _passwordController,
+                  keyboardType: TextInputType.text,
+                  validator: (password) {
+                    if (password == null || password.isEmpty) {
+                      return 'Por favor, digite sua senha';
+                    } else if (password.length < 8) {
+                      return 'Verifique no ícone acima as políticas de senhas';
+                    } else if (!RegExp(r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$')
+                        .hasMatch(password)) {
+                      return 'Verifique no ícone acima as políticas de senhas';
+                    }
+                    return null;
+                  },
+                  obscureText: !_isPasswordVisible,
+                  decoration: InputDecoration(
+                    labelText: 'Senha',
+                    labelStyle: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray),
+                    prefixIcon: const Icon(Icons.key, color: AppColors.purple),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: AppColors.purple,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: AppColors.gray),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: AppColors.gray),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 20.0),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               PrimaryButton(
@@ -227,6 +345,101 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showOptionsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 3.0),
+                leading: const Icon(
+                  Icons.photo_camera,
+                  color: AppColors.gray,
+                  size: 24,
+                ),
+                title: Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: Text(
+                    'Tirar uma foto',
+                    style:
+                        AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                  ),
+                ),
+                onTap: () {
+                  pickImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 3.0),
+                leading: const Icon(
+                  Icons.photo_library,
+                  color: AppColors.gray,
+                  size: 24,
+                ),
+                title: Padding(
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: Text(
+                    'Escolher da galeria',
+                    style:
+                        AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                  ),
+                ),
+                onTap: () {
+                  pickImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showPasswordPolicyAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Política de Senha',
+              style: AppTextStyles.mediumTextBold
+                  .copyWith(color: AppColors.titlePurple)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('A senha deve conter:',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.inputText)),
+                Text('- Pelo menos uma letra maiúscula',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- Pelo menos um caractere especial',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- Pelo menos 8 caracteres',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

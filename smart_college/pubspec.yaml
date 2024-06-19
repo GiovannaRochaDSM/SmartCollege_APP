@@ -32,7 +32,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/man.png
     - assets/images/woman.png
-    - assets/images/user.png
+    - assets/images/emoji.png
 
   fonts:
     - family: Codec-Cold

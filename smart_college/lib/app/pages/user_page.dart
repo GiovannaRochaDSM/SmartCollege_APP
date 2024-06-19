@@ -43,11 +43,11 @@ class _UserPageState extends State<UserPage> {
   void initState() {
     super.initState();
     futureUser = UserHelper.fetchUser();
-    futureUser.then((value) => {lerImagem(value.photo)});
+    futureUser.then((value) => {readImage(value.photo)});
     userRepository = UserRepository(client: HttpClient());
   }
 
-  Future<void> lerImagem(String? photo) async {
+  Future<void> readImage(String? photo) async {
     if (photo != null) {
       imagemReal = Image.memory(const Base64Decoder().convert(photo));
       setState(() {
@@ -63,6 +63,52 @@ class _UserPageState extends State<UserPage> {
       setState(() {
         _imageFile = File(pickedFile.path);
       });
+    }
+  }
+
+  Future<File> _compressImage(File imageFile) async {
+    final compressedImageBytes = await FlutterImageCompress.compressWithFile(
+      imageFile.path,
+      minHeight: 600,
+      minWidth: 600,
+      quality: 80,
+    );
+
+    final tempDir = await getTemporaryDirectory();
+    final tempPath = tempDir.path;
+    final tempFile = File('$tempPath/${imageFile.path.split('/').last}');
+    await tempFile.writeAsBytes(compressedImageBytes!);
+
+    return tempFile;
+  }
+
+  void _removeImage() async {
+    try {
+      Navigator.of(context).pop();
+      String? token = await AppStrings.secureStorage.read(key: 'token');
+
+      setState(() {
+        _imageFile = null;
+      });
+
+      final ByteData assetByteData =
+          await rootBundle.load('assets/images/emoji.png');
+      final Uint8List assetBytes = assetByteData.buffer.asUint8List();
+      final String base64Image = base64Encode(assetBytes);
+
+      final updatedUser = user.updatePhoto(base64Image);
+      await userRepository.updateUser(updatedUser, token);
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(AppSnackBar.removePhotoSuccess);
+                    Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UserPage(),
+                ),
+              );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.removePhotoError);
     }
   }
 
@@ -103,31 +149,43 @@ class _UserPageState extends State<UserPage> {
     }
   }
 
-  Future<File> _compressImage(File imageFile) async {
-    final compressedImageBytes = await FlutterImageCompress.compressWithFile(
-      imageFile.path,
-      minHeight: 600,
-      minWidth: 600,
-      quality: 80,
-    );
-
-    final tempDir = await getTemporaryDirectory();
-    final tempPath = tempDir.path;
-    final tempFile = File('$tempPath/${imageFile.path.split('/').last}');
-    await tempFile.writeAsBytes(compressedImageBytes!);
-
-    return tempFile;
-  }
-
   Future<void> deleteAccount() async {
     try {
       String? token = await AppStrings.secureStorage.read(key: 'token');
 
-      await userRepository.deleteUser(user.id, token);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.userDeletedSuccess);
+      bool confirmed = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Confirmar exclusão"),
+            content: const Text(
+                "Tem certeza que deseja excluir sua conta? Esta ação é irreversível."),
+            actions: <Widget>[
+              TextButton(
+                child: const Text("Cancelar"),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(false);
+                },
+              ),
+              TextButton(
+                child: const Text("Confirmar"),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pop(true);
+                },
+              ),
+            ],
+          );
+        },
+      );
 
-      AuthService.logout(context);
+      if (confirmed == true) {
+        await userRepository.deleteUser(user.id, token);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(AppSnackBar.userDeletedSuccess);
+        AuthService.logout(context);
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.userDeletedError);
     }
@@ -138,12 +196,20 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Meu perfil',
-          style:
-              AppTextStyles.smallTextBold.copyWith(color: AppColors.lightBlack),
+          'MEU PERFIL',
+          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.lightBlack),
           textAlign: TextAlign.right,
         ),
-        backgroundColor: AppColors.purple,
+        // flexibleSpace: Container(
+        //   decoration: const BoxDecoration(
+        //     gradient: LinearGradient(
+        //       colors: [AppColors.purple, AppColors.pink],
+        //       begin: Alignment.topCenter,
+        //       end: Alignment.bottomCenter,
+        //     ),
+        //   ),
+        // ),
+        backgroundColor: AppColors.titlePurple,
       ),
       drawer: const CustomDrawer(),
       body: SingleChildScrollView(
@@ -178,6 +244,7 @@ class _UserPageState extends State<UserPage> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      const SizedBox(height: 30),
                       Stack(
                         children: [
                           Container(
@@ -223,31 +290,39 @@ class _UserPageState extends State<UserPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 30),
                       Column(
                         children: [
                           CustomTextField(
-                            controller: _nameController,
-                            labelText: 'Nome',
-                          ),
-                          const SizedBox(height: 16),
-                          CustomTextField(
-                            controller: _emailController,
-                            labelText: 'E-mail',
-                          ),
-                          const SizedBox(height: 16),
-                          CustomTextField(
                             controller: _nicknameController,
+                            keyboardType: TextInputType.text,
                             labelText: 'Apelido',
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 30),
+                          CustomTextField(
+                            controller: _nameController,
+                            keyboardType: TextInputType.name,
+                            labelText: 'Nome',
+                          ),
+                          const SizedBox(height: 30),
+                          CustomTextField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            labelText: 'E-mail',
+                          ),
+                          const SizedBox(height: 50),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               ElevatedButton(
                                 onPressed: () {
                                   updateUser();
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                ),
                                 child: Text('Salvar alterações',
                                     style: AppTextStyles.smallerText.copyWith(
                                         color: AppColors.titlePurple)),
@@ -258,6 +333,9 @@ class _UserPageState extends State<UserPage> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
                                 ),
                                 child: Text(
                                   'Excluir conta',
@@ -282,30 +360,6 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  void _removeImage() async {
-    try {
-      Navigator.of(context).pop();
-      String? token = await AppStrings.secureStorage.read(key: 'token');
-
-      setState(() {
-        _imageFile = null;
-      });
-
-      final ByteData assetByteData =
-          await rootBundle.load('assets/images/user.png');
-      final Uint8List assetBytes = assetByteData.buffer.asUint8List();
-      final String base64Image = base64Encode(assetBytes);
-
-      final updatedUser = user.updatePhoto(base64Image);
-      await userRepository.updateUser(updatedUser, token);
-
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.removePhotoSuccess);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.removePhotoError);
-    }
-  }
-
   void _showOptionsBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -323,10 +377,9 @@ class _UserPageState extends State<UserPage> {
                     color: AppColors.white,
                   ),
                 ),
-                title: Text(
-                  'Escolher da galeria',
-                  style: AppTextStyles.smallTextBold.copyWith(color: AppColors.gray)
-                ),
+                title: Text('Escolher da galeria',
+                    style: AppTextStyles.smallTextBold
+                        .copyWith(color: AppColors.gray)),
                 onTap: () {
                   Navigator.of(context).pop();
                   pickImage(ImageSource.gallery);
@@ -340,10 +393,9 @@ class _UserPageState extends State<UserPage> {
                     color: AppColors.white,
                   ),
                 ),
-                title: Text(
-                  'Tirar foto',
-                  style: AppTextStyles.smallTextBold.copyWith(color: AppColors.gray)
-                ),
+                title: Text('Tirar foto',
+                    style: AppTextStyles.smallTextBold
+                        .copyWith(color: AppColors.gray)),
                 onTap: () {
                   Navigator.of(context).pop();
                   pickImage(ImageSource.camera);
@@ -357,10 +409,9 @@ class _UserPageState extends State<UserPage> {
                     color: AppColors.white,
                   ),
                 ),
-                title: Text(
-                  'Remover foto',
-                  style: AppTextStyles.smallTextBold.copyWith(color: AppColors.gray)
-                ),
+                title: Text('Remover foto',
+                    style: AppTextStyles.smallTextBold
+                        .copyWith(color: AppColors.gray)),
                 onTap: _removeImage,
               ),
             ],
