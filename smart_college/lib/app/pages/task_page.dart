@@ -5,7 +5,6 @@ import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/common/widgets/modals/task/edit_task_modal.dart';
 import 'package:smart_college/app/common/widgets/modals/task/new_task_modal.dart';
-import 'package:smart_college/app/common/widgets/modals/task/view_task_modal.dart';
 import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/data/helpers/fetch_tasks.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
@@ -19,7 +18,7 @@ import 'package:smart_college/app/services/auth_service.dart';
 class TaskPage extends StatefulWidget {
   final String? subjectId;
 
-  const TaskPage({Key? key, this.subjectId}) : super(key: key);
+  const TaskPage({super.key, this.subjectId});
 
   @override
   State<TaskPage> createState() => _TaskPageState();
@@ -34,14 +33,14 @@ class _TaskPageState extends State<TaskPage> {
   );
   String? selectedSubjectId;
   List<SubjectModel> subjects = [];
-  String? selectedStatus; // Selected status for filtering
+  String? selectedStatus;
 
   @override
   void initState() {
     super.initState();
     futureTasks = getFilteredTasks();
     _fetchSubjects();
-    selectedSubjectId = widget.subjectId; // Initialize with received subjectId
+    selectedSubjectId = widget.subjectId;
   }
 
   Future<void> _fetchSubjects() async {
@@ -56,7 +55,7 @@ class _TaskPageState extends State<TaskPage> {
     if (subjectId != null) {
       return tasks.where((task) => task.subjectId == subjectId).toList();
     } else {
-      return tasks; // Return all tasks if subjectId is null
+      return tasks;
     }
   }
 
@@ -65,7 +64,7 @@ class _TaskPageState extends State<TaskPage> {
     if (status != null) {
       return tasks.where((task) => task.status == status).toList();
     } else {
-      return tasks; // Return all tasks if status is null
+      return tasks;
     }
   }
 
@@ -102,7 +101,7 @@ class _TaskPageState extends State<TaskPage> {
     setState(() {
       selectedSubjectId = null;
       selectedStatus = null;
-      futureTasks = TaskHelper.fetchTasks(); // Update to fetch all tasks
+      futureTasks = TaskHelper.fetchTasks();
     });
   }
 
@@ -110,10 +109,10 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'TAREFAS',
-          style:
-              AppTextStyles.smallTextBold.copyWith(color: AppColors.lightBlack),
+          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
           textAlign: TextAlign.right,
         ),
         flexibleSpace: Container(
@@ -128,24 +127,21 @@ class _TaskPageState extends State<TaskPage> {
         backgroundColor: AppColors.purple,
         actions: [
           PopupMenuButton<String>(
-            icon: const Icon(Icons.filter_alt, color: AppColors.lightBlack),
+            icon: const Icon(Icons.filter_alt, color: AppColors.white),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                  15.0), // Ajuste o valor conforme desejado
-              side: BorderSide(color: Colors.grey), // Opcional, adicionar borda
+              borderRadius: BorderRadius.circular(15.0),
+              side: const BorderSide(color: Colors.grey),
             ),
             onSelected: (String? subjectId) {
               if (subjectId == 'Todas as matérias') {
                 _showAllTasks();
               } else {
-                _updateTasksForSubject(
-                    subjectId!); // Update to tasks of selected subject
+                _updateTasksForSubject(subjectId!);
               }
             },
             itemBuilder: (BuildContext context) {
               List<PopupMenuEntry<String>> menuItems = [];
 
-              // Add "All subjects" option
               menuItems.add(
                 const PopupMenuItem<String>(
                   value: 'Todas as matérias',
@@ -153,7 +149,6 @@ class _TaskPageState extends State<TaskPage> {
                 ),
               );
 
-              // Add remaining subjects
               menuItems.addAll(subjects.map((SubjectModel subject) {
                 return PopupMenuItem<String>(
                   value: subject.id,
@@ -170,57 +165,70 @@ class _TaskPageState extends State<TaskPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ChoiceChips for filtering by status
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 8), // Espaçamento à esquerda
+                const SizedBox(width: 8),
                 ChoiceChip(
-                  label: Text('Pendente'),
+                  label: const Text('Pendente'),
                   selected: selectedStatus == 'Pendente',
+                  selectedColor: AppColors.purple,
                   onSelected: (_) {
                     if (selectedStatus == 'Pendente') {
-                      _showAllTasks(); // Mostra todas as tarefas se já estiver selecionado
+                      _showAllTasks();
                     } else {
                       _updateTasksForStatus('Pendente');
                     }
                   },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: const BorderSide(color: AppColors.titlePurple),
+                  ),
                 ),
                 ChoiceChip(
-                  label: Text('Em progresso'),
+                  label: const Text('Em progresso'),
                   selected: selectedStatus == 'Em progresso',
+                  selectedColor: AppColors.purple,
                   onSelected: (_) {
                     if (selectedStatus == 'Em progresso') {
-                      _showAllTasks(); // Mostra todas as tarefas se já estiver selecionado
+                      _showAllTasks();
                     } else {
                       _updateTasksForStatus('Em progresso');
                     }
                   },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: const BorderSide(color: AppColors.titlePurple),
+                  ),
                 ),
                 ChoiceChip(
-                  label: Text('Concluída'),
+                  label: const Text('Concluída'),
                   selected: selectedStatus == 'Concluída',
+                  selectedColor: AppColors.purple,
                   onSelected: (_) {
                     if (selectedStatus == 'Concluída') {
-                      _showAllTasks(); // Mostra todas as tarefas se já estiver selecionado
+                      _showAllTasks();
                     } else {
                       _updateTasksForStatus('Concluída');
                     }
                   },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: const BorderSide(color: AppColors.titlePurple),
+                  ),
                 ),
-                SizedBox(width: 8), // Espaçamento à direita
+                const SizedBox(width: 8),
               ],
             ),
           ),
-
           Expanded(
             child: FutureBuilder<List<TaskModel>>(
               future: futureTasks,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(
                     child: Text(
@@ -264,30 +272,26 @@ class _TaskPageState extends State<TaskPage> {
                     return ListView.separated(
                       padding: const EdgeInsets.all(19),
                       separatorBuilder: (context, index) =>
-                          SizedBox(height: 16),
+                          const SizedBox(height: 16),
                       itemCount: tasks.length,
                       itemBuilder: (_, index) {
                         final item = tasks[index];
 
-                        // Determine color based on priority
-                        Color priorityColor = Colors
-                            .black; // Default color for priorities other than 'High'
+                        Color priorityColor = Colors.black;
                         if (item.priority == 'Alta') {
                           priorityColor = Colors.red;
                         } else if (item.priority == 'Média') {
-                          priorityColor = Color.fromARGB(255, 231, 210,
-                              18); // Exemplo de cor para prioridade média
+                          priorityColor =
+                              const Color.fromARGB(255, 231, 210, 18);
                         } else if (item.priority == 'Baixa') {
                           priorityColor = Colors.green;
                         }
 
-                        // Get initial of category
                         String categoryInitials =
                             item.category != null && item.category!.isNotEmpty
                                 ? item.category!.substring(0, 2).toUpperCase()
                                 : '';
 
-                        // Format task deadline date
                         String formattedDeadline = item.deadline != null
                             ? DateFormat('dd/MM/yy').format(item.deadline!)
                             : 'Sem data';
@@ -379,41 +383,40 @@ class _TaskPageState extends State<TaskPage> {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  item.name ?? '',
+                                                  item.name,
                                                   style: AppTextStyles.smallText
                                                       .copyWith(
-                                                    color:
-                                                        AppColors.titlePurple,
+                                                    color: AppColors.lightBlack,
                                                     fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
                                                 Container(
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
                                                       horizontal: 13,
                                                       vertical: 4),
-                                                  margin:
-                                                      EdgeInsets.only(left: 8),
+                                                  margin: const EdgeInsets.only(
+                                                      left: 8),
                                                   decoration: BoxDecoration(
                                                     color: priorityColor
-                                                        .withOpacity(
-                                                            0.8), // Cor de fundo com base na prioridade
+                                                        .withOpacity(0.8),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             25),
                                                   ),
                                                   child: Text(
                                                     categoryInitials,
-                                                    style: TextStyle(
-                                                        color: AppColors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 15),
+                                                    style: const TextStyle(
+                                                      color: AppColors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 15,
+                                                    ),
                                                   ),
-                                            
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 2),
+                                            const SizedBox(height: 2),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -438,7 +441,7 @@ class _TaskPageState extends State<TaskPage> {
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                       ),
-                                                      SizedBox(height: 4),
+                                                      const SizedBox(height: 4),
                                                       Text(
                                                         formattedDeadline,
                                                         style: AppTextStyles
@@ -450,11 +453,12 @@ class _TaskPageState extends State<TaskPage> {
                                                         ),
                                                       ),
                                                       Container(
-                                                        margin: EdgeInsets.only(
-                                                            top: 4),
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 10,
+                                                        margin: const EdgeInsets
+                                                            .only(top: 5),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 5,
                                                                 vertical: 5),
                                                         decoration:
                                                             BoxDecoration(
@@ -463,15 +467,16 @@ class _TaskPageState extends State<TaskPage> {
                                                               .withOpacity(0.1),
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(20),
+                                                                  .circular(15),
                                                         ),
                                                         child: Text(
                                                           item.subjectName ??
-                                                              '', // Nome do assunto como tag
-                                                          style: TextStyle(
+                                                              '',
+                                                          style:
+                                                              const TextStyle(
                                                             color: AppColors
                                                                 .titlePurple,
-                                                            fontSize: 12,
+                                                            fontSize: 15,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                           ),
@@ -481,8 +486,8 @@ class _TaskPageState extends State<TaskPage> {
                                                   ),
                                                 ),
                                                 Positioned(
-                                                  bottom: 15,
-                                                  right: 15,
+                                                  bottom: 20,
+                                                  right: 20,
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       showDialog(
@@ -493,18 +498,18 @@ class _TaskPageState extends State<TaskPage> {
                                                       ).then((value) {
                                                         setState(() {
                                                           futureTasks =
-                                                              getFilteredTasks(); // Atualiza as tarefas após a edição
+                                                              getFilteredTasks();
                                                         });
                                                       });
                                                     },
-                                                    child: CircleAvatar(
+                                                    child: const CircleAvatar(
                                                       backgroundColor:
-                                                          AppColors.purple,
-                                                      radius: 20,
+                                                          AppColors.pink,
+                                                      radius: 26,
                                                       child: Icon(
                                                         Icons.edit,
                                                         color: Colors.white,
-                                                        size: 20,
+                                                        size: 30,
                                                       ),
                                                     ),
                                                   ),
@@ -524,23 +529,25 @@ class _TaskPageState extends State<TaskPage> {
                       },
                     );
                   }
-                           } else {
-              return Center(
-                child: Text(
-                  'Nenhuma tarefa encontrada.',
-                  style: AppTextStyles.mediumText.copyWith(
-                    color: AppColors.gray,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              );
-            }
-          },
-        ),
+                } else {
+                  return Center(
+                    child: Text(
+                      'Nenhuma tarefa encontrada.',
+                      style: AppTextStyles.mediumText.copyWith(
+                        color: AppColors.gray,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
-      Positioned(
-        bottom: 26.0,
-        right: 26.0,
+      floatingActionButton: Positioned(
+        bottom: 55.0,
+        right: 55.0,
         child: GestureDetector(
           onTap: () async {
             final token = await AuthService.getToken();
@@ -550,21 +557,30 @@ class _TaskPageState extends State<TaskPage> {
             padding: const EdgeInsets.all(10.0),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.titlePurple,
+              gradient: LinearGradient(
+                colors: [AppColors.titlePurple, AppColors.pink],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
             ),
             child: const Icon(
               Icons.add,
               size: 50,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
         ),
       ),
-    ],
-  ),
-  
-);
-}
+    );
+  }
 
   Future<void> _updateAndReloadPage() async {
     Navigator.pushReplacement(
@@ -583,7 +599,7 @@ class _TaskPageState extends State<TaskPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const NewTaskPage();
+        return const NewTaskModal();
       },
     ).then((result) {
       if (result != null && result == true) {
@@ -605,53 +621,6 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
-  void _showViewModal(TaskModel task) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ViewTaskModal(task: task);
-      },
-    );
-  }
-
-  void _confirmDeleteTask(TaskModel task) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(
-          'Excluir tarefa',
-          style: AppTextStyles.smallText.copyWith(color: AppColors.titlePurple),
-        ),
-        content: Text(
-          'Tem certeza que deseja excluir a tarefa "${task.name}"?',
-          style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Cancelar',
-              style: AppTextStyles.smallerText
-                  .copyWith(color: AppColors.titlePurple),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _deleteTask(task.id);
-            },
-            child: Text(
-              'Excluir',
-              style: AppTextStyles.smallerText
-                  .copyWith(color: AppColors.titlePurple),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   void _deleteTask(String taskId) {
     store.deleteTask(taskId).then((_) {

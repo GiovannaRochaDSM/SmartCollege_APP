@@ -5,7 +5,6 @@ import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
 import 'package:smart_college/app/common/widgets/modals/subject/edit_subject_modal.dart';
 import 'package:smart_college/app/common/widgets/modals/subject/new_subject_modal.dart';
-import 'package:smart_college/app/common/widgets/modals/subject/view_subject_modal.dart';
 import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/repositories/subject_repository.dart';
@@ -13,7 +12,7 @@ import 'package:smart_college/app/data/stores/subject_store.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/pages/schedule_page.dart';
 import 'package:smart_college/app/services/auth_service.dart';
-import 'package:smart_college/app/pages/task_page.dart'; // Importe o arquivo TaskPage
+import 'package:smart_college/app/pages/task_page.dart';
 
 class SubjectPage extends StatefulWidget {
   const SubjectPage({Key? key}) : super(key: key);
@@ -40,7 +39,8 @@ class _SubjectPageState extends State<SubjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'MATÉRIAS',
           style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
@@ -56,31 +56,20 @@ class _SubjectPageState extends State<SubjectPage> {
           ),
         ),
         backgroundColor: AppColors.purple,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () async {
-              final token = await AuthService.getToken();
-              if (token != null) {
-                _showAddModal(token);
-              }
-            },
-          ),
-        ],
       ),
       drawer: const CustomDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 20, 20, 15),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(15, 20, 20, 15),
           ),
           Expanded(
             child: FutureBuilder<List<SubjectModel>>(
               future: futureSubjects,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(
                     child: Text(
@@ -98,8 +87,7 @@ class _SubjectPageState extends State<SubjectPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(
-                                20.0),
+                            padding: const EdgeInsets.all(20.0),
                             child: Text(
                               'Oops... Nenhuma matéria cadastrada.',
                               style: AppTextStyles.normalText.copyWith(
@@ -120,105 +108,65 @@ class _SubjectPageState extends State<SubjectPage> {
                     );
                   } else {
                     return ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          SizedBox(height: 16),
-                      padding: EdgeInsets.symmetric(horizontal: 16),
                       itemCount: subjects.length,
+                      separatorBuilder: (context, index) => const Divider(),
                       itemBuilder: (_, index) {
                         final item = subjects[index];
-                        return GestureDetector(
-                          onTap: () {
-                            _showViewModal(item);
-                          },
-                          child: Card(
-                            elevation: 5,
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              side: BorderSide(
-                                color: AppColors.purple,
-                                width: 2,
-                              ),
-                            ),
-                            child: ListTile(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 15),
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    item.name,
-                                    style: AppTextStyles.smallText
-                                        .copyWith(color: AppColors.titlePurple),
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(Icons.edit),
-                                        onPressed: () async {
-                                          final token =
-                                              await AuthService.getToken();
-                                          if (token != null) {
-                                            _showEditModal(item, token);
-                                          }
-                                        },
-                                        color: AppColors.titlePurple,
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.delete),
-                                        onPressed: () async {
-                                          final token =
-                                              await AuthService.getToken();
-                                          if (token != null) {
-                                            _confirmDeleteSubject(item, token);
-                                          }
-                                        },
-                                        color: AppColors.titlePurple,
-                                      ),
-                                      IconButton(
-                                        icon: Icon(Icons.view_list),
-                                        onPressed: () {
-                                          _navigateToTasksPage(item.id);
-                                        },
-                                        color: AppColors.titlePurple,
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.schedule),
-                                        onPressed: () {
-                                          _navigateToSchedulesPage(item.id);
-                                        },
-                                        color: AppColors.titlePurple,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.acronym,
-                                    style: AppTextStyles.smallerText
-                                        .copyWith(color: AppColors.gray),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    'Notas: ${item.grades?.join(', ')}',
-                                    style: AppTextStyles.smallerText,
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    'Faltas: ${item.abscence}',
-                                    style: AppTextStyles.smallerText,
-                                  ),
-                                ],
-                              ),
+                        return Dismissible(
+                          key: Key(item.id),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
                             ),
                           ),
+                          confirmDismiss: (_) async {
+                            return await showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: Text(
+                                  'Excluir matéria',
+                                  style: AppTextStyles.smallText
+                                      .copyWith(color: AppColors.titlePurple),
+                                ),
+                                content: Text(
+                                  'Tem certeza que deseja excluir a matéria "${item.name}"?',
+                                  style: AppTextStyles.smallerText
+                                      .copyWith(color: AppColors.gray),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context, false);
+                                    },
+                                    child: Text(
+                                      'Cancelar',
+                                      style: AppTextStyles.smallText.copyWith(
+                                          color: AppColors.titlePurple),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context, true);
+                                    },
+                                    child: Text(
+                                      'Excluir',
+                                      style: AppTextStyles.smallText.copyWith(
+                                          color: AppColors.titlePurple),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          onDismissed: (_) {
+                            _deleteSubject(item.id);
+                          },
+                          child: _buildSubjectTile(item),
                         );
                       },
                     );
@@ -228,6 +176,68 @@ class _SubjectPageState extends State<SubjectPage> {
                 }
               },
             ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final token = await AuthService.getToken();
+          _showAddModal(token);
+        },
+        backgroundColor: AppColors.purple,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildSubjectTile(SubjectModel subject) {
+    return ListTile(
+      title: Text(
+        subject.acronym,
+        style: AppTextStyles.smallText.copyWith(color: AppColors.titlePurple),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 4),
+          Text(
+            subject.name,
+            style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Notas: ${subject.grades?.join(', ') ?? 'N/A'}',
+            style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Faltas: ${subject.abscence}',
+            style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+          ),
+        ],
+      ),
+      trailing: Wrap(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              _showEditModal(subject);
+            },
+            color: AppColors.titlePurple,
+          ),
+          IconButton(
+            icon: const Icon(Icons.view_list),
+            onPressed: () {
+              _navigateToTasksPage(subject.id);
+            },
+            color: AppColors.titlePurple,
+          ),
+          IconButton(
+            icon: const Icon(Icons.schedule),
+            onPressed: () {
+              _navigateToSchedulesPage(subject.id);
+            },
+            color: AppColors.titlePurple,
           ),
         ],
       ),
@@ -260,7 +270,7 @@ class _SubjectPageState extends State<SubjectPage> {
     });
   }
 
-  void _showEditModal(SubjectModel subject, String? token) {
+  void _showEditModal(SubjectModel subject) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -271,54 +281,6 @@ class _SubjectPageState extends State<SubjectPage> {
         _updateAndReloadPage();
       }
     });
-  }
-
-  void _showViewModal(SubjectModel subject) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ViewSubjectModal(subject: subject);
-      },
-    );
-  }
-
-  void _confirmDeleteSubject(SubjectModel subject, String? token) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(
-          'Excluir matéria',
-          style: AppTextStyles.smallText.copyWith(color: AppColors.titlePurple),
-        ),
-        content: Text(
-          'Tem certeza que deseja excluir a matéria "${subject.name}"?',
-          style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Cancelar',
-              style: AppTextStyles.smallText
-                  .copyWith(color: AppColors.titlePurple),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _deleteSubject(subject.id);
-            },
-            child: Text(
-              'Excluir',
-              style: AppTextStyles.smallText
-                  .copyWith(color: AppColors.titlePurple),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   void _deleteSubject(String subjectId) {

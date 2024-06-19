@@ -22,8 +22,21 @@ class _AuthCodePageForgotState extends State<AuthCodeForgotPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Código de Autenticação - Esqueci a Senha'),
-        backgroundColor: AppColors.gray,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          'CÓDIGO DE AUTENTICAÇÃO - ESQUECI A SENHA' ,    
+       style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+      textAlign: TextAlign.right,
+    ),
+    flexibleSpace: Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.purple, AppColors.pink],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+    ),
       ),
       body: Center(
         child: Padding(
@@ -35,16 +48,11 @@ class _AuthCodePageForgotState extends State<AuthCodeForgotPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  'ESQUECI A SENHA',
-                  style: AppTextStyles.normalText,
-                  textAlign: TextAlign.center,
-                ),
-                const Text(
-                  'Insira o código enviado para autenticação e redefinição de senha.',
+                  'Insira o código enviado para no seu email para redefinir sua senha e voltar à se organizar conosco!',
                   style: AppTextStyles.smallText,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 50),
                 TextFormField(
                   controller: _authCodeController,
                   keyboardType: TextInputType.number,
@@ -59,9 +67,9 @@ class _AuthCodePageForgotState extends State<AuthCodeForgotPage> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
                 PrimaryButton(
-                  text: 'Validar',
+                  text: 'Este é o código',
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       bool isValid = await AuthService.validateForgotCode(

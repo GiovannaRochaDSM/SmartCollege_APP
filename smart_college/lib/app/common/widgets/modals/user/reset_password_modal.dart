@@ -23,10 +23,10 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
   final UserRepository _userRepository = UserRepository(client: HttpClient());
   late Future<UserModel> futureUser;
 
-@override
+  @override
   void initState() {
     super.initState();
-     futureUser = UserHelper.fetchUser(); 
+    futureUser = UserHelper.fetchUser();
   }
 
   @override
@@ -112,8 +112,12 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
     final confirmPassword = _passwordConfirmController.text;
 
     if (password.isEmpty || confirmPassword.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.fillFields);
+      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.fillFields);
+      return;
+    }
+
+    if (!_validatePassword(password)) {
+      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.invalidEmailOrPassword);
       return;
     }
 
@@ -133,11 +137,16 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
-      
+
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(AppSnackBar.passwordUpdatedError);
     }
+  }
+
+  bool _validatePassword(String password) {
+    return password.length >= 8 &&
+        RegExp(r'(?=.*[A-Z])(?=.*[!@#\$&*~]).*$').hasMatch(password);
   }
 }
 

@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
+import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_strings.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
-import 'package:smart_college/app/data/models/task_model.dart';
-import 'package:smart_college/app/common/constants/app_strings.dart';
-import 'package:smart_college/app/common/constants/app_snack_bar.dart';
-import 'package:smart_college/app/data/repositories/task_repository.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
+import 'package:smart_college/app/data/models/task_model.dart';
+import 'package:smart_college/app/data/repositories/task_repository.dart';
 
-class NewTaskPage extends StatefulWidget {
-  const NewTaskPage({super.key});
+class NewTaskModal extends StatefulWidget {
+  const NewTaskModal({Key? key}) : super(key: key);
 
   @override
-  _NewTaskPageState createState() => _NewTaskPageState();
+  _NewTaskModalState createState() => _NewTaskModalState();
 }
 
-class _NewTaskPageState extends State<NewTaskPage> {
+class _NewTaskModalState extends State<NewTaskModal> {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   String? _selectedPriority;
@@ -32,7 +35,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
     _descriptionController = TextEditingController();
     _httpClient = HttpClient();
 
-    // Carregar matérias disponíveis ao iniciar a página
+    // Load available subjects when the page initializes
     _fetchSubjects();
   }
 
@@ -47,21 +50,34 @@ class _NewTaskPageState extends State<NewTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nova Tarefa'),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          'NOVA TAREFA',
+          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.purple, AppColors.pink],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(15.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Nome'),
+              decoration: _customInputDecoration('Nome'),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Descrição'),
+              decoration: _customInputDecoration('Descrição'),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -77,7 +93,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                   _selectedPriority = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Prioridade'),
+              decoration: _customInputDecoration('Prioridade'),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -93,7 +109,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                   _selectedCategory = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Categoria'),
+              decoration: _customInputDecoration('Categoria'),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -109,7 +125,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                   _selectedStatus = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Status'),
+              decoration: _customInputDecoration('Status'),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -125,7 +141,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
                   _selectedSubjectId = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Matéria'),
+              decoration: _customInputDecoration('Matéria'),
             ),
             const SizedBox(height: 12),
             Row(
@@ -143,15 +159,28 @@ class _NewTaskPageState extends State<NewTaskPage> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            ElevatedButton(
+            const SizedBox(height: 20),
+            PrimaryButton(
+              text: 'Adicionar',
               onPressed: () async {
                 await _addTask(context);
               },
-              child: const Text('Adicionar'),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  InputDecoration _customInputDecoration(String labelText) {
+    return InputDecoration(
+      labelText: labelText,
+      labelStyle: const TextStyle(color: Colors.grey),
+      enabledBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+      ),
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: AppColors.pink, width: 3.0),
       ),
     );
   }
@@ -219,7 +248,7 @@ void showNewTaskPage(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (BuildContext context) {
-        return const NewTaskPage();
+        return NewTaskModal();
       },
     ),
   );

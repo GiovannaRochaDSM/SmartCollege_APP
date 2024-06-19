@@ -38,21 +38,21 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white, // Cor da app bar
-        elevation: 0, // Sem sombra
+        backgroundColor: Colors.white,
+        elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu,
-                color: Colors.black), // Ícone do menu (drawer)
+                color: AppColors.titlePurple),
             onPressed: () {
               Scaffold.of(context)
-                  .openDrawer(); // Abre o drawer ao clicar no ícone
+                  .openDrawer();
             },
           ),
         ),
       ),
       drawer:
-          const CustomDrawer(), // Conteúdo do drawer (substitua pelo seu drawer personalizado)
+          const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
               future: _futureUser,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Text('Erro ao carregar usuário: ${snapshot.error}');
                 } else if (snapshot.hasData) {
@@ -79,12 +79,12 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 const SizedBox(height: 40),
                                 Text(
-                                  'Olá, ${user.nickname}.', // Saudação com o nickname do usuário
+                                  'Olá, ${user.nickname}.',
                                   style: AppTextStyles.biggerText,
                                 ),
                                 const SizedBox(height: 20),
                                 const Text(
-                                  'Descubra no que você pode evoluir hoje.', // Título principal
+                                  'Descubra no que você pode evoluir hoje.',
                                   style: AppTextStyles.smallText,
                                 ),
                               ],
@@ -101,16 +101,16 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 50),
                       const Text(
-                        'Organize-se conosco:', // Saudação com o nickname do usuário
+                        'Organize-se conosco:',
                         style: AppTextStyles.normalText,
                       ),
                       const SizedBox(height: 30),
                       SizedBox(
                         height:
-                            170, // Altura dos cards (ajuste conforme necessário)
+                            170,
                         child: ListView(
                           scrollDirection: Axis
-                              .horizontal, // Rolagem horizontal para os cards
+                              .horizontal,
                           children: [
                             HomeCard(
                               title: 'Tarefas',
@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => TaskPage()),
+                                      builder: (context) => const TaskPage()),
                                 );
                               },
                             ),
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SubjectPage()),
+                                      builder: (context) => const SubjectPage()),
                                 );
                               },
                             ),
@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SchedulePage()),
+                                      builder: (context) => const SchedulePage()),
                                 );
                               },
                             ),
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => UserPage()),
+                                      builder: (context) => const UserPage()),
                                 );
                               },
                             ),
@@ -169,7 +169,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Widget para cada card na página inicial
 class HomeCard extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
@@ -187,7 +186,11 @@ class HomeCard extends StatelessWidget {
         width: 150,
         margin: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
-          color: AppColors.purple,
+          gradient: const LinearGradient(
+            colors: [AppColors.purple, AppColors.pink],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -200,13 +203,16 @@ class HomeCard extends StatelessWidget {
                 style: AppTextStyles.normalText.copyWith(color: AppColors.white),
               ),
             ),
-            const Spacer(), 
+            const Spacer(),
             const Padding(
               padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Icon(Icons.arrow_forward),
+                  Icon(Icons.arrow_forward,
+                  size: 50,
+                  color:AppColors.lightGray,
+                  )
                 ],
               ),
             ),

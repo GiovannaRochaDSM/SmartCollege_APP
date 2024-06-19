@@ -58,7 +58,7 @@ class _OnboardingPage extends State<OnboardingPage> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => RegisterPage(),
+                        builder: (context) => const RegisterPage(),
                       ),
                     );
                   },

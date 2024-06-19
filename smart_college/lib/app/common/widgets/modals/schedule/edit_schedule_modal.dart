@@ -13,7 +13,7 @@ import 'package:smart_college/app/data/models/subject_model.dart';
 class EditScheduleModal extends StatefulWidget {
   final ScheduleModel schedule;
 
-  const EditScheduleModal({Key? key, required this.schedule}) : super(key: key);
+  const EditScheduleModal({super.key, required this.schedule});
 
   @override
   _EditScheduleModalState createState() => _EditScheduleModalState();

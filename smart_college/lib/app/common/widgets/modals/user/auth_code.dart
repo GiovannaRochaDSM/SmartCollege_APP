@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/pages/task_page.dart';
+import 'package:smart_college/app/pages/home_page.dart';
 import 'package:smart_college/app/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
@@ -21,8 +21,21 @@ class _AuthCodePageState extends State<AuthCodePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Código de Autenticação'),
-        backgroundColor: AppColors.gray,
+        iconTheme: const IconThemeData(color: Colors.white),
+    title: Text(
+      'CÓDIGO DE AUTENTICAÇÃO',
+      style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+      textAlign: TextAlign.right,
+    ),
+    flexibleSpace: Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [AppColors.purple, AppColors.pink],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+    ),
       ),
       body: Center(
         child: Padding(
@@ -34,16 +47,11 @@ class _AuthCodePageState extends State<AuthCodePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  'AUTENTICAÇÃO',
-                  style: AppTextStyles.normalText,
-                  textAlign: TextAlign.center,
-                ),
-                const Text(
-                  'Insira o código enviado para autenticação.',
+                  'Insira o código enviado para no seu email para autenticar e se organizar conosco!',
                   style: AppTextStyles.smallText,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 50),
                 TextFormField(
                   controller: _authCodeController,
                   keyboardType: TextInputType.number,
@@ -58,9 +66,9 @@ class _AuthCodePageState extends State<AuthCodePage> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
                 PrimaryButton(
-                  text: 'Validar',
+                  text: 'Este é o código',
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       bool isValid = await AuthService.validateAuthCode(
@@ -71,7 +79,7 @@ class _AuthCodePageState extends State<AuthCodePage> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const TaskPage(),
+                              builder: (context) => const HomePage(),
                             ),
                           );
                         } else {
