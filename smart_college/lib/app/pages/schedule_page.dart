@@ -135,14 +135,30 @@ Widget build(BuildContext context) {
                     final schedules = snapshot.data!;
                     if (schedules.isEmpty) {
                       return Center(
-                        child: Text(
-                          'Oops... Nenhum horário cadastrado.',
-                          style: AppTextStyles.mediumText.copyWith(
-                              color: AppColors.gray,
-                              fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(
+                                20.0),
+                            child: Text(
+                              'Oops... Nenhum horário cadastrado.',
+                              style: AppTextStyles.normalText.copyWith(
+                                  color: AppColors.gray,
+                                  fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 200,
+                            height: 200,
+                            child: Image.asset(
+                              'assets/images/wind.png',
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
                     } else {
                       return ListView.separated(
                         padding: const EdgeInsets.all(19),

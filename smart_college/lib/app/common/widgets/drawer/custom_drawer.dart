@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/pages/home_page.dart';
 import 'package:smart_college/app/pages/schedule_page.dart';
 import 'package:smart_college/app/pages/subject_page.dart';
 import 'package:smart_college/app/pages/user_page.dart';
@@ -160,6 +161,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const SchedulePage(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('Home',
+                style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomePage(),
                 ),
               );
             },

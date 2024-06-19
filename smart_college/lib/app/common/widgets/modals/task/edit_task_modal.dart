@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_dropdown.dart';
 import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/models/task_model.dart';
 import 'package:smart_college/app/data/repositories/task_repository.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_field.dart'; // Importando o widget CustomTextField // Importando o widget CustomDropdown
 
 class EditTaskModal extends StatefulWidget {
   final TaskModel task;
 
-  const EditTaskModal({super.key, required this.task});
+  const EditTaskModal({Key? key, required this.task}) : super(key: key);
 
   @override
   _EditTaskModalState createState() => _EditTaskModalState();
 }
 
 class _EditTaskModalState extends State<EditTaskModal> {
-  
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
   String? _selectedPriority;
@@ -25,14 +26,15 @@ class _EditTaskModalState extends State<EditTaskModal> {
   String? _selectedSubjectId;
   String? _selectedCategory;
   DateTime? _selectedDate;
-  List<SubjectModel> _subjects = [];
+  List<SubjectModel> _subjects = []; // Inicializar como lista vazia
   late IHttpClient _httpClient;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.task.name);
-    _descriptionController = TextEditingController(text: widget.task.description ?? '');
+    _descriptionController =
+        TextEditingController(text: widget.task.description ?? '');
     _selectedPriority = widget.task.priority;
     _selectedStatus = widget.task.status;
     _selectedSubjectId = widget.task.subjectId;
@@ -40,6 +42,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
     _selectedDate = widget.task.deadline;
     _httpClient = HttpClient();
 
+    // Chamada para buscar matérias
     _fetchSubjects();
   }
 
@@ -54,76 +57,63 @@ class _EditTaskModalState extends State<EditTaskModal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar Tarefa'),
+        title: Text('Editar Tarefa'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextField(
+            CustomTextField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Nome'),
+              labelText: 'Nome',
+              // keyboardType: TextInputType.text,
             ),
-            const SizedBox(height: 12),
-            TextField(
+            SizedBox(height: 12),
+            CustomTextField(
               controller: _descriptionController,
-              decoration:  const InputDecoration(labelText: 'Descrição'),
+              labelText: 'Descrição',
+              // keyboardType: TextInputType.text,
             ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
+            SizedBox(height: 12),
+            CustomDropdown(
               value: _selectedPriority,
-              items: ['Baixa', 'Média', 'Alta'].map((priority) {
-                return DropdownMenuItem<String>(
-                  value: priority,
-                  child: Text(priority),
-                );
-              }).toList(),
+              items: ['Baixa', 'Média', 'Alta'],
+              labelText: 'Prioridade',
               onChanged: (value) {
                 setState(() {
                   _selectedPriority = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Prioridade'),
             ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
+            SizedBox(height: 12),
+            CustomDropdown(
               value: _selectedCategory,
-              items: ['Atividade', 'Avaliação', 'Estudo'].map((category) {
-                return DropdownMenuItem<String>(
-                  value: category,
-                  child: Text(category),
-                );
-              }).toList(),
+              items: ['Atividade', 'Avaliação', 'Estudo'],
+              labelText: 'Categoria',
               onChanged: (value) {
                 setState(() {
                   _selectedCategory = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Categoria'),
             ),
-            const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
+            SizedBox(height: 12),
+            CustomDropdown(
               value: _selectedStatus,
-              items: ['Pendente', 'Em progresso', 'Concluída'].map((status) {
-                return DropdownMenuItem<String>(
-                  value: status,
-                  child: Text(status),
-                );
-              }).toList(),
+              items: ['Pendente', 'Em progresso', 'Concluída'],
+              labelText: 'Status',
               onChanged: (value) {
                 setState(() {
                   _selectedStatus = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Status'),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             DropdownButtonFormField<String>(
               value: _selectedSubjectId,
               items: _subjects.map((subject) {
                 return DropdownMenuItem<String>(
-                   value: subject.id.toString(),
+                  value: subject.id.toString(),
                   child: Text(subject.name),
                 );
               }).toList(),
@@ -132,9 +122,9 @@ class _EditTaskModalState extends State<EditTaskModal> {
                   _selectedSubjectId = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Matéria'),
+              decoration: InputDecoration(labelText: 'Matéria'),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
@@ -145,17 +135,17 @@ class _EditTaskModalState extends State<EditTaskModal> {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.calendar_today),
+                  icon: Icon(Icons.calendar_today),
                   onPressed: () => _selectDate(context),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ElevatedButton(
               onPressed: () async {
                 await _updateTask(context);
               },
-              child: const Text('Salvar'),
+              child: Text('Salvar'),
             ),
           ],
         ),
@@ -164,10 +154,15 @@ class _EditTaskModalState extends State<EditTaskModal> {
   }
 
   Future<void> _fetchSubjects() async {
-    List<SubjectModel> subjects = await SubjectHelper.fetchSubjects();
-    setState(() {
-      _subjects = subjects;
-    });
+    try {
+      List<SubjectModel> subjects = await SubjectHelper.fetchSubjects();
+      setState(() {
+        _subjects = subjects;
+      });
+    } catch (e) {
+      print('Failed to fetch subjects: $e');
+      // Tratar erro ao buscar matérias
+    }
   }
 
   Future<void> _updateTask(BuildContext context) async {
@@ -193,17 +188,21 @@ class _EditTaskModalState extends State<EditTaskModal> {
 
       await _performUpdate(updatedTask);
 
-      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.taskUpdatedSuccess);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(AppSnackBar.taskUpdatedSuccess);
 
       Navigator.of(context).pop(true);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.taskUpdatedError);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(AppSnackBar.taskUpdatedError);
     }
   }
 
   Future<void> _performUpdate(TaskModel updatedTask) async {
-    final TaskRepository taskRepository = TaskRepository(client: _httpClient);
-    String? token = await AppStrings.secureStorage.read(key: 'token');
+    final TaskRepository taskRepository =
+        TaskRepository(client: _httpClient);
+    String? token =
+        await AppStrings.secureStorage.read(key: 'token');
     await taskRepository.updateTask(updatedTask, token);
   }
 

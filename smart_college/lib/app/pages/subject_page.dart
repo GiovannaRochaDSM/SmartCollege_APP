@@ -40,10 +40,20 @@ class _SubjectPageState extends State<SubjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+       appBar: AppBar(
         title: Text(
-          'Matérias',
-          style: AppTextStyles.normalText.copyWith(color: Colors.white),
+          'MATÉRIAS',
+          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          textAlign: TextAlign.right,
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.purple, AppColors.pink],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
         ),
         backgroundColor: AppColors.purple,
         actions: [
@@ -84,16 +94,34 @@ class _SubjectPageState extends State<SubjectPage> {
                   List<SubjectModel> subjects = snapshot.data!;
                   if (subjects.isEmpty) {
                     return Center(
-                      child: Text(
-                        'Nenhuma matéria cadastrada.',
-                        style: AppTextStyles.mediumText.copyWith(
-                            color: AppColors.gray, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(
+                                20.0),
+                            child: Text(
+                              'Oops... Nenhuma matéria cadastrada.',
+                              style: AppTextStyles.normalText.copyWith(
+                                  color: AppColors.gray,
+                                  fontWeight: FontWeight.w600),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 200,
+                            height: 200,
+                            child: Image.asset(
+                              'assets/images/wind.png',
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   } else {
                     return ListView.separated(
-                      separatorBuilder: (context, index) => SizedBox(height: 16),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 16),
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       itemCount: subjects.length,
                       itemBuilder: (_, index) {
@@ -113,14 +141,16 @@ class _SubjectPageState extends State<SubjectPage> {
                               ),
                             ),
                             child: ListTile(
-                              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 15),
                               title: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     item.name,
-                                    style: AppTextStyles.smallText.copyWith(
-                                        color: AppColors.titlePurple),
+                                    style: AppTextStyles.smallText
+                                        .copyWith(color: AppColors.titlePurple),
                                   ),
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -128,7 +158,8 @@ class _SubjectPageState extends State<SubjectPage> {
                                       IconButton(
                                         icon: Icon(Icons.edit),
                                         onPressed: () async {
-                                          final token = await AuthService.getToken();
+                                          final token =
+                                              await AuthService.getToken();
                                           if (token != null) {
                                             _showEditModal(item, token);
                                           }
@@ -138,7 +169,8 @@ class _SubjectPageState extends State<SubjectPage> {
                                       IconButton(
                                         icon: Icon(Icons.delete),
                                         onPressed: () async {
-                                          final token = await AuthService.getToken();
+                                          final token =
+                                              await AuthService.getToken();
                                           if (token != null) {
                                             _confirmDeleteSubject(item, token);
                                           }
@@ -168,8 +200,8 @@ class _SubjectPageState extends State<SubjectPage> {
                                 children: [
                                   Text(
                                     item.acronym,
-                                    style: AppTextStyles.smallerText.copyWith(
-                                        color: AppColors.gray),
+                                    style: AppTextStyles.smallerText
+                                        .copyWith(color: AppColors.gray),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),

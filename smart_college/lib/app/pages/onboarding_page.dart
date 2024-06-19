@@ -35,7 +35,7 @@ class _OnboardingPage extends State<OnboardingPage> {
               ),
               const SizedBox(height: 20),
               Text(
-                'Organização no ensino superior',
+                'Sua rotina de estudos de forma simples.',
                 style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
               ),
               const SizedBox(height: 20),

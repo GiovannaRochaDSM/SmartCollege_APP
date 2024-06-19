@@ -34,13 +34,14 @@ class _TaskPageState extends State<TaskPage> {
   );
   String? selectedSubjectId;
   List<SubjectModel> subjects = [];
+  String? selectedStatus; // Selected status for filtering
 
   @override
   void initState() {
     super.initState();
-    futureTasks = TaskHelper.fetchTasks();
+    futureTasks = getFilteredTasks();
     _fetchSubjects();
-    selectedSubjectId = widget.subjectId; // Inicializa com o subjectId recebido
+    selectedSubjectId = widget.subjectId; // Initialize with received subjectId
   }
 
   Future<void> _fetchSubjects() async {
@@ -55,21 +56,53 @@ class _TaskPageState extends State<TaskPage> {
     if (subjectId != null) {
       return tasks.where((task) => task.subjectId == subjectId).toList();
     } else {
-      return tasks; // Retorna todas as tarefas se subjectId for null
+      return tasks; // Return all tasks if subjectId is null
+    }
+  }
+
+  Future<List<TaskModel>> getTasksByStatus(String? status) async {
+    final tasks = await TaskHelper.fetchTasks();
+    if (status != null) {
+      return tasks.where((task) => task.status == status).toList();
+    } else {
+      return tasks; // Return all tasks if status is null
     }
   }
 
   void _updateTasksForSubject(String subjectId) {
     setState(() {
       selectedSubjectId = subjectId;
-      futureTasks = getTasksBySubject(subjectId); // Atualiza para tarefas da matéria selecionada
+      futureTasks = getFilteredTasks();
+    });
+  }
+
+  Future<List<TaskModel>> getFilteredTasks() async {
+    List<TaskModel> tasks = await TaskHelper.fetchTasks();
+
+    if (selectedSubjectId != null) {
+      tasks =
+          tasks.where((task) => task.subjectId == selectedSubjectId).toList();
+    }
+
+    if (selectedStatus != null) {
+      tasks = tasks.where((task) => task.status == selectedStatus).toList();
+    }
+
+    return tasks;
+  }
+
+  void _updateTasksForStatus(String status) {
+    setState(() {
+      selectedStatus = status;
+      futureTasks = getFilteredTasks();
     });
   }
 
   void _showAllTasks() {
     setState(() {
       selectedSubjectId = null;
-      futureTasks = TaskHelper.fetchTasks(); // Atualiza para todas as tarefas
+      selectedStatus = null;
+      futureTasks = TaskHelper.fetchTasks(); // Update to fetch all tasks
     });
   }
 
@@ -79,32 +112,48 @@ class _TaskPageState extends State<TaskPage> {
       appBar: AppBar(
         title: Text(
           'TAREFAS',
-          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
-          textAlign: TextAlign.start,
+          style:
+              AppTextStyles.smallTextBold.copyWith(color: AppColors.lightBlack),
+          textAlign: TextAlign.right,
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.purple, AppColors.pink],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
         ),
         backgroundColor: AppColors.purple,
         actions: [
           PopupMenuButton<String>(
-            icon: const Icon(Icons.filter_alt, color: AppColors.white),
+            icon: const Icon(Icons.filter_alt, color: AppColors.lightBlack),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                  15.0), // Ajuste o valor conforme desejado
+              side: BorderSide(color: Colors.grey), // Opcional, adicionar borda
+            ),
             onSelected: (String? subjectId) {
-              if (subjectId == 'Todas') {
+              if (subjectId == 'Todas as matérias') {
                 _showAllTasks();
               } else {
-                _updateTasksForSubject(subjectId!); // Atualiza para tarefas da matéria selecionada
+                _updateTasksForSubject(
+                    subjectId!); // Update to tasks of selected subject
               }
             },
             itemBuilder: (BuildContext context) {
               List<PopupMenuEntry<String>> menuItems = [];
 
-              // Adicionar opção "Todas"
+              // Add "All subjects" option
               menuItems.add(
                 const PopupMenuItem<String>(
-                  value: 'Todas',
-                  child: Text('Todas'),
+                  value: 'Todas as matérias',
+                  child: Text('Todas as matérias'),
                 ),
               );
 
-              // Adicionar as matérias restantes
+              // Add remaining subjects
               menuItems.addAll(subjects.map((SubjectModel subject) {
                 return PopupMenuItem<String>(
                   value: subject.id,
@@ -118,256 +167,404 @@ class _TaskPageState extends State<TaskPage> {
         ],
       ),
       drawer: const CustomDrawer(),
-      body: Stack(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: FutureBuilder<List<TaskModel>>(
-                  future: getTasksBySubject(selectedSubjectId),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text(
-                          'Erro ao carregar tarefas: ${snapshot.error}',
-                          style: AppTextStyles.mediumText.copyWith(
-                              color: Colors.red, fontWeight: FontWeight.w600),
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    } else if (snapshot.hasData) {
-                      final tasks = snapshot.data!;
-                      if (tasks.isEmpty) {
-                        return Center(
-                          child: Text(
-                            'Oops...Nenhuma tarefa cadastrada.',
-                            style: AppTextStyles.mediumText.copyWith(
-                                color: AppColors.gray,
-                                fontWeight: FontWeight.w600),
-                            textAlign: TextAlign.center,
-                          ),
-                        );
-                      } else {
-                        return ListView.separated(
-                          padding: const EdgeInsets.all(19),
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 16),
-                          itemCount: tasks.length,
-                          itemBuilder: (_, index) {
-                            final item = tasks[index];
-                            // Formatar a data da tarefa
-                            String formattedDeadline = item.deadline != null
-                                ? DateFormat('dd/MM/yyyy')
-                                    .format(item.deadline!)
-                                : 'Sem data';
-
-                            // Determinar a cor com base na prioridade
-                            Color priorityColor = Colors
-                                .black; // Cor padrão para prioridades diferentes de 'Alta'
-                            if (item.priority == 'Alta') {
-                              priorityColor = Colors.red;
-                            } else if (item.priority == 'Média') {
-                              priorityColor = Colors.yellow;
-                            } else if (item.priority == 'Baixa') {
-                              priorityColor = Colors.green;
-                            }
-
-                            return Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(29.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.pink.withOpacity(0.2),
-                                    blurRadius: 2,
-                                  ),
-                                ],
-                              ),
-                              child: Card(
-                                elevation: 5,
-                                margin: const EdgeInsets.symmetric(vertical: 5),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 15),
-                                  title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        item.name,
-                                        style: AppTextStyles.smallText.copyWith(
-                                            color: AppColors.titlePurple),
-                                      ),
-                                      // Espaçamento entre o nome e a tag da matéria
-                                      SizedBox(width: 8),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.white,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Text(
-                                          item.priority ?? '', // Mostra a prioridade associada como tag
-                                          style: TextStyle(
-                                            color: priorityColor,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  subtitle: Column(
-                                    
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    
-                                    children: [
-                                      
-                                      Text(
-                                        
-                                        item.description ?? '',
-                                        style: AppTextStyles.smallerText.copyWith(
-                                          
-                                            color: AppColors.gray,
-                                            fontWeight: FontWeight.w400),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                        margin: EdgeInsets.only(top: 4), // Espaço entre a tag de matéria e a de prioridade
-                                        decoration: BoxDecoration(
-                                          color: AppColors.pink,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        child: Text(
-                                          item.subjectName ?? '', // Mostra a matéria associada como tag
-                                          style: TextStyle(
-                                            color: AppColors.white,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Limite:',
-                                            style: AppTextStyles.smallerText.copyWith(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            formattedDeadline,
-                                            style: AppTextStyles.smallerText.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors.gray,),
-                                                
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(color: AppColors.titlePurple, width: 1.0),
-                                                ),
-                                                child: IconButton(
-                                                  icon: const Icon(Icons.edit, color: AppColors.titlePurple,),
-                                                  onPressed: () async {
-                                                    final token =
-                                                        await AuthService.getToken();
-                                                    if (token != null) {
-                                                      _showEditModal(item, token);
-                                                    }
-                                                  },
-                                                  color: AppColors.gray,
-                                                ),
-                                              ),
-                                              SizedBox(width: 8), // Espaçamento entre os botões
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(color: AppColors.titlePurple, width: 1.0),
-                                                ),
-                                                child: IconButton(
-                                                  icon: const Icon(Icons.delete, color: AppColors.titlePurple),
-                                                  onPressed: () async {
-                                                    final token =
-                                                        await AuthService.getToken();
-                                                    if (token != null) {
-                                                      _confirmDeleteTask(item, token);
-                                                    }
-                                                  },
-                                                  color: AppColors.gray,
-                                                ),
-                                              ),
-                                              SizedBox(width: 8), // Espaçamento entre os botões
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(color: AppColors.titlePurple, width: 1.0),
-                                                ),
-                                                child: IconButton(
-                                                  icon: const Icon(Icons.visibility, color: AppColors.titlePurple),
-                                                  onPressed: () {
-                                                    _showViewModal(item);
-                                                  },
-                                                  color: AppColors.gray,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      }
+          // ChoiceChips for filtering by status
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(width: 8), // Espaçamento à esquerda
+                ChoiceChip(
+                  label: Text('Pendente'),
+                  selected: selectedStatus == 'Pendente',
+                  onSelected: (_) {
+                    if (selectedStatus == 'Pendente') {
+                      _showAllTasks(); // Mostra todas as tarefas se já estiver selecionado
                     } else {
-                      return Container();
+                      _updateTasksForStatus('Pendente');
                     }
                   },
                 ),
-              ),
-            ],
-          ),
-          Positioned(
-            bottom: 26.0,
-            right: 26.0,
-            child: GestureDetector(
-              onTap: () async {
-                final token = await AuthService.getToken();
-                _showAddModal(token);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.titlePurple,
+                ChoiceChip(
+                  label: Text('Em progresso'),
+                  selected: selectedStatus == 'Em progresso',
+                  onSelected: (_) {
+                    if (selectedStatus == 'Em progresso') {
+                      _showAllTasks(); // Mostra todas as tarefas se já estiver selecionado
+                    } else {
+                      _updateTasksForStatus('Em progresso');
+                    }
+                  },
                 ),
-                child: const Icon(
-                  Icons.add,
-                  size: 50,
-                  color: Colors.white,
+                ChoiceChip(
+                  label: Text('Concluída'),
+                  selected: selectedStatus == 'Concluída',
+                  onSelected: (_) {
+                    if (selectedStatus == 'Concluída') {
+                      _showAllTasks(); // Mostra todas as tarefas se já estiver selecionado
+                    } else {
+                      _updateTasksForStatus('Concluída');
+                    }
+                  },
                 ),
-              ),
+                SizedBox(width: 8), // Espaçamento à direita
+              ],
             ),
           ),
-        ],
+
+          Expanded(
+            child: FutureBuilder<List<TaskModel>>(
+              future: futureTasks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      'Erro ao carregar tarefas: ${snapshot.error}',
+                      style: AppTextStyles.mediumText.copyWith(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  final tasks = snapshot.data!;
+                  if (tasks.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Text(
+                              'Oops... Nenhuma tarefa cadastrada.',
+                              style: AppTextStyles.normalText.copyWith(
+                                color: AppColors.gray,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 200,
+                            height: 200,
+                            child: Image.asset(
+                              'assets/images/wind.png',
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return ListView.separated(
+                      padding: const EdgeInsets.all(19),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 16),
+                      itemCount: tasks.length,
+                      itemBuilder: (_, index) {
+                        final item = tasks[index];
+
+                        // Determine color based on priority
+                        Color priorityColor = Colors
+                            .black; // Default color for priorities other than 'High'
+                        if (item.priority == 'Alta') {
+                          priorityColor = Colors.red;
+                        } else if (item.priority == 'Média') {
+                          priorityColor = Color.fromARGB(255, 231, 210,
+                              18); // Exemplo de cor para prioridade média
+                        } else if (item.priority == 'Baixa') {
+                          priorityColor = Colors.green;
+                        }
+
+                        // Get initial of category
+                        String categoryInitials =
+                            item.category != null && item.category!.isNotEmpty
+                                ? item.category!.substring(0, 2).toUpperCase()
+                                : '';
+
+                        // Format task deadline date
+                        String formattedDeadline = item.deadline != null
+                            ? DateFormat('dd/MM/yy').format(item.deadline!)
+                            : 'Sem data';
+
+                        return Dismissible(
+                          key: Key(item.id),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20.0),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          confirmDismiss: (DismissDirection direction) async {
+                            return await showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                title: Text(
+                                  'Excluir tarefa',
+                                  style: AppTextStyles.smallText
+                                      .copyWith(color: AppColors.titlePurple),
+                                ),
+                                content: Text(
+                                  'Tem certeza que deseja excluir a tarefa "${item.name}"?',
+                                  style: AppTextStyles.smallerText
+                                      .copyWith(color: AppColors.gray),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context, false);
+                                    },
+                                    child: Text(
+                                      'Cancelar',
+                                      style: AppTextStyles.smallerText.copyWith(
+                                          color: AppColors.titlePurple),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      Navigator.pop(context, true);
+                                      await store.deleteTask(item.id);
+                                      setState(() {
+                                        tasks.removeAt(index);
+                                      });
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                              AppSnackBar.taskDeletedError);
+                                    },
+                                    child: Text(
+                                      'Confirmar',
+                                      style: AppTextStyles.smallerText
+                                          .copyWith(color: Colors.red),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  border:
+                                      Border.all(color: Colors.grey.shade300),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(width: 2),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  item.name ?? '',
+                                                  style: AppTextStyles.smallText
+                                                      .copyWith(
+                                                    color:
+                                                        AppColors.titlePurple,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 13,
+                                                      vertical: 4),
+                                                  margin:
+                                                      EdgeInsets.only(left: 8),
+                                                  decoration: BoxDecoration(
+                                                    color: priorityColor
+                                                        .withOpacity(
+                                                            0.8), // Cor de fundo com base na prioridade
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            25),
+                                                  ),
+                                                  child: Text(
+                                                    categoryInitials,
+                                                    style: TextStyle(
+                                                        color: AppColors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 15),
+                                                  ),
+                                            
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 2),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        item.description ?? '',
+                                                        style: AppTextStyles
+                                                            .smallerText
+                                                            .copyWith(
+                                                          color: AppColors.gray,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      SizedBox(height: 4),
+                                                      Text(
+                                                        formattedDeadline,
+                                                        style: AppTextStyles
+                                                            .smallerText
+                                                            .copyWith(
+                                                          color: AppColors.gray,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        margin: EdgeInsets.only(
+                                                            top: 4),
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 10,
+                                                                vertical: 5),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: AppColors
+                                                              .purple
+                                                              .withOpacity(0.1),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                        child: Text(
+                                                          item.subjectName ??
+                                                              '', // Nome do assunto como tag
+                                                          style: TextStyle(
+                                                            color: AppColors
+                                                                .titlePurple,
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  bottom: 15,
+                                                  right: 15,
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (_) =>
+                                                            EditTaskModal(
+                                                                task: item),
+                                                      ).then((value) {
+                                                        setState(() {
+                                                          futureTasks =
+                                                              getFilteredTasks(); // Atualiza as tarefas após a edição
+                                                        });
+                                                      });
+                                                    },
+                                                    child: CircleAvatar(
+                                                      backgroundColor:
+                                                          AppColors.purple,
+                                                      radius: 20,
+                                                      child: Icon(
+                                                        Icons.edit,
+                                                        color: Colors.white,
+                                                        size: 20,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                           } else {
+              return Center(
+                child: Text(
+                  'Nenhuma tarefa encontrada.',
+                  style: AppTextStyles.mediumText.copyWith(
+                    color: AppColors.gray,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              );
+            }
+          },
+        ),
       ),
-    );
-  }
+      Positioned(
+        bottom: 26.0,
+        right: 26.0,
+        child: GestureDetector(
+          onTap: () async {
+            final token = await AuthService.getToken();
+            _showAddModal(token);
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.titlePurple,
+            ),
+            child: const Icon(
+              Icons.add,
+              size: 50,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    ],
+  ),
+  
+);
+}
 
   Future<void> _updateAndReloadPage() async {
     Navigator.pushReplacement(
@@ -395,7 +592,7 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
-  void _showEditModal(TaskModel task, String? token) {
+  void _showEditModal(TaskModel task) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -417,7 +614,7 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  void _confirmDeleteTask(TaskModel task, String? token) {
+  void _confirmDeleteTask(TaskModel task) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
