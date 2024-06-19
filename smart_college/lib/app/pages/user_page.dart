@@ -200,15 +200,15 @@ class _UserPageState extends State<UserPage> {
           style: AppTextStyles.smallTextBold.copyWith(color: AppColors.lightBlack),
           textAlign: TextAlign.right,
         ),
-        // flexibleSpace: Container(
-        //   decoration: const BoxDecoration(
-        //     gradient: LinearGradient(
-        //       colors: [AppColors.purple, AppColors.pink],
-        //       begin: Alignment.topCenter,
-        //       end: Alignment.bottomCenter,
-        //     ),
-        //   ),
-        // ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.purple, AppColors.pink],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
         backgroundColor: AppColors.titlePurple,
       ),
       drawer: const CustomDrawer(),
