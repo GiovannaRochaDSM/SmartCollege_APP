@@ -10,6 +10,15 @@ class AppSnackBar {
     backgroundColor: Colors.redAccent,
   );
 
+  static const invalidPassword = SnackBar(
+    content: Text(
+      'Por favor, digite uma senha válida',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
   static const removePhotoSuccess = SnackBar(
     content: Text(
       'Foto removida com sucesso',
@@ -208,7 +217,7 @@ class AppSnackBar {
     backgroundColor: Colors.green,
   );
 
-    static const passwordUpdatedError = SnackBar(
+  static const passwordUpdatedError = SnackBar(
     content: Text(
       'Erro ao alterar senha. Tente novamente.',
       textAlign: TextAlign.center,
@@ -307,7 +316,7 @@ class AppSnackBar {
     backgroundColor: Colors.redAccent,
   );
 
-    static const scheduleDeleteSuccess = SnackBar(
+  static const scheduleDeleteSuccess = SnackBar(
     content: Text(
       'Horário excluído com sucesso.',
       textAlign: TextAlign.center,

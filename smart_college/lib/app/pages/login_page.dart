@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 import 'package:smart_college/app/pages/register_page.dart';
-import 'package:smart_college/app/common/widgets/modals/user/auth_code.dart';
-import 'package:smart_college/app/services/auth_service.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/modals/user/auth_code.dart';
 import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 import 'package:smart_college/app/common/widgets/modals/user/forgot_password_modal.dart';
 
 class LoginPage extends StatefulWidget {
@@ -75,7 +75,7 @@ class _LoginPage extends State<LoginPage> {
                     },
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Text(
                   'SENHA',
                   style:
@@ -91,10 +91,10 @@ class _LoginPage extends State<LoginPage> {
                       if (password == null || password.isEmpty) {
                         return 'Por favor, digite sua senha';
                       } else if (password.length < 8) {
-                        return 'Verifique no ícone acima as políticas de senhas';
+                        return 'Por favor, digite uma senha válida';
                       } else if (!RegExp(r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$')
                           .hasMatch(password)) {
-                        return 'Verifique no ícone acima as políticas de senhas';
+                        return 'Por favor, digite uma senha válida';
                       }
                       return null;
                     },
@@ -121,7 +121,7 @@ class _LoginPage extends State<LoginPage> {
                     _showForgotPasswordModal(context);
                   },
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 PrimaryButton(
                   text: 'Entrar',
                   onPressed: () async {
@@ -136,7 +136,7 @@ class _LoginPage extends State<LoginPage> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AuthCodePage(),
+                            builder: (context) => const AuthCodeModal(),
                           ),
                         );
                       } else {
@@ -159,7 +159,7 @@ class _LoginPage extends State<LoginPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RegisterPage()));
+                            builder: (context) => const RegisterPage()));
                   },
                 ),
               ],
@@ -174,7 +174,7 @@ class _LoginPage extends State<LoginPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ForgotPasswordModal();
+        return const ForgotPasswordModal();
       },
     ).then((result) {
       if (result != null && result is String) {
@@ -213,7 +213,7 @@ class _LoginPage extends State<LoginPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

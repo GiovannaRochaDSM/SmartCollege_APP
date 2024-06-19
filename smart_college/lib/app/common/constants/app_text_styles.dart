@@ -27,6 +27,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
   );
 
+  static const TextStyle normalTextBold = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 25.0,
+    fontWeight: FontWeight.w900,
+  );
+
   static const TextStyle mediumTextBold = TextStyle(
     fontFamily: 'Nunito',
     fontSize: 30.4,
@@ -34,10 +40,10 @@ class AppTextStyles {
   );
 
   static const TextStyle smallTextBold = TextStyle(
-  fontFamily: 'Nunito',
-  fontSize: 20.4,
-  fontWeight: FontWeight.w700,
-);
+    fontFamily: 'Nunito',
+    fontSize: 20.4,
+    fontWeight: FontWeight.w700,
+  );
 
   static const TextStyle smallText = TextStyle(
     fontFamily: 'Nunito',
@@ -49,5 +55,11 @@ class AppTextStyles {
     fontFamily: 'Nunito',
     fontSize: 16,
     fontWeight: FontWeight.w600,
+  );
+
+  static const TextStyle smallerTextBold = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 16,
+    fontWeight: FontWeight.w800,
   );
 }

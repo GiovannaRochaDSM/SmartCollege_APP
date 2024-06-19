@@ -32,7 +32,6 @@ flutter:
   assets: 
     - assets/images/logo.png
     - assets/images/man.png
-    - assets/images/woman.png
     - assets/images/emoji.png
     - assets/images/wind.png
     

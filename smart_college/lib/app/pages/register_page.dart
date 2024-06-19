@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:smart_college/app/pages/login_page.dart';
+import 'package:smart_college/app/pages/onboarding_page.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_routes.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
-import 'package:smart_college/app/pages/login_page.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:smart_college/app/pages/onboarding_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -74,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginPage(),
+          builder: (context) => const LoginPage(),
         ),
       );
     } else {
@@ -142,7 +142,8 @@ class _RegisterPageState extends State<RegisterPage> {
             style: AppTextStyles.normalText.copyWith(color: AppColors.white)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline_rounded, color: AppColors.white),
+            icon:
+                const Icon(Icons.help_outline_rounded, color: AppColors.white),
             onPressed: _showPasswordPolicyAlert,
           ),
         ],
@@ -293,10 +294,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     if (password == null || password.isEmpty) {
                       return 'Por favor, digite sua senha';
                     } else if (password.length < 8) {
-                      return 'Verifique no ícone acima as políticas de senhas';
+                      return 'Por favor, digite uma senha válida';
                     } else if (!RegExp(r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$')
                         .hasMatch(password)) {
-                      return 'Verifique no ícone acima as políticas de senhas';
+                      return 'Por favor, digite uma senha válida';
                     }
                     return null;
                   },
@@ -432,7 +433,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

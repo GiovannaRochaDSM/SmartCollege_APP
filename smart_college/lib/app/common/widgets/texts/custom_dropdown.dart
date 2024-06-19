@@ -9,12 +9,12 @@ class CustomDropdown extends StatelessWidget {
   final void Function(String?) onChanged;
 
   const CustomDropdown({
-    Key? key,
+    super.key,
     required this.value,
     required this.items,
     required this.labelText,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

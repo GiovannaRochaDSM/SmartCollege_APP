@@ -13,6 +13,8 @@ import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 
 class ResetPasswordModal extends StatefulWidget {
+  const ResetPasswordModal({super.key});
+
   @override
   _ResetPasswordModalState createState() => _ResetPasswordModalState();
 }
@@ -22,6 +24,8 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
   final TextEditingController _passwordConfirmController = TextEditingController();
   final UserRepository _userRepository = UserRepository(client: HttpClient());
   late Future<UserModel> futureUser;
+    bool _isPasswordVisible = false;
+    bool _isConfirmPasswordVisible = false;
 
   @override
   void initState() {
@@ -31,16 +35,26 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 90),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline_rounded, color: AppColors.gray),
+            onPressed: _showPasswordPolicyAlert,
+          ),
+        ],
+      ),
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 50),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               'Redefinir Senha',
-              style: AppTextStyles.bigText.copyWith(color: AppColors.titlePurple),
+              style:
+                  AppTextStyles.bigText.copyWith(color: AppColors.titlePurple),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
@@ -59,13 +73,24 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
             CustomTextFormField(
               controller: _passwordController,
               keyboardType: TextInputType.text,
-              obscureText: true,
               validator: (password) {
                 if (password == null || password.isEmpty) {
                   return 'Por favor, digite sua nova senha';
                 }
                 return null;
               },
+              obscureText: !_isPasswordVisible,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isPasswordVisible = !_isPasswordVisible;
+                  });
+                },
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                  color: AppColors.gray,
+                ),
+              ),
             ),
             const SizedBox(height: 10),
             Text(
@@ -77,7 +102,6 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
             CustomTextFormField(
               controller: _passwordConfirmController,
               keyboardType: TextInputType.text,
-              obscureText: true,
               validator: (password) {
                 if (password == null || password.isEmpty) {
                   return 'Por favor, confirme sua nova senha';
@@ -86,8 +110,20 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
                 }
                 return null;
               },
+              obscureText: !_isConfirmPasswordVisible,
+              suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                  });
+                },
+                icon: Icon(
+                  _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                  color: AppColors.gray,
+                ),
+              ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 30),
             PrimaryButton(
               text: 'Alterar',
               onPressed: () {
@@ -107,6 +143,45 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
     );
   }
 
+  void _showPasswordPolicyAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Política de Senha',
+              style: AppTextStyles.mediumTextBold
+                  .copyWith(color: AppColors.titlePurple)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('A senha deve conter:',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.inputText)),
+                Text('- Pelo menos uma letra maiúscula',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- Pelo menos um caractere especial',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- Pelo menos 8 caracteres',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _changePassword(BuildContext context) async {
     final password = _passwordController.text;
     final confirmPassword = _passwordConfirmController.text;
@@ -117,7 +192,8 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
     }
 
     if (!_validatePassword(password)) {
-      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.invalidEmailOrPassword);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(AppSnackBar.invalidPassword);
       return;
     }
 
@@ -137,7 +213,6 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
-
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(AppSnackBar.passwordUpdatedError);
@@ -146,7 +221,7 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
 
   bool _validatePassword(String password) {
     return password.length >= 8 &&
-        RegExp(r'(?=.*[A-Z])(?=.*[!@#\$&*~]).*$').hasMatch(password);
+        RegExp(r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$').hasMatch(password);
   }
 }
 
@@ -162,7 +237,7 @@ void showResetPasswordModal(BuildContext context) {
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: ResetPasswordModal(),
+        child: const ResetPasswordModal(),
       );
     },
   );

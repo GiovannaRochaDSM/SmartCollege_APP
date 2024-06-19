@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/subject_repository.dart';
+import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 
 class NewSubjectModal extends StatefulWidget {
+  const NewSubjectModal({super.key});
+
   @override
   _NewSubjectModalState createState() => _NewSubjectModalState();
 }
@@ -40,49 +45,87 @@ class _NewSubjectModalState extends State<NewSubjectModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Container(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'NOVA MATÉRIA',
+          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          textAlign: TextAlign.center,
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.purple, AppColors.pink],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+        iconTheme: const IconThemeData(
+          color: AppColors.white,
+        ),
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'Nova Matéria',
-              style: TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF4B61C2),
+            const SizedBox(height: 50),
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Nome',
+                labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                ),
               ),
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Nome'),
-            ),
-            const SizedBox(height: 12),
-            TextField(
               controller: _acronymController,
-              decoration: const InputDecoration(labelText: 'Sigla'),
+              decoration: InputDecoration(
+                labelText: 'Sigla',
+                labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                ),
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             TextField(
               controller: _gradesController,
-              decoration: const InputDecoration(labelText: 'Notas'),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _absenceController,
-              decoration: const InputDecoration(labelText: 'Faltas'),
+              decoration: InputDecoration(
+                labelText: 'Notas',
+                labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                ),
+              ),
               keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
+            TextField(
+              controller: _absenceController,
+              decoration: InputDecoration(
+                labelText: 'Faltas',
+                labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                ),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            const SizedBox(height: 60),
+            PrimaryButton(
+              text: 'Adicionar',
+              onPressed: () {
                 _addSubject(context);
               },
-              child: const Text('Adicionar'),
             ),
           ],
         ),
@@ -135,19 +178,9 @@ class _NewSubjectModalState extends State<NewSubjectModal> {
 }
 
 void showNewSubjectModal(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => const NewSubjectModal(),
     ),
-    builder: (BuildContext context) {
-      return SingleChildScrollView(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: NewSubjectModal(),
-      );
-    },
   );
 }

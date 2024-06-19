@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/pages/task_page.dart';
+import 'package:smart_college/app/pages/user_page.dart';
+import 'package:smart_college/app/pages/subject_page.dart';
+import 'package:smart_college/app/pages/schedule_page.dart';
+import 'package:smart_college/app/data/models/user_model.dart';
+import 'package:smart_college/app/data/helpers/fetch_user.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
-import 'package:smart_college/app/data/helpers/fetch_user.dart';
-import 'package:smart_college/app/data/models/user_model.dart';
-import 'package:smart_college/app/pages/schedule_page.dart';
-import 'package:smart_college/app/pages/subject_page.dart';
-import 'package:smart_college/app/pages/task_page.dart';
-import 'package:smart_college/app/pages/user_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -173,7 +173,7 @@ class HomeCard extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const HomeCard({
+  const HomeCard({super.key, 
     required this.title,
     required this.onTap,
   });
@@ -211,7 +211,7 @@ class HomeCard extends StatelessWidget {
                 children: [
                   Icon(Icons.arrow_forward,
                   size: 50,
-                  color:AppColors.lightGray,
+                  color:AppColors.whiteSmoke,
                   )
                 ],
               ),

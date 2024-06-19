@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/constants/app_colors.dart';
-import 'package:smart_college/app/common/constants/app_snack_bar.dart';
-import 'package:smart_college/app/common/constants/app_strings.dart';
-import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
-import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
-import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/models/task_model.dart';
+import 'package:smart_college/app/data/models/subject_model.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
+import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
+import 'package:smart_college/app/common/constants/app_strings.dart';
+import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/task_repository.dart';
+import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 
 class EditTaskModal extends StatefulWidget {
   final TaskModel task;
@@ -79,15 +79,16 @@ class _EditTaskModalState extends State<EditTaskModal> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Nome',
-                labelStyle: TextStyle(color: Colors.grey),
-                enabledBorder: UnderlineInputBorder(
+                labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             TextField(
               controller: _descriptionController,
               decoration: const InputDecoration(
@@ -98,7 +99,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedPriority,
               items: ['Baixa', 'Média', 'Alta'].map((priority) {
@@ -112,15 +113,16 @@ class _EditTaskModalState extends State<EditTaskModal> {
                   _selectedPriority = value;
                 });
               },
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Prioridade',
-                labelStyle: TextStyle(color: Colors.grey),
-                enabledBorder: UnderlineInputBorder(
+                labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedCategory,
               items: ['Atividade', 'Avaliação', 'Estudo'].map((category) {
@@ -134,15 +136,16 @@ class _EditTaskModalState extends State<EditTaskModal> {
                   _selectedCategory = value;
                 });
               },
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Categoria',
-                labelStyle: TextStyle(color: Colors.grey),
-                enabledBorder: UnderlineInputBorder(
+                labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedStatus,
               items: ['Pendente', 'Em progresso', 'Concluída'].map((status) {
@@ -156,15 +159,16 @@ class _EditTaskModalState extends State<EditTaskModal> {
                   _selectedStatus = value;
                 });
               },
-              decoration: const  InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Status',
-                labelStyle: TextStyle(color: Colors.grey),
-                enabledBorder: UnderlineInputBorder(
+                labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedSubjectId,
               items: _subjects.map((subject) {
@@ -178,15 +182,16 @@ class _EditTaskModalState extends State<EditTaskModal> {
                   _selectedSubjectId = value;
                 });
               },
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Matéria',
-                labelStyle: TextStyle(color: Colors.grey),
-                enabledBorder: UnderlineInputBorder(
+                labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(
@@ -202,7 +207,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
                 ),
               ],
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             PrimaryButton(
               text: 'Salvar',
               onPressed: () async {
@@ -261,18 +266,18 @@ class _EditTaskModalState extends State<EditTaskModal> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-  final DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: _selectedDate ?? DateTime.now(),
-    firstDate: DateTime.now(),
-    lastDate: DateTime(2101),
-  );
-  if (picked != null && picked != _selectedDate) {
-    setState(() {
-      _selectedDate = picked;
-    });
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
   }
-}
 }
 
 void showEditTaskPage(BuildContext context, TaskModel task) {

@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/services/auth_service.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 import 'package:smart_college/app/common/widgets/modals/user/reset_password_modal.dart';
 
-
-class AuthCodeForgotPage extends StatefulWidget {
-  const AuthCodeForgotPage({Key? key}) : super(key: key);
+class AuthCodeForgotModal extends StatefulWidget {
+  const AuthCodeForgotModal({super.key});
 
   @override
-  _AuthCodePageForgotState createState() => _AuthCodePageForgotState();
+  _AuthCodeModalForgotState createState() => _AuthCodeModalForgotState();
 }
 
-class _AuthCodePageForgotState extends State<AuthCodeForgotPage> {
+class _AuthCodeModalForgotState extends State<AuthCodeForgotModal> {
   final _formKey = GlobalKey<FormState>();
   final _authCodeController = TextEditingController();
 
@@ -24,19 +23,19 @@ class _AuthCodePageForgotState extends State<AuthCodeForgotPage> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'CÓDIGO DE AUTENTICAÇÃO - ESQUECI A SENHA' ,    
-       style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
-      textAlign: TextAlign.right,
-    ),
-    flexibleSpace: Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.purple, AppColors.pink],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+          'CÓDIGO DE AUTENTICAÇÃO - ESQUECI A SENHA',
+          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          textAlign: TextAlign.right,
         ),
-      ),
-    ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.purple, AppColors.pink],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
       ),
       body: Center(
         child: Padding(

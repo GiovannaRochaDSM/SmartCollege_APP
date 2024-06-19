@@ -4,22 +4,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:smart_college/app/common/constants/app_colors.dart';
-import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/modals/user/reset_password_modal.dart';
-import 'package:smart_college/app/common/widgets/texts/custom_text_field.dart';
-import 'package:smart_college/app/services/auth_service.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/data/helpers/fetch_user.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/user_repository.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_field.dart';
+import 'package:smart_college/app/common/widgets/modals/user/reset_password_modal.dart';
 
 class UserPage extends StatefulWidget {
-  const UserPage({Key? key}) : super(key: key);
+  const UserPage({super.key});
 
   @override
   State<UserPage> createState() => _UserPageState();
@@ -210,7 +210,7 @@ class _UserPageState extends State<UserPage> {
           ),
         ),
         backgroundColor: AppColors.titlePurple,
-              actions: [
+        actions: [
           IconButton(
             icon: const Icon(Icons.vpn_key),
             onPressed: () {
@@ -225,7 +225,7 @@ class _UserPageState extends State<UserPage> {
                     padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
-                    child: ResetPasswordModal(),
+                    child: const ResetPasswordModal(),
                   );
                 },
               );
@@ -427,7 +427,7 @@ class _UserPageState extends State<UserPage> {
                 leading: const CircleAvatar(
                   backgroundColor: AppColors.purple,
                   child: Icon(
-                    Icons.delete,
+                    Icons.delete_outline_rounded,
                     color: AppColors.white,
                   ),
                 ),

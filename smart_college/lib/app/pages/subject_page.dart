@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/pages/task_page.dart';
+import 'package:smart_college/app/pages/schedule_page.dart';
+import 'package:smart_college/app/data/http/http_client.dart';
+import 'package:smart_college/app/data/models/subject_model.dart';
+import 'package:smart_college/app/data/stores/subject_store.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
+import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
-import 'package:smart_college/app/common/widgets/modals/subject/edit_subject_modal.dart';
-import 'package:smart_college/app/common/widgets/modals/subject/new_subject_modal.dart';
-import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
-import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/repositories/subject_repository.dart';
-import 'package:smart_college/app/data/stores/subject_store.dart';
-import 'package:smart_college/app/data/http/http_client.dart';
-import 'package:smart_college/app/pages/schedule_page.dart';
-import 'package:smart_college/app/services/auth_service.dart';
-import 'package:smart_college/app/pages/task_page.dart';
+import 'package:smart_college/app/common/widgets/modals/subject/new_subject_modal.dart';
+import 'package:smart_college/app/common/widgets/modals/subject/edit_subject_modal.dart';
 
 class SubjectPage extends StatefulWidget {
-  const SubjectPage({Key? key}) : super(key: key);
+  const SubjectPage({super.key});
 
   @override
   State<SubjectPage> createState() => _SubjectPageState();
@@ -39,6 +39,7 @@ class _SubjectPageState extends State<SubjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
@@ -107,66 +108,90 @@ class _SubjectPageState extends State<SubjectPage> {
                       ),
                     );
                   } else {
-                    return ListView.separated(
+                    return ListView.builder(
                       itemCount: subjects.length,
-                      separatorBuilder: (context, index) => const Divider(),
-                      itemBuilder: (_, index) {
+                      itemBuilder: (context, index) {
                         final item = subjects[index];
-                        return Dismissible(
-                          key: Key(item.id),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            color: Colors.red,
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
+                        return Column(
+                          children: [
+                            const Divider(
+                              color: AppColors.pink,
+                              thickness: 2,
                             ),
-                          ),
-                          confirmDismiss: (_) async {
-                            return await showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                title: Text(
-                                  'Excluir matéria',
-                                  style: AppTextStyles.smallText
-                                      .copyWith(color: AppColors.titlePurple),
+                            Dismissible(
+                              key: Key(item.id),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                color: Colors.red,
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: const Icon(
+                                  Icons.delete_outline_rounded,
+                                  color: Colors.white,
                                 ),
-                                content: Text(
-                                  'Tem certeza que deseja excluir a matéria "${item.name}"?',
-                                  style: AppTextStyles.smallerText
-                                      .copyWith(color: AppColors.gray),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context, false);
-                                    },
-                                    child: Text(
-                                      'Cancelar',
-                                      style: AppTextStyles.smallText.copyWith(
-                                          color: AppColors.titlePurple),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context, true);
-                                    },
-                                    child: Text(
-                                      'Excluir',
-                                      style: AppTextStyles.smallText.copyWith(
-                                          color: AppColors.titlePurple),
-                                    ),
-                                  ),
-                                ],
                               ),
-                            );
-                          },
-                          onDismissed: (_) {
-                            _deleteSubject(item.id);
-                          },
-                          child: _buildSubjectTile(item),
+                              confirmDismiss: (_) async {
+                                bool confirmDelete = await showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                    title: Text(
+                                      'Excluir matéria',
+                                      style: AppTextStyles.normalTextBold
+                                          .copyWith(
+                                              color: AppColors.titlePurple),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    content: Text(
+                                      'Tem certeza que deseja excluir a matéria "${item.name}"?',
+                                      style: AppTextStyles.smallText
+                                          .copyWith(color: AppColors.gray),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context,
+                                              false);
+                                        },
+                                        child: Text(
+                                          'Cancelar',
+                                          style: AppTextStyles.smallerText
+                                              .copyWith(color: AppColors.gray),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context,
+                                              true);
+                                        },
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                        ),
+                                        child: Text(
+                                          'Excluir',
+                                          style: AppTextStyles.smallerText
+                                              .copyWith(color: AppColors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                if (confirmDelete) {
+                                  _deleteSubject(item
+                                      .id);
+                                }
+                                return confirmDelete;
+                              },
+                              onDismissed: (_) {
+                              },
+                              child: _buildSubjectTile(
+                                  item),
+                            ),
+                            const Divider(
+                              color: AppColors.pink,
+                              thickness: 2,
+                            ),
+                          ],
                         );
                       },
                     );
@@ -179,13 +204,39 @@ class _SubjectPageState extends State<SubjectPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final token = await AuthService.getToken();
-          _showAddModal(token);
-        },
-        backgroundColor: AppColors.purple,
-        child: const Icon(Icons.add),
+      floatingActionButton: Positioned(
+        bottom: 55.0,
+        right: 55.0,
+        child: GestureDetector(
+          onTap: () async {
+            final token = await AuthService.getToken();
+            _showAddModal(token);
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [AppColors.purple, AppColors.pink],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.add,
+              size: 40,
+              color: AppColors.white,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -194,7 +245,8 @@ class _SubjectPageState extends State<SubjectPage> {
     return ListTile(
       title: Text(
         subject.acronym,
-        style: AppTextStyles.smallText.copyWith(color: AppColors.titlePurple),
+        style:
+            AppTextStyles.normalTextBold.copyWith(color: AppColors.titlePurple),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,42 +254,84 @@ class _SubjectPageState extends State<SubjectPage> {
           const SizedBox(height: 4),
           Text(
             subject.name,
-            style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+            style: AppTextStyles.smallTextBold.copyWith(color: AppColors.gray),
           ),
           const SizedBox(height: 4),
-          Text(
-            'Notas: ${subject.grades?.join(', ') ?? 'N/A'}',
-            style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Notas: ',
+                  style: AppTextStyles.smallerTextBold.copyWith(
+                    color: AppColors.inputText,
+                  ),
+                ),
+                TextSpan(
+                  text: subject.grades?.join(', ') ?? 'N/A',
+                  style: AppTextStyles.smallerText.copyWith(
+                    color: AppColors.gray,
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 4),
-          Text(
-            'Faltas: ${subject.abscence}',
-            style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Faltas: ',
+                  style: AppTextStyles.smallerTextBold.copyWith(
+                    color: AppColors.inputText,
+                  ),
+                ),
+                TextSpan(
+                  text: '${subject.abscence}',
+                  style: AppTextStyles.smallerText.copyWith(
+                    color: AppColors.gray,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
       trailing: Wrap(
         children: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              _showEditModal(subject);
-            },
-            color: AppColors.titlePurple,
+          CircleAvatar(
+            backgroundColor: AppColors.pink,
+            radius: 25,
+            child: IconButton(
+              icon: const Icon(Icons.edit, size: 25),
+              onPressed: () {
+                _showEditModal(subject);
+              },
+              color: AppColors.white,
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.view_list),
-            onPressed: () {
-              _navigateToTasksPage(subject.id);
-            },
-            color: AppColors.titlePurple,
+          const SizedBox(width: 8),
+          CircleAvatar(
+            backgroundColor: AppColors.pink,
+            radius: 25,
+            child: IconButton(
+              icon: const Icon(Icons.format_list_bulleted_rounded, size: 25),
+              onPressed: () {
+                _navigateToTasksPage(subject.id);
+              },
+              color: AppColors.white,
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.schedule),
-            onPressed: () {
-              _navigateToSchedulesPage(subject.id);
-            },
-            color: AppColors.titlePurple,
+          const SizedBox(width: 8),
+          CircleAvatar(
+            backgroundColor: AppColors.pink,
+            radius: 25,
+            child: IconButton(
+              icon: const Icon(Icons.schedule, size: 25),
+              onPressed: () {
+                _navigateToSchedulesPage(subject.id);
+              },
+              color: AppColors.white,
+            ),
           ),
         ],
       ),

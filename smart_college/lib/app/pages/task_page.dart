@@ -1,19 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:smart_college/app/data/http/http_client.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
+import 'package:smart_college/app/data/models/task_model.dart';
+import 'package:smart_college/app/data/stores/task_store.dart';
+import 'package:smart_college/app/data/helpers/fetch_tasks.dart';
+import 'package:smart_college/app/data/models/subject_model.dart';
+import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/modals/task/edit_task_modal.dart';
-import 'package:smart_college/app/common/widgets/modals/task/new_task_modal.dart';
-import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
-import 'package:smart_college/app/data/helpers/fetch_tasks.dart';
-import 'package:smart_college/app/data/models/subject_model.dart';
-import 'package:smart_college/app/data/models/task_model.dart';
 import 'package:smart_college/app/data/repositories/task_repository.dart';
-import 'package:smart_college/app/data/stores/task_store.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
-import 'package:smart_college/app/data/http/http_client.dart';
-import 'package:smart_college/app/services/auth_service.dart';
+import 'package:smart_college/app/common/widgets/modals/task/new_task_modal.dart';
+import 'package:smart_college/app/common/widgets/modals/task/edit_task_modal.dart';
 
 class TaskPage extends StatefulWidget {
   final String? subjectId;
@@ -158,6 +158,11 @@ class _TaskPageState extends State<TaskPage> {
 
               return menuItems;
             },
+          ),
+          IconButton(
+            icon:
+                const Icon(Icons.help_outline_rounded, color: AppColors.white),
+            onPressed: _showClassificationAlert,
           ),
         ],
       ),
@@ -307,7 +312,7 @@ class _TaskPageState extends State<TaskPage> {
                               borderRadius: BorderRadius.circular(20.0),
                             ),
                             child: const Icon(
-                              Icons.delete,
+                              Icons.delete_outline_rounded,
                               color: Colors.white,
                             ),
                           ),
@@ -371,7 +376,7 @@ class _TaskPageState extends State<TaskPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(width: 2),
+                                      const SizedBox(width: 2),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
@@ -558,7 +563,7 @@ class _TaskPageState extends State<TaskPage> {
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               gradient: LinearGradient(
-                colors: [AppColors.titlePurple, AppColors.pink],
+                colors: [AppColors.purple, AppColors.pink],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -573,7 +578,7 @@ class _TaskPageState extends State<TaskPage> {
             ),
             child: const Icon(
               Icons.add,
-              size: 50,
+              size: 40,
               color: AppColors.white,
             ),
           ),
@@ -621,7 +626,6 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
-
   void _deleteTask(String taskId) {
     store.deleteTask(taskId).then((_) {
       ScaffoldMessenger.of(context)
@@ -630,5 +634,53 @@ class _TaskPageState extends State<TaskPage> {
     }).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.taskDeletedError);
     });
+  }
+
+  void _showClassificationAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Classificação de Tarefas',
+              style: AppTextStyles.normalTextBold
+                  .copyWith(color: AppColors.titlePurple)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('O elemento cujo conteúdo:',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.inputText)),
+                Text('- É vermelho: Prioridade ALTA',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- É amarelo: Prioridade MÉDIA',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- É verde: Prioridade BAIXA',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- AV: Tarefa de AVALIAÇÃO',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- AT: Tarefa de ATIVIDADE',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- ES: Tarefa de ESTUDOS',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

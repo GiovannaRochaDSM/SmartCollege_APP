@@ -21,6 +21,7 @@ class _OnboardingPage extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.white,
       body: Center(
         child: Padding(

@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/pages/home_page.dart';
-import 'package:smart_college/app/pages/schedule_page.dart';
-import 'package:smart_college/app/pages/subject_page.dart';
 import 'package:smart_college/app/pages/user_page.dart';
 import 'package:smart_college/app/pages/task_page.dart';
-import 'package:smart_college/app/services/auth_service.dart';
+import 'package:smart_college/app/pages/subject_page.dart';
+import 'package:smart_college/app/pages/schedule_page.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/data/helpers/fetch_user.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
@@ -119,13 +119,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           ListTile(
-            title: Text('Meu perfil',
+            title: Text('Home',
                 style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const UserPage(),
+                  builder: (context) => const HomePage(),
                 ),
               );
             },
@@ -167,13 +167,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           ListTile(
-            title: Text('Home',
+            title: Text('Meu perfil',
                 style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const HomePage(),
+                  builder: (context) => const UserPage(),
                 ),
               );
             },

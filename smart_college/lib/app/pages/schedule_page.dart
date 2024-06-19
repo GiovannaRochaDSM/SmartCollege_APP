@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/data/http/http_client.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
+import 'package:smart_college/app/data/models/subject_model.dart';
+import 'package:smart_college/app/data/models/schedule_model.dart';
+import 'package:smart_college/app/data/stores/schedule_store.dart';
+import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
+import 'package:smart_college/app/data/helpers/fetch_schedules.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
+import 'package:smart_college/app/data/repositories/schedule_repository.dart';
 import 'package:smart_college/app/common/widgets/modals/schedule/edit_schedule_modal.dart';
 import 'package:smart_college/app/common/widgets/modals/schedule/new_schedule_modal.dart';
-import 'package:smart_college/app/data/helpers/fetch_schedules.dart';
-import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
-import 'package:smart_college/app/data/models/schedule_model.dart';
-import 'package:smart_college/app/data/models/subject_model.dart';
-import 'package:smart_college/app/data/repositories/schedule_repository.dart';
-import 'package:smart_college/app/data/stores/schedule_store.dart';
-import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
-import 'package:smart_college/app/data/http/http_client.dart';
-import 'package:smart_college/app/services/auth_service.dart';
 
 class SchedulePage extends StatefulWidget {
   final String? subjectId;
@@ -76,6 +76,7 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: const CustomDrawer(),
       appBar: AppBar(
         title: Text(
@@ -172,13 +173,12 @@ class _SchedulePageState extends State<SchedulePage> {
                         );
                       } else {
                         return ListView.separated(
-                          padding: const EdgeInsets.all(19),
+                          padding: const EdgeInsets.all(25),
                           separatorBuilder: (context, index) =>
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 20),
                           itemCount: schedules.length,
                           itemBuilder: (_, index) {
                             final item = schedules[index];
-                            // Formatar a data da tarefa
                             String formattedTime =
                                 '${item.dayWeek}, ${item.time}';
                             return Dismissible(
@@ -192,7 +192,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 child: const Icon(
-                                  Icons.delete,
+                                  Icons.delete_outline_rounded ,
                                   color: Colors.white,
                                 ),
                               ),
@@ -212,21 +212,21 @@ class _SchedulePageState extends State<SchedulePage> {
                                 child: ListTile(
                                   leading: SizedBox(
                                     width:
-                                        80.0, // Ajuste o valor conforme necessário para aumentar o espaço
+                                        80.0,
                                     child: Row(
                                       children: [
                                         CircleAvatar(
                                           radius:
-                                              30.0, // Ajuste o valor conforme necessário para aumentar o tamanho do CircleAvatar
+                                              30.0,
                                           backgroundColor: AppColors
-                                              .purple, // Ajuste a cor de fundo, se necessário
+                                              .purple,
                                           foregroundColor: Colors
-                                              .white, // Ajuste a cor do texto, se necessário
+                                              .white,
                                           child: Text(item.room ?? ''),
                                         ),
                                         const SizedBox(
                                           width:
-                                              10.0, // Espaço entre o CircleAvatar e o texto
+                                              10.0,
                                         ),
                                       ],
                                     ),
@@ -293,7 +293,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 ),
                 child: const Icon(
                   Icons.add,
-                  size: 50,
+                  size: 40,
                   color: AppColors.white,
                 ),
               ),

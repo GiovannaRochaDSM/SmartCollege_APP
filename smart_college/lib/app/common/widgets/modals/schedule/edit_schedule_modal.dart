@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/constants/app_colors.dart';
-import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
-import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
+import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/models/schedule_model.dart';
+import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 import 'package:smart_college/app/data/repositories/schedule_repository.dart';
-import 'package:smart_college/app/data/models/subject_model.dart';
 
 class EditScheduleModal extends StatefulWidget {
   final ScheduleModel schedule;
@@ -23,8 +23,7 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
   late TextEditingController _roomController;
   late TimeOfDay _selectedTime;
   String? _selectedSubjectId;
-  late String
-      _selectedDayOfWeek; // Adicionando variável para o dia da semana selecionado
+  late String _selectedDayOfWeek; 
   List<SubjectModel> _subjects = [];
   late IHttpClient _httpClient;
 

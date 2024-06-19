@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/constants/app_colors.dart';
-import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
-import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
+import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/models/schedule_model.dart';
+import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 import 'package:smart_college/app/data/repositories/schedule_repository.dart';
-import 'package:smart_college/app/data/models/subject_model.dart';
 
 class NewSchedulePage extends StatefulWidget {
   const NewSchedulePage({super.key});
@@ -89,7 +89,7 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
                 child: Text(
                   _formatTimeOfDay(_selectedTime),

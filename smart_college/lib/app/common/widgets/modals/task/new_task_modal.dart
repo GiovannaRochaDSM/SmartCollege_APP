@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/constants/app_colors.dart';
-import 'package:smart_college/app/common/constants/app_snack_bar.dart';
-import 'package:smart_college/app/common/constants/app_strings.dart';
-import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
-import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
-import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/models/task_model.dart';
+import 'package:smart_college/app/data/models/subject_model.dart';
+import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
+import 'package:smart_college/app/common/constants/app_strings.dart';
+import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/task_repository.dart';
+import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 
 class NewTaskModal extends StatefulWidget {
-  const NewTaskModal({Key? key}) : super(key: key);
+  const NewTaskModal({super.key});
 
   @override
   _NewTaskModalState createState() => _NewTaskModalState();
@@ -35,7 +35,6 @@ class _NewTaskModalState extends State<NewTaskModal> {
     _descriptionController = TextEditingController();
     _httpClient = HttpClient();
 
-    // Load available subjects when the page initializes
     _fetchSubjects();
   }
 
@@ -74,12 +73,12 @@ class _NewTaskModalState extends State<NewTaskModal> {
               controller: _nameController,
               decoration: _customInputDecoration('Nome'),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             TextField(
               controller: _descriptionController,
               decoration: _customInputDecoration('Descrição'),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedPriority,
               items: ['Baixa', 'Média', 'Alta'].map((priority) {
@@ -95,7 +94,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
               },
               decoration: _customInputDecoration('Prioridade'),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedCategory,
               items: ['Atividade', 'Avaliação', 'Estudo'].map((category) {
@@ -111,7 +110,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
               },
               decoration: _customInputDecoration('Categoria'),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedStatus,
               items: ['Pendente', 'Em progresso', 'Concluída'].map((status) {
@@ -127,7 +126,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
               },
               decoration: _customInputDecoration('Status'),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedSubjectId,
               items: _subjects.map((subject) {
@@ -143,7 +142,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
               },
               decoration: _customInputDecoration('Matéria'),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(
@@ -159,7 +158,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             PrimaryButton(
               text: 'Adicionar',
               onPressed: () async {
@@ -175,7 +174,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
   InputDecoration _customInputDecoration(String labelText) {
     return InputDecoration(
       labelText: labelText,
-      labelStyle: const TextStyle(color: Colors.grey),
+      labelStyle: AppTextStyles.smallText.copyWith(color: AppColors.gray),
       enabledBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: AppColors.pink, width: 3.0),
       ),
@@ -248,7 +247,7 @@ void showNewTaskPage(BuildContext context) {
   Navigator.of(context).push(
     MaterialPageRoute(
       builder: (BuildContext context) {
-        return NewTaskModal();
+        return const NewTaskModal();
       },
     ),
   );

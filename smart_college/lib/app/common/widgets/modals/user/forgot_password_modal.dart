@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/widgets/modals/user/auth_code_forgot.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/user_repository.dart';
 import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
-import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
+import 'package:smart_college/app/common/widgets/modals/user/auth_code_forgot.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 
 class ForgotPasswordModal extends StatefulWidget {
+  const ForgotPasswordModal({super.key});
+
   @override
   _ForgotPasswordModalState createState() => _ForgotPasswordModalState();
 }
@@ -20,16 +22,18 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               'Recuperar Senha',
-              style: AppTextStyles.bigText.copyWith(color: AppColors.titlePurple),
+              style:
+                  AppTextStyles.bigText.copyWith(color: AppColors.titlePurple),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
@@ -38,7 +42,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
               style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 35),
             Text(
               'E-mail',
               style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
@@ -94,8 +98,8 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
       ScaffoldMessenger.of(context)
           .showSnackBar(AppSnackBar.emailSendCodeResetPasswordSuccess);
       Navigator.of(context).pop();
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => AuthCodeForgotPage()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => AuthCodeForgotModal()));
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(AppSnackBar.emailSendCodeResetPasswordError);
@@ -115,7 +119,7 @@ void showForgotPasswordModal(BuildContext context) {
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: ForgotPasswordModal(),
+        child: const ForgotPasswordModal(),
       );
     },
   );
