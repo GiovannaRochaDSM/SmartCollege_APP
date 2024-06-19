@@ -154,8 +154,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
-          const SizedBox(height: 230.00),
-          const Divider(),
           ListTile(
             title: Text('Horários',
                 style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
@@ -180,6 +178,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
+          const SizedBox(height: 130.00),
+          const Divider(),
           ListTile(
             title: Text('Sair',
                 style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),

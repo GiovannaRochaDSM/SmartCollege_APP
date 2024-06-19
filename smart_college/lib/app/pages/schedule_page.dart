@@ -17,7 +17,7 @@ import 'package:smart_college/app/services/auth_service.dart';
 class SchedulePage extends StatefulWidget {
   final String? subjectId;
 
-  const SchedulePage({Key? key, this.subjectId}) : super(key: key);
+  const SchedulePage({super.key, this.subjectId});
 
   @override
   State<SchedulePage> createState() => _SchedulePageState();
@@ -38,7 +38,7 @@ class _SchedulePageState extends State<SchedulePage> {
     super.initState();
     futureSchedules = ScheduleHelper.fetchSchedules();
     _fetchSubjects();
-    selectedSubjectId= widget.subjectId;
+    selectedSubjectId = widget.subjectId;
   }
 
   Future<void> _fetchSubjects() async {
@@ -51,7 +51,9 @@ class _SchedulePageState extends State<SchedulePage> {
   Future<List<ScheduleModel>> getSchedulesBySubject(String? subjectId) async {
     final schedules = await ScheduleHelper.fetchSchedules();
     if (subjectId != null) {
-      return schedules.where((schedules) => schedules.subjectId == subjectId).toList();
+      return schedules
+          .where((schedules) => schedules.subjectId == subjectId)
+          .toList();
     } else {
       return schedules;
     }
@@ -60,201 +62,247 @@ class _SchedulePageState extends State<SchedulePage> {
   void _updateSchedulesForSubject(String subjectId) {
     setState(() {
       selectedSubjectId = subjectId;
-      futureSchedules = getSchedulesBySubject(subjectId); 
+      futureSchedules = getSchedulesBySubject(subjectId);
     });
   }
 
   void _showAllSchedules() {
     setState(() {
       selectedSubjectId = null;
-      futureSchedules = ScheduleHelper.fetchSchedules(); 
+      futureSchedules = ScheduleHelper.fetchSchedules();
     });
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(
-        'Horários',
-        style: AppTextStyles.smallText.copyWith(color: AppColors.white),
-        textAlign: TextAlign.start,
-      ),
-      backgroundColor: AppColors.purple,
-      actions: [
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.filter_alt, color: AppColors.white),
-          onSelected: (String? subjectId) {
-            if (subjectId == 'Todos') {
-              _showAllSchedules();
-            } else {
-              _updateSchedulesForSubject(subjectId!);
-            }
-          },
-          itemBuilder: (BuildContext context) {
-            List<PopupMenuEntry<String>> menuItems = [];
-            menuItems.add(
-              const PopupMenuItem<String>(
-                value: 'Todos',
-                child: Text('Todos'),
-              ),
-            );
-            menuItems.addAll(subjects.map((SubjectModel subject) {
-              return PopupMenuItem<String>(
-                value: subject.id,
-                child: Text(subject.name),
-              );
-            }));
-            return menuItems;
-          },
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: const CustomDrawer(),
+      appBar: AppBar(
+        title: Text(
+          'HORÁRIOS',
+          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          textAlign: TextAlign.right,
         ),
-      ],
-    ),
-    drawer: const CustomDrawer(),
-    body: Stack(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: FutureBuilder<List<ScheduleModel>>(
-                future: getSchedulesBySubject(selectedSubjectId),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        'Erro ao carregar horários: ${snapshot.error}',
-                        style: AppTextStyles.mediumText.copyWith(
-                            color: Colors.red, fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  } else if (snapshot.hasData) {
-                    final schedules = snapshot.data!;
-                    if (schedules.isEmpty) {
-                      return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(
-                                20.0),
-                            child: Text(
-                              'Oops... Nenhum horário cadastrado.',
-                              style: AppTextStyles.normalText.copyWith(
-                                  color: AppColors.gray,
-                                  fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 200,
-                            height: 200,
-                            child: Image.asset(
-                              'assets/images/wind.png',
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                    } else {
-                      return ListView.separated(
-                        padding: const EdgeInsets.all(19),
-                        separatorBuilder: (context, index) => const SizedBox(height: 16),
-                        itemCount: schedules.length,
-                        itemBuilder: (_, index) {
-                          final item = schedules[index];
-                          // Formatar a data da tarefa
-                          String formattedTime = '${item.dayWeek}, ${item.time}';
-                          return ListTile(
-                            title: Text(
-                              item.subjectName ?? '',
-                              style: AppTextStyles.smallText.copyWith(
-                                  color: AppColors.titlePurple),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  formattedTime,
-                                  style: AppTextStyles.smallerText.copyWith(
-                                      color: AppColors.gray,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                const SizedBox(height: 8),
-                                if (item.room != null)
-                                  Text(
-                                    'Sala: ${item.room}',
-                                    style: AppTextStyles.smallerText.copyWith(
-                                        color: AppColors.gray,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                              ],
-                            ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit, color: AppColors.titlePurple),
-                                  onPressed: () async {
-                                    final token = await AuthService.getToken();
-                                    if (token != null) {
-                                      _showEditModal(item, token);
-                                    }
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: AppColors.titlePurple),
-                                  onPressed: () async {
-                                    final token = await AuthService.getToken();
-                                    if (token != null) {
-                                      _confirmDeleteSchedule(item, token);
-                                    }
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-        Positioned(
-          bottom: 26.0,
-          right: 26.0,
-          child: GestureDetector(
-            onTap: () async {
-              final token = await AuthService.getToken();
-              _showAddModal(token);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10.0),
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.titlePurple,
-              ),
-              child: const Icon(
-                Icons.add,
-                size: 50,
-                color: Colors.white,
-              ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.purple, AppColors.pink],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
         ),
-      ],
-    ),
-  );
-}
-
+        backgroundColor: AppColors.purple,
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.filter_alt, color: AppColors.white),
+            onSelected: (String? subjectId) {
+              if (subjectId == 'Todos') {
+                _showAllSchedules();
+              } else {
+                _updateSchedulesForSubject(subjectId!);
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              List<PopupMenuEntry<String>> menuItems = [];
+              menuItems.add(
+                const PopupMenuItem<String>(
+                  value: 'Todos',
+                  child: Text('Todos'),
+                ),
+              );
+              menuItems.addAll(subjects.map((SubjectModel subject) {
+                return PopupMenuItem<String>(
+                  value: subject.id,
+                  child: Text(subject.name),
+                );
+              }));
+              return menuItems;
+            },
+          ),
+        ],
+        iconTheme: const IconThemeData(color: AppColors.white),
+      ),
+      body: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: FutureBuilder<List<ScheduleModel>>(
+                  future: getSchedulesBySubject(selectedSubjectId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'Erro ao carregar horários: ${snapshot.error}',
+                          style: AppTextStyles.mediumText.copyWith(
+                              color: Colors.red, fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      final schedules = snapshot.data!;
+                      if (schedules.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Text(
+                                  'Oops... Nenhum horário cadastrado.',
+                                  style: AppTextStyles.normalText.copyWith(
+                                      color: AppColors.gray,
+                                      fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 200,
+                                height: 200,
+                                child: Image.asset(
+                                  'assets/images/wind.png',
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return ListView.separated(
+                          padding: const EdgeInsets.all(19),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 16),
+                          itemCount: schedules.length,
+                          itemBuilder: (_, index) {
+                            final item = schedules[index];
+                            // Formatar a data da tarefa
+                            String formattedTime =
+                                '${item.dayWeek}, ${item.time}';
+                            return Dismissible(
+                              key: Key(item.id),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 20.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                ),
+                                child: const Icon(
+                                  Icons.delete,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onDismissed: (direction) async {
+                                if (direction == DismissDirection.endToStart) {
+                                  final token = await AuthService.getToken();
+                                  if (token != null) {
+                                    _confirmDeleteSchedule(item, token);
+                                  }
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: AppColors.pink),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: ListTile(
+                                  leading: SizedBox(
+                                    width:
+                                        80.0, // Ajuste o valor conforme necessário para aumentar o espaço
+                                    child: Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius:
+                                              30.0, // Ajuste o valor conforme necessário para aumentar o tamanho do CircleAvatar
+                                          backgroundColor: AppColors
+                                              .purple, // Ajuste a cor de fundo, se necessário
+                                          foregroundColor: Colors
+                                              .white, // Ajuste a cor do texto, se necessário
+                                          child: Text(item.room ?? ''),
+                                        ),
+                                        const SizedBox(
+                                          width:
+                                              10.0, // Espaço entre o CircleAvatar e o texto
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  title: Text(
+                                    item.subjectName ?? '',
+                                    style: AppTextStyles.smallText
+                                        .copyWith(color: AppColors.titlePurple),
+                                  ),
+                                  subtitle: Text(
+                                    formattedTime,
+                                    style: AppTextStyles.smallerText.copyWith(
+                                      color: AppColors.gray,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit,
+                                            color: AppColors.purple),
+                                        onPressed: () async {
+                                          final token =
+                                              await AuthService.getToken();
+                                          if (token != null) {
+                                            _showEditModal(item, token);
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 26.0,
+            right: 26.0,
+            child: GestureDetector(
+              onTap: () async {
+                final token = await AuthService.getToken();
+                _showAddModal(token);
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10.0),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [AppColors.purple, AppColors.pink],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: const Icon(
+                  Icons.add,
+                  size: 50,
+                  color: AppColors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Future<void> _updateAndReloadPage() async {
     Navigator.pushReplacement(
@@ -340,7 +388,8 @@ Widget build(BuildContext context) {
           .showSnackBar(AppSnackBar.scheduleDeleteSuccess);
       _updateAndReloadPage();
     }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.scheduleDeleteError);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(AppSnackBar.scheduleDeleteError);
     });
   }
 }

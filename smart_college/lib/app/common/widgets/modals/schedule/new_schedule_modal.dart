@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/schedule_model.dart';
@@ -8,7 +11,7 @@ import 'package:smart_college/app/data/repositories/schedule_repository.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
 
 class NewSchedulePage extends StatefulWidget {
-  const NewSchedulePage({Key? key}) : super(key: key);
+  const NewSchedulePage({super.key});
 
   @override
   _NewSchedulePageState createState() => _NewSchedulePageState();
@@ -42,23 +45,50 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Novo Horário'),
+        title: Text(
+          'Novo Horário',
+          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          textAlign: TextAlign.center,
+        ),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppColors.purple, AppColors.pink],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+        iconTheme: const IconThemeData(
+          color: AppColors.white,
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 50),
             TextField(
               controller: _roomController,
-              decoration: const InputDecoration(labelText: 'Sala'),
+              decoration: InputDecoration(labelText: 'Sala',
+              labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                ),),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             InkWell(
               onTap: () => _selectTime(context),
               child: InputDecorator(
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Hora',
+                  labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                ),
                   border: OutlineInputBorder(),
                 ),
                 child: Text(
@@ -67,7 +97,7 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               value: _selectedDayOfWeek,
               items: [
@@ -89,9 +119,13 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
                   _selectedDayOfWeek = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Dia da Semana'),
+              decoration: InputDecoration(labelText: 'Dia da Semana', labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                ),),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               value: _selectedSubjectId,
               items: _subjects.map((subject) {
@@ -105,14 +139,18 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
                   _selectedSubjectId = value;
                 });
               },
-              decoration: const InputDecoration(labelText: 'Matéria'),
+              decoration: InputDecoration(labelText: 'Matéria', labelStyle:
+                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                ),),
             ),
-            const SizedBox(height: 12),
-            ElevatedButton(
+            const SizedBox(height: 60),
+            PrimaryButton(
+              text: 'Adicionar',
               onPressed: () async {
                 await _addSchedule(context);
               },
-              child: const Text('Adicionar'),
             ),
           ],
         ),

@@ -102,12 +102,12 @@ class _UserPageState extends State<UserPage> {
 
       ScaffoldMessenger.of(context)
           .showSnackBar(AppSnackBar.removePhotoSuccess);
-                    Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const UserPage(),
-                ),
-              );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const UserPage(),
+        ),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.removePhotoError);
     }
@@ -165,15 +165,13 @@ class _UserPageState extends State<UserPage> {
               TextButton(
                 child: const Text("Cancelar"),
                 onPressed: () {
-                  Navigator.of(context)
-                      .pop(false);
+                  Navigator.of(context).pop(false);
                 },
               ),
               TextButton(
                 child: const Text("Confirmar"),
                 onPressed: () {
-                  Navigator.of(context)
-                      .pop(true);
+                  Navigator.of(context).pop(true);
                 },
               ),
             ],
@@ -195,10 +193,11 @@ class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const CustomDrawer(),
       appBar: AppBar(
         title: Text(
           'MEU PERFIL',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.lightBlack),
+          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
           textAlign: TextAlign.right,
         ),
         flexibleSpace: Container(
@@ -233,8 +232,8 @@ class _UserPageState extends State<UserPage> {
             },
           ),
         ],
+        iconTheme: const IconThemeData(color: AppColors.white),
       ),
-      drawer: const CustomDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
