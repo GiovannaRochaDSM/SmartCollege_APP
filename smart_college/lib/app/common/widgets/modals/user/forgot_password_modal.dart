@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/common/widgets/modals/user/auth_code_forgot.dart';
-import 'package:smart_college/app/pages/login_page.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
@@ -23,7 +22,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 90),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 80),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -33,13 +32,13 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
               style: AppTextStyles.bigText.copyWith(color: AppColors.titlePurple),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Text(
-              'Digite seu e-mail cadastrado aqui na plataforma, vamos te ajudar a recuperar sua senha',
-              style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+              'Digite seu e-mail cadastrado aqui na plataforma, vamos te ajudar a recuperar sua senha.',
+              style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 30),
             Text(
               'E-mail',
               style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
@@ -61,7 +60,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
                 return null;
               },
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 30),
             PrimaryButton(
               text: 'Enviar',
               onPressed: () {

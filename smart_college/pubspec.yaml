@@ -37,6 +37,6 @@ flutter:
     - assets/images/wind.png
     
   fonts:
-    - family: Codec-Cold
+    - family: Nunito
       fonts:
-        - asset: assets/fonts/Codec-Cold-Regular-trial.ttf
+        - asset: assets/fonts/Nunito.ttf
