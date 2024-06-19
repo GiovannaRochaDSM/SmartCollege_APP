@@ -28,11 +28,20 @@ class _LoginPage extends State<LoginPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline_rounded, color: AppColors.gray),
+            onPressed: _showPasswordPolicyAlert,
+          ),
+        ],
+      ),
       body: Form(
         key: _formkey,
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 50.0),
+            padding: const EdgeInsets.symmetric(vertical: 25.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -78,12 +87,14 @@ class _LoginPage extends State<LoginPage> {
                   child: CustomTextFormField(
                     controller: _passwordController,
                     keyboardType: TextInputType.text,
-                    validator: (senha) {
-                      if (senha == null || senha.isEmpty) {
+                    validator: (password) {
+                      if (password == null || password.isEmpty) {
                         return 'Por favor, digite sua senha';
-                        // TO DO: Adicionar políticas de senha
-                      } else if (senha.length < 2) {
-                        return 'Por favor, digite uma senha maior que 6 caracteres';
+                      } else if (password.length < 8) {
+                        return 'Verifique no ícone acima as políticas de senhas';
+                      } else if (!RegExp(r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$')
+                          .hasMatch(password)) {
+                        return 'Verifique no ícone acima as políticas de senhas';
                       }
                       return null;
                     },
@@ -172,5 +183,44 @@ class _LoginPage extends State<LoginPage> {
         );
       }
     });
+  }
+
+  void _showPasswordPolicyAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Política de Senha',
+              style: AppTextStyles.mediumTextBold
+                  .copyWith(color: AppColors.titlePurple)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('A senha deve conter:',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.inputText)),
+                Text('- Pelo menos uma letra maiúscula',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- Pelo menos um caractere especial',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+                Text('- Pelo menos 8 caracteres',
+                    style: AppTextStyles.smallerText
+                        .copyWith(color: AppColors.gray)),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

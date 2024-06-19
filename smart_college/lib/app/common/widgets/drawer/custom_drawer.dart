@@ -4,7 +4,7 @@ import 'package:smart_college/app/pages/home_page.dart';
 import 'package:smart_college/app/pages/schedule_page.dart';
 import 'package:smart_college/app/pages/subject_page.dart';
 import 'package:smart_college/app/pages/user_page.dart';
-import 'package:smart_college/app/pages/task_page.dart'; // Importa a página de tarefas
+import 'package:smart_college/app/pages/task_page.dart';
 import 'package:smart_college/app/services/auth_service.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/data/helpers/fetch_user.dart';
@@ -105,8 +105,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       const SizedBox(height: 10),
                       Flexible(
                         child: Text(
-                          displayName, // Usa o displayName em vez do user.name
-                          style: AppTextStyles.smallText.copyWith(color: AppColors.white), 
+                          displayName,
+                          style: AppTextStyles.smallText
+                              .copyWith(color: AppColors.white),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -153,6 +154,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
+          const SizedBox(height: 230.00),
+          const Divider(),
           ListTile(
             title: Text('Horários',
                 style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),

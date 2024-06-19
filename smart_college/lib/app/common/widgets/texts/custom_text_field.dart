@@ -6,29 +6,39 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     required this.controller,
+    required this.keyboardType,
     required this.labelText,
+    this.prefixIcon,
   });
 
   final TextEditingController controller;
+  final TextInputType keyboardType;
   final String labelText;
+  final Widget? prefixIcon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: TextFormField(
         controller: controller,
-        style: AppTextStyles.smallerText.copyWith(color: AppColors.inputText),
+        keyboardType: keyboardType,
+        style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: AppTextStyles.smallerText.copyWith(color: AppColors.inputText),
+          labelStyle: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+          prefixIcon: prefixIcon,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+            borderSide: const BorderSide(color: AppColors.purple),
+          ),
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.black54),
-            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(color: AppColors.purple),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: AppColors.lightBlack),
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(20.0),
+            borderSide: const BorderSide(color: AppColors.purple),
           ),
           contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
         ),
