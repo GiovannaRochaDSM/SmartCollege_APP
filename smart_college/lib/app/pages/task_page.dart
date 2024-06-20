@@ -350,7 +350,7 @@ class _TaskPageState extends State<TaskPage> {
                                       });
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                              AppSnackBar.taskDeletedError);
+                                              AppSnackBar.taskAddSuccess);
                                     },
                                     child: Text(
                                       'Confirmar',
@@ -610,29 +610,6 @@ class _TaskPageState extends State<TaskPage> {
       if (result != null && result == true) {
         _updateAndReloadPage();
       }
-    });
-  }
-
-  void _showEditModal(TaskModel task) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return EditTaskModal(task: task);
-      },
-    ).then((result) {
-      if (result != null && result == true) {
-        _updateAndReloadPage();
-      }
-    });
-  }
-
-  void _deleteTask(String taskId) {
-    store.deleteTask(taskId).then((_) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.taskDeletedSuccess);
-      _updateAndReloadPage();
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.taskDeletedError);
     });
   }
 

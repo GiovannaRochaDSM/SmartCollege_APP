@@ -228,7 +228,7 @@ class AppSnackBar {
 
   static const taskDeletedSuccess = SnackBar(
     content: Text(
-      'Matéria excluída com sucesso.',
+      'Tarefa excluída com sucesso.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
@@ -237,7 +237,7 @@ class AppSnackBar {
 
   static const taskDeletedError = SnackBar(
     content: Text(
-      'Erro ao excluir matéria.',
+      'Erro ao excluir tarefa.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
@@ -246,7 +246,7 @@ class AppSnackBar {
 
   static const taskUpdatedSuccess = SnackBar(
     content: Text(
-      'Matéria atualizada com sucesso.',
+      'Tarefa atualizada com sucesso.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
@@ -255,7 +255,7 @@ class AppSnackBar {
 
   static const taskUpdatedError = SnackBar(
     content: Text(
-      'Erro ao atualizar matéria.',
+      'Erro ao atualizar tarefa.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
@@ -264,7 +264,7 @@ class AppSnackBar {
 
   static const taskAddSuccess = SnackBar(
     content: Text(
-      'Matéria adicionada com sucesso.',
+      'Tarefa adicionada com sucesso.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
@@ -273,7 +273,7 @@ class AppSnackBar {
 
   static const taskAddError = SnackBar(
     content: Text(
-      'Erro ao adicionar matéria.',
+      'Erro ao adicionar tarefa.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
