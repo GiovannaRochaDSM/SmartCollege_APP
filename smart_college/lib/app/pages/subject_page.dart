@@ -338,18 +338,14 @@ class _SubjectPageState extends State<SubjectPage> {
     );
   }
 
-  Future<void> _updateAndReloadPage() async {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SubjectPage(),
-      ),
-    );
-
-    setState(() {
-      store.getSubjects();
-    });
-  }
+Future<void> _updateAndReloadPage() async {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const SubjectPage(),
+    ),
+  );
+}
 
   void _showAddModal(String? token) {
     showDialog(
@@ -377,16 +373,18 @@ class _SubjectPageState extends State<SubjectPage> {
     });
   }
 
-  void _deleteSubject(String subjectId) {
-    store.deleteSubject(subjectId).then((_) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.subjectDeletedSuccess);
-      _updateAndReloadPage();
-    }).catchError((error) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.subjectDeletedError);
+void _deleteSubject(String subjectId) {
+  store.deleteSubject(subjectId).then((_) {
+    ScaffoldMessenger.of(context)
+    .showSnackBar(AppSnackBar.subjectDeletedSuccess);
+    setState(() {
+      futureSubjects = SubjectHelper.fetchSubjects();
     });
-  }
+  }).catchError((error) {
+    ScaffoldMessenger.of(context)
+    .showSnackBar(AppSnackBar.subjectDeletedError);
+  });
+}
 
   void _navigateToTasksPage(String subjectId) {
     Navigator.push(

@@ -350,7 +350,7 @@ class _TaskPageState extends State<TaskPage> {
                                       });
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                              AppSnackBar.taskAddSuccess);
+                                              AppSnackBar.taskDeletedSuccess);
                                     },
                                     child: Text(
                                       'Confirmar',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/pages/subject_page.dart';
 import 'package:smart_college/app/pages/onboarding_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:smart_college/app/pages/home_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -18,7 +18,7 @@ class _WelcomeScreenState extends State<SplashPage> {
       if (value) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const SubjectPage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         Navigator.pushReplacement(
