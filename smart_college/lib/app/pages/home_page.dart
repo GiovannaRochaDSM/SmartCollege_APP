@@ -38,23 +38,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 50,
         backgroundColor: Colors.white,
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: const Icon(Icons.menu,
-                color: AppColors.titlePurple),
+            icon:
+                const Icon(Icons.menu, color: AppColors.purple, size: 40),
             onPressed: () {
-              Scaffold.of(context)
-                  .openDrawer();
+              Scaffold.of(context).openDrawer();
             },
           ),
         ),
       ),
-      drawer:
-          const CustomDrawer(),
+      drawer: const CustomDrawer(),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.fromLTRB(20, 60, 20, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -74,13 +73,12 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Expanded(
                             child: Column(
-                              
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 40),
                                 Text(
                                   'Olá, ${user.nickname}.',
-                                  style: AppTextStyles.biggerText,
+                                  style: AppTextStyles.bigTextBold,
                                 ),
                                 const SizedBox(height: 20),
                                 const Text(
@@ -91,26 +89,24 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           SizedBox(
-                            width: 147,
-                            height: 157,
+                            width: 150,
+                            height: 160,
                             child: Image.asset(
                               'assets/images/man.png',
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 50),
+                      const SizedBox(height: 110),
                       const Text(
                         'Organize-se conosco:',
                         style: AppTextStyles.normalText,
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 40),
                       SizedBox(
-                        height:
-                            170,
+                        height: 190,
                         child: ListView(
-                          scrollDirection: Axis
-                              .horizontal,
+                          scrollDirection: Axis.horizontal,
                           children: [
                             HomeCard(
                               title: 'Tarefas',
@@ -128,7 +124,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const SubjectPage()),
+                                      builder: (context) =>
+                                          const SubjectPage()),
                                 );
                               },
                             ),
@@ -138,7 +135,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const SchedulePage()),
+                                      builder: (context) =>
+                                          const SchedulePage()),
                                 );
                               },
                             ),
@@ -173,7 +171,8 @@ class HomeCard extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const HomeCard({super.key, 
+  const HomeCard({
+    super.key,
     required this.title,
     required this.onTap,
   });
@@ -200,7 +199,8 @@ class HomeCard extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Text(
                 title,
-                style: AppTextStyles.normalText.copyWith(color: AppColors.white),
+                style:
+                    AppTextStyles.normalText.copyWith(color: AppColors.white),
               ),
             ),
             const Spacer(),
@@ -209,9 +209,10 @@ class HomeCard extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Icon(Icons.arrow_forward,
-                  size: 50,
-                  color:AppColors.whiteSmoke,
+                  Icon(
+                    Icons.arrow_forward,
+                    size: 50,
+                    color: AppColors.whiteSmoke,
                   )
                 ],
               ),

@@ -15,6 +15,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w800,
   );
 
+    static const TextStyle bigTextBold = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 41.0,
+    fontWeight: FontWeight.w800,
+  );
+
   static const TextStyle mediumText = TextStyle(
     fontFamily: 'Nunito',
     fontSize: 35.4,

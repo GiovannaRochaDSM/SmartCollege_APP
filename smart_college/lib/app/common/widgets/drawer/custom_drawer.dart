@@ -58,23 +58,26 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   child: Center(child: CircularProgressIndicator()),
                 );
               } else if (snapshot.hasError) {
-                return DrawerHeader(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [AppColors.purple, AppColors.pink],
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Erro ao carregar usuário: ${snapshot.error}',
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                return Container(
+                  height: 200,
+                  child: DrawerHeader(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [AppColors.purple, AppColors.pink],
                       ),
-                      textAlign: TextAlign.center,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'Erro ao carregar usuário: ${snapshot.error}',
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 );
@@ -82,36 +85,42 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 final user = snapshot.data!;
                 final displayName = user.nickname ?? user.name;
 
-                return DrawerHeader(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [AppColors.purple, AppColors.pink],
+                return Container(
+                  height: 250,
+                  child: DrawerHeader(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [AppColors.purple, AppColors.pink],
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.grey[200],
-                        radius: 50,
-                        backgroundImage: imagemReal?.image,
-                        child: imagemReal == null
-                            ? const Icon(Icons.camera_alt,
-                                size: 50, color: Colors.white)
-                            : null,
-                      ),
-                      const SizedBox(height: 10),
-                      Flexible(
-                        child: Text(
-                          displayName,
-                          style: AppTextStyles.smallText
-                              .copyWith(color: AppColors.white),
-                          overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.grey[200],
+                          radius: 70,
+                          backgroundImage: imagemReal?.image,
+                          child: imagemReal == null
+                              ? const Icon(Icons.camera_alt,
+                                  size: 50, color: Colors.white)
+                              : null,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 10),
+                        Flexible(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              displayName,
+                              style: AppTextStyles.normalText
+                                  .copyWith(color: AppColors.white),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }
@@ -120,7 +129,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Home',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
+                style: AppTextStyles.normalText.copyWith(color: AppColors.gray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -132,7 +141,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Tarefas',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
+                style: AppTextStyles.normalText.copyWith(color: AppColors.gray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -144,7 +153,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Matérias',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
+                style: AppTextStyles.normalText.copyWith(color: AppColors.gray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -156,7 +165,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Horários',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
+                style: AppTextStyles.normalText.copyWith(color: AppColors.gray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -168,7 +177,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Meu perfil',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
+                style: AppTextStyles.normalText.copyWith(color: AppColors.gray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -178,11 +187,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
-          const SizedBox(height: 130.00),
+          const SizedBox(height: 230.00),
           const Divider(),
           ListTile(
             title: Text('Sair',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray)),
+                style: AppTextStyles.normalText.copyWith(color: AppColors.gray)),
             onTap: () {
               AuthService.logout(context);
             },

@@ -49,10 +49,11 @@ class _NewTaskModalState extends State<NewTaskModal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 65,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'NOVA TAREFA',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
         ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -65,7 +66,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -73,12 +74,12 @@ class _NewTaskModalState extends State<NewTaskModal> {
               controller: _nameController,
               decoration: _customInputDecoration('Nome'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             TextField(
               controller: _descriptionController,
               decoration: _customInputDecoration('Descrição'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             DropdownButtonFormField<String>(
               value: _selectedPriority,
               items: ['Baixa', 'Média', 'Alta'].map((priority) {
@@ -94,7 +95,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
               },
               decoration: _customInputDecoration('Prioridade'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             DropdownButtonFormField<String>(
               value: _selectedCategory,
               items: ['Atividade', 'Avaliação', 'Estudo'].map((category) {
@@ -110,7 +111,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
               },
               decoration: _customInputDecoration('Categoria'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             DropdownButtonFormField<String>(
               value: _selectedStatus,
               items: ['Pendente', 'Em progresso', 'Concluída'].map((status) {
@@ -126,7 +127,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
               },
               decoration: _customInputDecoration('Status'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             DropdownButtonFormField<String>(
               value: _selectedSubjectId,
               items: _subjects.map((subject) {
@@ -142,7 +143,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
               },
               decoration: _customInputDecoration('Matéria'),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             Row(
               children: [
                 Expanded(
@@ -150,15 +151,16 @@ class _NewTaskModalState extends State<NewTaskModal> {
                     _selectedDate == null
                         ? 'Selecione uma data limite'
                         : 'Data Limite: ${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
+                    style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.calendar_today),
+                  icon: const Icon(Icons.calendar_today, color: AppColors.gray),
                   onPressed: () => _selectDate(context),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 30),
             PrimaryButton(
               text: 'Adicionar',
               onPressed: () async {

@@ -40,22 +40,22 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
       child: Stack(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 90),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Redefinir Senha',
-                  style: AppTextStyles.bigText
+                  'Redefinir senha',
+                  style: AppTextStyles.biggerText
                       .copyWith(color: AppColors.titlePurple),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Text(
                   'Crie uma nova senha de acordo com nossos parâmetros',
                   style:
-                      AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+                      AppTextStyles.smallText.copyWith(color: AppColors.gray),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
@@ -162,7 +162,8 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
         return AlertDialog(
           title: Text('Política de Senha',
               style: AppTextStyles.mediumTextBold
-                  .copyWith(color: AppColors.titlePurple)),
+                  .copyWith(color: AppColors.titlePurple),
+                  textAlign: TextAlign.center),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -183,7 +184,8 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('OK'),
+              child: Text('OK', style: AppTextStyles.smallerTextBold
+                  .copyWith(color: AppColors.titlePurple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },

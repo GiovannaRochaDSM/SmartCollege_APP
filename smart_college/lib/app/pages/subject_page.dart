@@ -39,12 +39,12 @@ class _SubjectPageState extends State<SubjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
+        toolbarHeight: 65,
+        iconTheme: const IconThemeData(color: Colors.white, size: 25),
         title: Text(
           'MATÉRIAS',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
           textAlign: TextAlign.right,
         ),
         flexibleSpace: Container(
@@ -146,6 +146,7 @@ class _SubjectPageState extends State<SubjectPage> {
                                       'Tem certeza que deseja excluir a matéria "${item.name}"?',
                                       style: AppTextStyles.smallText
                                           .copyWith(color: AppColors.gray),
+                                      textAlign: TextAlign.center,
                                     ),
                                     actions: [
                                       TextButton(
@@ -232,7 +233,7 @@ class _SubjectPageState extends State<SubjectPage> {
             ),
             child: const Icon(
               Icons.add,
-              size: 40,
+              size: 50,
               color: AppColors.white,
             ),
           ),
@@ -300,9 +301,9 @@ class _SubjectPageState extends State<SubjectPage> {
         children: [
           CircleAvatar(
             backgroundColor: AppColors.pink,
-            radius: 25,
+            radius: 26,
             child: IconButton(
-              icon: const Icon(Icons.edit, size: 25),
+              icon: const Icon(Icons.edit, size: 30),
               onPressed: () {
                 _showEditModal(subject);
               },
@@ -312,9 +313,9 @@ class _SubjectPageState extends State<SubjectPage> {
           const SizedBox(width: 8),
           CircleAvatar(
             backgroundColor: AppColors.pink,
-            radius: 25,
+            radius: 26,
             child: IconButton(
-              icon: const Icon(Icons.format_list_bulleted_rounded, size: 25),
+              icon: const Icon(Icons.format_list_bulleted_rounded, size: 30),
               onPressed: () {
                 _navigateToTasksPage(subject.id);
               },
@@ -324,9 +325,9 @@ class _SubjectPageState extends State<SubjectPage> {
           const SizedBox(width: 8),
           CircleAvatar(
             backgroundColor: AppColors.pink,
-            radius: 25,
+            radius: 26,
             child: IconButton(
-              icon: const Icon(Icons.schedule, size: 25),
+              icon: const Icon(Icons.schedule, size: 30),
               onPressed: () {
                 _navigateToSchedulesPage(subject.id);
               },

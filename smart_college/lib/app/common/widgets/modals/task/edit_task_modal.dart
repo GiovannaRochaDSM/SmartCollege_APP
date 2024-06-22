@@ -56,11 +56,11 @@ class _EditTaskModalState extends State<EditTaskModal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 65,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'EDITAR TAREFA',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
-          textAlign: TextAlign.center,
+          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
         ),
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -73,7 +73,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -82,24 +82,24 @@ class _EditTaskModalState extends State<EditTaskModal> {
               decoration: InputDecoration(
                 labelText: 'Nome',
                 labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Descrição',
-                labelStyle: TextStyle(color: Colors.grey),
-                enabledBorder: UnderlineInputBorder(
+                labelStyle: AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             DropdownButtonFormField<String>(
               value: _selectedPriority,
               items: ['Baixa', 'Média', 'Alta'].map((priority) {
@@ -116,13 +116,13 @@ class _EditTaskModalState extends State<EditTaskModal> {
               decoration: InputDecoration(
                 labelText: 'Prioridade',
                 labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             DropdownButtonFormField<String>(
               value: _selectedCategory,
               items: ['Atividade', 'Avaliação', 'Estudo'].map((category) {
@@ -139,13 +139,13 @@ class _EditTaskModalState extends State<EditTaskModal> {
               decoration: InputDecoration(
                 labelText: 'Categoria',
                 labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             DropdownButtonFormField<String>(
               value: _selectedStatus,
               items: ['Pendente', 'Em progresso', 'Concluída'].map((status) {
@@ -162,13 +162,13 @@ class _EditTaskModalState extends State<EditTaskModal> {
               decoration: InputDecoration(
                 labelText: 'Status',
                 labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             DropdownButtonFormField<String>(
               value: _selectedSubjectId,
               items: _subjects.map((subject) {
@@ -185,13 +185,13 @@ class _EditTaskModalState extends State<EditTaskModal> {
               decoration: InputDecoration(
                 labelText: 'Matéria',
                 labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 25),
             Row(
               children: [
                 Expanded(
@@ -199,15 +199,16 @@ class _EditTaskModalState extends State<EditTaskModal> {
                     _selectedDate == null
                         ? 'Selecione uma data limite'
                         : 'Data Limite: ${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
+                    style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.calendar_today),
+                  icon: const Icon(Icons.calendar_today, color: AppColors.gray),
                   onPressed: () => _selectDate(context),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 30),
             PrimaryButton(
               text: 'Salvar',
               onPressed: () async {

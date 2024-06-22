@@ -45,9 +45,10 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 65,
         title: Text(
-          'Novo Horário',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          'NOVO HORÁRIO',
+          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
           textAlign: TextAlign.center,
         ),
         flexibleSpace: Container(
@@ -64,28 +65,27 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(20, 70, 20, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 50),
             TextField(
               controller: _roomController,
               decoration: InputDecoration(labelText: 'Sala',
               labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 45),
             InkWell(
               onTap: () => _selectTime(context),
               child: InputDecorator(
                 decoration: InputDecoration(
                   labelText: 'Hora',
                   labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
@@ -97,7 +97,7 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 45),
             DropdownButtonFormField<String>(
               value: _selectedDayOfWeek,
               items: [
@@ -120,12 +120,12 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
                 });
               },
               decoration: InputDecoration(labelText: 'Dia da Semana', labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 45),
             DropdownButtonFormField<String>(
               value: _selectedSubjectId,
               items: _subjects.map((subject) {
@@ -140,12 +140,12 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
                 });
               },
               decoration: InputDecoration(labelText: 'Matéria', labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),),
             ),
-            const SizedBox(height: 60),
+            const SizedBox(height: 80),
             PrimaryButton(
               text: 'Adicionar',
               onPressed: () async {

@@ -88,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
       imageFile.path,
       minHeight: 600,
       minWidth: 600,
-      quality: 1,
+      quality: 90,
     );
 
     final tempDir = await getTemporaryDirectory();
@@ -155,6 +155,7 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const SizedBox(height: 20),
               Stack(
                 children: [
                   Container(
@@ -166,14 +167,14 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     child: CircleAvatar(
-                      radius: 80,
+                      radius: 100,
                       backgroundColor: Colors.grey[200],
                       backgroundImage:
                           _imageFile != null ? FileImage(_imageFile!) : null,
                       child: _imageFile == null
                           ? const Icon(
                               Icons.camera_alt,
-                              size: 50,
+                              size: 60,
                               color: AppColors.purple,
                             )
                           : null,
@@ -188,25 +189,25 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                       child: const CircleAvatar(
                         backgroundColor: AppColors.purple,
-                        radius: 20,
+                        radius: 30,
                         child: Icon(
-                          Icons.camera_alt_sharp,
+                          Icons.camera_alt,
                           color: Colors.white,
-                          size: 20,
+                          size: 30,
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 40),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
                   controller: _nicknameController,
                   keyboardType: TextInputType.name,
                   decoration: InputDecoration(
-                    labelText: 'Nickname',
+                    labelText: 'Apelido',
                     labelStyle: AppTextStyles.smallerText
                         .copyWith(color: AppColors.gray),
                     prefixIcon: const Icon(Icons.alternate_email_rounded,
@@ -224,7 +225,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
@@ -249,7 +250,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
@@ -284,7 +285,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextFormField(
@@ -333,7 +334,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
               PrimaryButton(
                 text: 'Cadastrar',
                 onPressed: () {
@@ -412,7 +413,8 @@ class _RegisterPageState extends State<RegisterPage> {
         return AlertDialog(
           title: Text('Política de Senha',
               style: AppTextStyles.mediumTextBold
-                  .copyWith(color: AppColors.titlePurple)),
+                  .copyWith(color: AppColors.titlePurple), 
+                  textAlign: TextAlign.center),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -433,7 +435,8 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('OK'),
+              child: Text('OK', style: AppTextStyles.smallerTextBold
+                  .copyWith(color: AppColors.titlePurple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },

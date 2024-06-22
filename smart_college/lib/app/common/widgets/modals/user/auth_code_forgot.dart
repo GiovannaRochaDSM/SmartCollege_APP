@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
 import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 import 'package:smart_college/app/common/widgets/modals/user/reset_password_modal.dart';
+import 'package:smart_college/app/pages/onboarding_page.dart';
 
 class AuthCodeForgotModal extends StatefulWidget {
   const AuthCodeForgotModal({super.key});
@@ -20,38 +22,28 @@ class _AuthCodeModalForgotState extends State<AuthCodeForgotModal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          'CÓDIGO DE AUTENTICAÇÃO - ESQUECI A SENHA',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
-          textAlign: TextAlign.right,
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.purple, AppColors.pink],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-      ),
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.fromLTRB(20, 120, 20, 10),
           child: Form(
             key: _formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Insira o código enviado para no seu email para redefinir sua senha e voltar à se organizar conosco!',
-                  style: AppTextStyles.smallText,
+                Text(
+                  'Código de autenticação',
+                  style: AppTextStyles.biggerText
+                      .copyWith(color: AppColors.titlePurple),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 25),
+                Text(
+                  'Insira o código enviado para no seu   e-mail para redefinir sua senha e voltar à se organizar conosco!',
+                  style:
+                      AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 80),
                 TextFormField(
                   controller: _authCodeController,
                   keyboardType: TextInputType.number,
@@ -61,12 +53,15 @@ class _AuthCodeModalForgotState extends State<AuthCodeForgotModal> {
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Código de Autenticação',
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                      borderSide: const BorderSide(color: AppColors.gray),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 120),
                 PrimaryButton(
                   text: 'Este é o código',
                   onPressed: () async {
@@ -92,6 +87,18 @@ class _AuthCodeModalForgotState extends State<AuthCodeForgotModal> {
                             .showSnackBar(AppSnackBar.invalidAuthCode);
                       }
                     }
+                  },
+                ),
+                const SizedBox(height: 10),
+                CustomTextButton(
+                  text: 'Cancelar',
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const OnboardingPage(),
+                      ),
+                    );
                   },
                 ),
               ],

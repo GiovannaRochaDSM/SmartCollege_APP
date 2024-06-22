@@ -47,9 +47,10 @@ class _NewSubjectModalState extends State<NewSubjectModal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 65,
         title: Text(
           'NOVA MATÉRIA',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
           textAlign: TextAlign.center,
         ),
         flexibleSpace: Container(
@@ -66,61 +67,60 @@ class _NewSubjectModalState extends State<NewSubjectModal> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: const EdgeInsets.fromLTRB(20, 70, 20, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: 50),
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: 'Nome',
                 labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 45),
             TextField(
               controller: _acronymController,
               decoration: InputDecoration(
                 labelText: 'Sigla',
                 labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 45),
             TextField(
               controller: _gradesController,
               decoration: InputDecoration(
                 labelText: 'Notas',
                 labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
               keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 45),
             TextField(
               controller: _absenceController,
               decoration: InputDecoration(
                 labelText: 'Faltas',
                 labelStyle:
-                    AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
                 enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.pink, width: 3.0),
                 ),
               ),
               keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 60),
+            const SizedBox(height: 80),
             PrimaryButton(
               text: 'Adicionar',
               onPressed: () {

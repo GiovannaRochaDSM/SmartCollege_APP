@@ -72,7 +72,7 @@ class _UserPageState extends State<UserPage> {
       imageFile.path,
       minHeight: 600,
       minWidth: 600,
-      quality: 80,
+      quality: 90,
     );
 
     final tempDir = await getTemporaryDirectory();
@@ -195,9 +195,10 @@ class _UserPageState extends State<UserPage> {
     return Scaffold(
       drawer: const CustomDrawer(),
       appBar: AppBar(
+        toolbarHeight: 65,
         title: Text(
           'MEU PERFIL',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
           textAlign: TextAlign.right,
         ),
         flexibleSpace: Container(
@@ -209,10 +210,9 @@ class _UserPageState extends State<UserPage> {
             ),
           ),
         ),
-        backgroundColor: AppColors.titlePurple,
         actions: [
           IconButton(
-            icon: const Icon(Icons.vpn_key),
+            icon: const Icon(Icons.vpn_key, size: 25),
             onPressed: () {
               showModalBottomSheet(
                 context: context,
@@ -232,10 +232,9 @@ class _UserPageState extends State<UserPage> {
             },
           ),
         ],
-        iconTheme: const IconThemeData(color: AppColors.white),
+        iconTheme: const IconThemeData(color: AppColors.white, size: 30),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             FutureBuilder<UserModel>(
@@ -266,7 +265,7 @@ class _UserPageState extends State<UserPage> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 40),
                       Stack(
                         children: [
                           Container(
@@ -278,7 +277,7 @@ class _UserPageState extends State<UserPage> {
                               ),
                             ),
                             child: CircleAvatar(
-                              radius: 80,
+                              radius: 100,
                               backgroundColor: Colors.grey[200],
                               backgroundImage: _imageFile != null
                                   ? FileImage(_imageFile!)
@@ -286,7 +285,7 @@ class _UserPageState extends State<UserPage> {
                               child: _imageFile == null && isNull
                                   ? const Icon(
                                       Icons.camera_alt,
-                                      size: 50,
+                                      size: 60,
                                       color: Colors.white,
                                     )
                                   : null,
@@ -301,18 +300,18 @@ class _UserPageState extends State<UserPage> {
                               },
                               child: const CircleAvatar(
                                 backgroundColor: AppColors.purple,
-                                radius: 20,
+                                radius: 30,
                                 child: Icon(
                                   Icons.edit,
                                   color: Colors.white,
-                                  size: 20,
+                                  size: 30,
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 60),
                       Column(
                         children: [
                           CustomTextField(
@@ -320,17 +319,27 @@ class _UserPageState extends State<UserPage> {
                             keyboardType: TextInputType.text,
                             labelText: 'Apelido',
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 40),
                           CustomTextField(
                             controller: _nameController,
                             keyboardType: TextInputType.name,
                             labelText: 'Nome',
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 40),
                           CustomTextField(
                             controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             labelText: 'E-mail',
+                            validator: (email) {
+                              if (email == null || email.isEmpty) {
+                                return 'Por favor, digite seu e-mail';
+                              } else if (!RegExp(
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                  .hasMatch(email)) {
+                                return 'Por favor, digite um e-mail correto';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 50),
                           Row(
@@ -346,7 +355,7 @@ class _UserPageState extends State<UserPage> {
                                   ),
                                 ),
                                 child: Text('Salvar alterações',
-                                    style: AppTextStyles.smallerText.copyWith(
+                                    style: AppTextStyles.smallText.copyWith(
                                         color: AppColors.titlePurple)),
                               ),
                               ElevatedButton(
@@ -361,7 +370,7 @@ class _UserPageState extends State<UserPage> {
                                 ),
                                 child: Text(
                                   'Excluir conta',
-                                  style: AppTextStyles.smallerText
+                                  style: AppTextStyles.smallText
                                       .copyWith(color: AppColors.white),
                                 ),
                               ),

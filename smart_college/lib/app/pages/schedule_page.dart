@@ -76,12 +76,12 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       drawer: const CustomDrawer(),
       appBar: AppBar(
+        toolbarHeight: 65,
         title: Text(
           'HORÁRIOS',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
           textAlign: TextAlign.right,
         ),
         flexibleSpace: Container(
@@ -96,7 +96,8 @@ class _SchedulePageState extends State<SchedulePage> {
         backgroundColor: AppColors.purple,
         actions: [
           PopupMenuButton<String>(
-            icon: const Icon(Icons.filter_alt, color: AppColors.white),
+            icon:
+                const Icon(Icons.filter_alt, color: AppColors.white, size: 25),
             onSelected: (String? subjectId) {
               if (subjectId == 'Todos') {
                 _showAllSchedules();
@@ -122,7 +123,7 @@ class _SchedulePageState extends State<SchedulePage> {
             },
           ),
         ],
-        iconTheme: const IconThemeData(color: AppColors.white),
+        iconTheme: const IconThemeData(color: AppColors.white, size: 25),
       ),
       body: Stack(
         children: [
@@ -173,7 +174,7 @@ class _SchedulePageState extends State<SchedulePage> {
                         );
                       } else {
                         return ListView.separated(
-                          padding: const EdgeInsets.all(25),
+                          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                           separatorBuilder: (context, index) =>
                               const SizedBox(height: 20),
                           itemCount: schedules.length,
@@ -192,7 +193,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 child: const Icon(
-                                  Icons.delete_outline_rounded ,
+                                  Icons.delete_outline_rounded,
                                   color: Colors.white,
                                 ),
                               ),
@@ -211,22 +212,17 @@ class _SchedulePageState extends State<SchedulePage> {
                                 ),
                                 child: ListTile(
                                   leading: SizedBox(
-                                    width:
-                                        80.0,
+                                    width: 80.0,
                                     child: Row(
                                       children: [
                                         CircleAvatar(
-                                          radius:
-                                              30.0,
-                                          backgroundColor: AppColors
-                                              .purple,
-                                          foregroundColor: Colors
-                                              .white,
+                                          radius: 30.0,
+                                          backgroundColor: AppColors.purple,
+                                          foregroundColor: Colors.white,
                                           child: Text(item.room ?? ''),
                                         ),
                                         const SizedBox(
-                                          width:
-                                              10.0,
+                                          width: 10.0,
                                         ),
                                       ],
                                     ),
@@ -248,7 +244,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                     children: [
                                       IconButton(
                                         icon: const Icon(Icons.edit,
-                                            color: AppColors.purple),
+                                            color: AppColors.purple, size: 30),
                                         onPressed: () async {
                                           final token =
                                               await AuthService.getToken();
@@ -293,7 +289,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 ),
                 child: const Icon(
                   Icons.add,
-                  size: 40,
+                  size: 50,
                   color: AppColors.white,
                 ),
               ),
@@ -359,6 +355,7 @@ class _SchedulePageState extends State<SchedulePage> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
+              _updateAndReloadPage();
             },
             child: Text(
               'Cancelar',

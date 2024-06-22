@@ -29,9 +29,10 @@ class _OnboardingPage extends State<OnboardingPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 20),
               Text(
                 'SmartCollege',
-                style: AppTextStyles.bigText
+                style: AppTextStyles.biggerText
                     .copyWith(color: AppColors.titlePurple),
               ),
               const SizedBox(height: 20),
@@ -42,13 +43,13 @@ class _OnboardingPage extends State<OnboardingPage> {
               const SizedBox(height: 20),
               Image.asset(
                 'assets/images/logo.png',
-                width: 147,
-                height: 147,
+                width: 190,
+                height: 190,
               ),
               const SizedBox(height: 20),
               Text(
                 'Ainda não possui uma conta?',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
               ),
               const SizedBox(height: 20),
               Padding(
@@ -68,7 +69,7 @@ class _OnboardingPage extends State<OnboardingPage> {
               const SizedBox(height: 30),
               Text(
                 'Já se organiza conosco?',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
               ),
               const SizedBox(height: 20),
               Padding(

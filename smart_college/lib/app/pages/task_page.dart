@@ -109,10 +109,11 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
+        toolbarHeight: 65,
+        iconTheme: const IconThemeData(color: Colors.white, size: 25),
         title: Text(
           'TAREFAS',
-          style: AppTextStyles.smallTextBold.copyWith(color: AppColors.white),
+          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
           textAlign: TextAlign.right,
         ),
         flexibleSpace: Container(
@@ -124,10 +125,9 @@ class _TaskPageState extends State<TaskPage> {
             ),
           ),
         ),
-        backgroundColor: AppColors.purple,
         actions: [
           PopupMenuButton<String>(
-            icon: const Icon(Icons.filter_alt, color: AppColors.white),
+            icon: const Icon(Icons.filter_alt, color: AppColors.white, size: 25),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
               side: const BorderSide(color: Colors.grey),
@@ -161,7 +161,7 @@ class _TaskPageState extends State<TaskPage> {
           ),
           IconButton(
             icon:
-                const Icon(Icons.help_outline_rounded, color: AppColors.white),
+                const Icon(Icons.help_outline_rounded, color: AppColors.white, size: 25),
             onPressed: _showClassificationAlert,
           ),
         ],
@@ -177,7 +177,7 @@ class _TaskPageState extends State<TaskPage> {
               children: [
                 const SizedBox(width: 8),
                 ChoiceChip(
-                  label: const Text('Pendente'),
+                  label: Text('Pendente', style: AppTextStyles.smallerText.copyWith(color: AppColors.inputText)),
                   selected: selectedStatus == 'Pendente',
                   selectedColor: AppColors.purple,
                   onSelected: (_) {
@@ -193,7 +193,7 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                 ),
                 ChoiceChip(
-                  label: const Text('Em progresso'),
+                  label: Text('Em progresso', style: AppTextStyles.smallerText.copyWith(color: AppColors.inputText)),
                   selected: selectedStatus == 'Em progresso',
                   selectedColor: AppColors.purple,
                   onSelected: (_) {
@@ -209,7 +209,7 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                 ),
                 ChoiceChip(
-                  label: const Text('Concluída'),
+                  label: Text('Concluída', style: AppTextStyles.smallerText.copyWith(color: AppColors.inputText)),
                   selected: selectedStatus == 'Concluída',
                   selectedColor: AppColors.purple,
                   onSelected: (_) {
@@ -322,13 +322,15 @@ class _TaskPageState extends State<TaskPage> {
                               builder: (_) => AlertDialog(
                                 title: Text(
                                   'Excluir tarefa',
-                                  style: AppTextStyles.smallText
+                                  style: AppTextStyles.normalTextBold
                                       .copyWith(color: AppColors.titlePurple),
+                                  textAlign: TextAlign.center,
                                 ),
                                 content: Text(
                                   'Tem certeza que deseja excluir a tarefa "${item.name}"?',
                                   style: AppTextStyles.smallerText
                                       .copyWith(color: AppColors.gray),
+                                  textAlign: TextAlign.center,
                                 ),
                                 actions: [
                                   TextButton(
@@ -389,10 +391,10 @@ class _TaskPageState extends State<TaskPage> {
                                               children: [
                                                 Text(
                                                   item.name,
-                                                  style: AppTextStyles.smallText
+                                                  style: AppTextStyles.normalText
                                                       .copyWith(
                                                     color: AppColors.lightBlack,
-                                                    fontWeight: FontWeight.w600,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
                                                 Container(
@@ -415,7 +417,7 @@ class _TaskPageState extends State<TaskPage> {
                                                       color: AppColors.white,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      fontSize: 15,
+                                                      fontSize: 20,
                                                     ),
                                                   ),
                                                 ),
@@ -436,7 +438,7 @@ class _TaskPageState extends State<TaskPage> {
                                                       Text(
                                                         item.description ?? '',
                                                         style: AppTextStyles
-                                                            .smallerText
+                                                            .smallText
                                                             .copyWith(
                                                           color: AppColors.gray,
                                                           fontWeight:
@@ -479,6 +481,7 @@ class _TaskPageState extends State<TaskPage> {
                                                               '',
                                                           style:
                                                               const TextStyle(
+                                                            
                                                             color: AppColors
                                                                 .titlePurple,
                                                             fontSize: 15,
@@ -578,7 +581,7 @@ class _TaskPageState extends State<TaskPage> {
             ),
             child: const Icon(
               Icons.add,
-              size: 40,
+              size: 50,
               color: AppColors.white,
             ),
           ),
@@ -650,7 +653,8 @@ class _TaskPageState extends State<TaskPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('OK'),
+              child: Text('OK', style: AppTextStyles.smallerTextBold
+                  .copyWith(color: AppColors.titlePurple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },

@@ -145,6 +145,15 @@ class AppSnackBar {
     backgroundColor: Colors.redAccent,
   );
 
+  static const emailResetPasswordInvalid = SnackBar(
+    content: Text(
+      'Por favor, digite um e-mail correto',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
   static const emailSendCodeResetPasswordError = SnackBar(
     content: Text(
       'Erro ao enviar email para redefinição de senha. Por favor, tente novamente.',

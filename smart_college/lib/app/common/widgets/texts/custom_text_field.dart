@@ -8,13 +8,15 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.keyboardType,
     required this.labelText,
-    this.prefixIcon,
+    this.prefixIcon, 
+    this.validator,
   });
 
   final TextEditingController controller;
   final TextInputType keyboardType;
   final String labelText;
   final Widget? prefixIcon;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +25,11 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
-        style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+        validator: validator,
+        style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+          labelStyle: AppTextStyles.smallText.copyWith(color: AppColors.gray),
           prefixIcon: prefixIcon,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
@@ -40,7 +43,8 @@ class CustomTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
             borderSide: const BorderSide(color: AppColors.purple),
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
         ),
       ),
     );

@@ -39,8 +39,8 @@ class _WelcomeScreenState extends State<SplashPage> {
           children: [
             Image.asset(
               'assets/images/logo.png',
-              height: 150,
-              width: 150,
+              height: 250,
+              width: 250,
             )
           ],
         ),
