@@ -35,6 +35,7 @@ class AuthService {
     );
     if (response.statusCode == 200) {
       await AppStrings.secureStorage.write(key: 'token', value: jsonDecode(response.body)['token']);
+      await saveUserEmail(email);
       return true;
     } else {
       return false;
@@ -101,5 +102,13 @@ class AuthService {
     } catch (e) {
       return false;
     }
+  }
+
+  static Future<void> saveUserEmail(String email) async {
+    await AppStrings.secureStorage.write(key: 'email', value: email);
+  }
+
+  static Future<String?> getUserEmail() async {
+    return await AppStrings.secureStorage.read(key: 'email');
   }
 }

@@ -12,4 +12,7 @@ class AppRoutes {
   static String task = 'https://smartcollege-api.onrender.com/task/';
   static String schedules = 'https://smartcollege-api.onrender.com/schedule/';
   static String notifications = 'https://smartcollege-api.onrender.com/notifications/';
+  static String feed = 'https://smartcollege-api.onrender.com/feed/publication/';
+  static String bond = 'https://smartcollege-api.onrender.com/bond/';
+  static String universities = 'https://smartcollege-api.onrender.com/university/';
 }

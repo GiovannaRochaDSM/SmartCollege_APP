@@ -11,6 +11,7 @@ class UserModel {
   final DateTime createAt;
   final bool bond;
   final bool isCoord;
+  final String? universityId;
 
   UserModel({
     required this.id,
@@ -25,6 +26,7 @@ class UserModel {
     DateTime? createAt,
     required this.bond,
     required this.isCoord,
+    this.universityId,
   }) : createAt = createAt ?? DateTime.now();
 
 
@@ -42,6 +44,7 @@ class UserModel {
       createAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : DateTime.now(),
       bond: map['bond'] ?? false,
       isCoord: map['isCoord'] ?? false,
+      universityId: map['universityId'],
     );
   }
 
@@ -59,6 +62,7 @@ class UserModel {
       'createdAt': createAt.toIso8601String(),
       'bond': bond,
       'isCoord': isCoord,
+      'universityId': universityId,
     };
   }
 
@@ -76,6 +80,7 @@ class UserModel {
       createAt: createAt,
       bond: bond,
       isCoord: isCoord,
+      universityId: universityId,
     );
   }
 }

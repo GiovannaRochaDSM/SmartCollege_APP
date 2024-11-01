@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/data/helpers/fetch_user.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
@@ -16,6 +16,7 @@ import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/user_repository.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_field.dart';
+import 'package:smart_college/app/common/widgets/dialogs/request_bond_dialog.dart';
 import 'package:smart_college/app/common/widgets/modals/user/reset_password_modal.dart';
 
 class UserPage extends StatefulWidget {
@@ -341,7 +342,25 @@ class _UserPageState extends State<UserPage> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 50),
+                          const SizedBox(height: 20),
+                          Text(
+                            'Ainda não possui vínculo com a sua instituição?',
+                            style: AppTextStyles.smallerText.copyWith(color: AppColors.lightBlack),
+                            textAlign: TextAlign.right,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return RequestBondDialog(
+                                      userId: user.id);
+                                },
+                              );
+                            },
+                            child: const Text('Solicite aqui'),
+                          ),
+                          const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [

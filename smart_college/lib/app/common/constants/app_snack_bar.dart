@@ -342,4 +342,157 @@ class AppSnackBar {
     duration: Duration(seconds: 2),
     backgroundColor: Colors.redAccent,
   );
+
+  static const requestBondSuccess = SnackBar(
+    content: Text(
+      'Vínculo solicitado com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const requestBondError = SnackBar(
+    content: Text(
+      'Erro ao solicitar vínculo.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const bondAcceptedSuccess = SnackBar(
+    content: Text(
+      'Vínculo aceito com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const bondAcceptedError = SnackBar(
+    content: Text(
+      'Erro ao aceitar o vínculo.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const bondRejectedSuccess = SnackBar(
+    content: Text(
+      'Vínculo rejeitado com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const bondRejectedError = SnackBar(
+    content: Text(
+      'Erro ao rejeitar o vínculo.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const publicationDeletedSuccess = SnackBar(
+    content: Text(
+      'Publicação excluída com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const publicationDeletedError = SnackBar(
+    content: Text(
+      'Erro ao excluir publicação.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const feedUpdatedSuccess = SnackBar(
+    content: Text(
+      'Publicação editada com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const feedUpdatedError = SnackBar(
+    content: Text(
+      'Erro ao editar publicação.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const restrictedAccess = SnackBar(
+    content: Text(
+      'Acesso restrito. Somente coordenadores podem ver detalhes.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const likeError = SnackBar(
+    content: Text(
+      'Erro ao curtir a publicação.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const dislikeError = SnackBar(
+    content: Text(
+      'Erro ao descurtir a publicação.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const selectedImageError = SnackBar(
+    content: Text(
+      'Erro ao selecionar imagem.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const addPublicationSuccess = SnackBar(
+    content: Text(
+      'Publicação criada com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const addPublicationError = SnackBar(
+    content: Text(
+      'Erro ao adicionar publicação.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const deletePublicationError = SnackBar(
+    content: Text(
+      'Erro ao excluir publicação.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
 }
