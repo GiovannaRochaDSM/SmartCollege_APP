@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/pages/bond_page.dart';
+import 'package:smart_college/app/pages/feed_page.dart';
 import 'package:smart_college/app/pages/home_page.dart';
 import 'package:smart_college/app/pages/user_page.dart';
 import 'package:smart_college/app/pages/task_page.dart';
@@ -217,7 +218,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const BondPage(),
+                              builder: (context) => const FeedPage(),
                             ),
                           );
                         },

@@ -68,4 +68,10 @@ class AppTextStyles {
     fontSize: 16,
     fontWeight: FontWeight.w800,
   );
+
+  static const TextStyle tinyText = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+  );
 }
