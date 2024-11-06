@@ -44,7 +44,7 @@ class UserModel {
       createAt: map['createdAt'] != null ? DateTime.parse(map['createdAt']) : DateTime.now(),
       bond: map['bond'] ?? false,
       isCoord: map['isCoord'] ?? false,
-      universityId: map['universityId'],
+      universityId: map['university']?['_id'] ?? '',
     );
   }
 
@@ -62,7 +62,7 @@ class UserModel {
       'createdAt': createAt.toIso8601String(),
       'bond': bond,
       'isCoord': isCoord,
-      'universityId': universityId,
+      'university': universityId
     };
   }
 

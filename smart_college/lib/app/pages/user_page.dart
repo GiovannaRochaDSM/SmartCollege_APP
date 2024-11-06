@@ -35,7 +35,6 @@ class _UserPageState extends State<UserPage> {
   late UserRepository userRepository;
 
   final ImagePicker _imagePicker = ImagePicker();
-  final _bondController = TextEditingController();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -125,9 +124,10 @@ class _UserPageState extends State<UserPage> {
         email: _emailController.text,
         photo: user.photo,
         password: _passwordController.text,
-        bond: _bondController.text == '' ? false : true,
+        bond: user.bond,
         studentRecord: '',
-        isCoord: false,
+        universityId: user.universityId,
+        isCoord: user.isCoord,
       );
 
       if (_imageFile != null) {
@@ -261,7 +261,6 @@ class _UserPageState extends State<UserPage> {
                   _emailController.text = user.email;
                   _nicknameController.text = user.nickname;
                   _passwordController.text = user.password;
-                  _bondController.text = user.bond.toString();
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
