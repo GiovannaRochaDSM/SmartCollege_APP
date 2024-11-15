@@ -75,3 +75,37 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 }
+
+class AppNewTextStyles {
+  AppNewTextStyles._();
+
+  static const TextStyle balooTitle = TextStyle(
+    fontFamily: 'BalooTamma',
+    fontSize: 24,
+    fontWeight: FontWeight.w900,
+  );
+
+  static const TextStyle poppinsMedium = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const TextStyle poppinsExtraLight = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 13,
+    fontWeight: FontWeight.w200,
+  );
+
+  static const TextStyle smallExtraLight = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 16,
+    fontWeight: FontWeight.w200,
+  );
+
+  static const TextStyle poppinsRegular = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
+}

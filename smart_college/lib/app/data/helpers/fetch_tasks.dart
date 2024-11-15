@@ -63,4 +63,29 @@ class TaskHelper {
   static bool isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
+
+  static Future<List<TaskModel>> fetchTasksFilterSubjects({required String subjectId}) async {
+    String? token = await AppStrings.secureStorage.read(key: 'token');
+    final response = await http.get(
+      Uri.parse(AppRoutes.task),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      List<TaskModel> tasks = jsonResponse.map((data) => TaskModel.fromMap(data)).toList();
+      return tasks.where((task) => task.subjectId == subjectId).toList();
+    } else {
+      throw Exception('Falha ao carregar as tarefas');
+    }
+  }
+
+  static Future<int> countPendingOrOngoingTasks({required String subjectId}) async {
+    List<TaskModel> tasks = await fetchTasksFilterSubjects(subjectId: subjectId);
+    int count = tasks.where((task) =>
+        task.status == 'Pendente' || task.status == 'Em andamento').length;
+    return count;
+  }
 }

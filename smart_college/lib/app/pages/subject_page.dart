@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/pages/detail.dart';
 import 'package:smart_college/app/pages/schedule_page.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
@@ -241,90 +242,24 @@ class _SubjectPageState extends State<SubjectPage> {
     );
   }
 
-  Widget _buildSubjectTile(SubjectModel subject) {
-    return ListTile(
-      title: Text(
-        subject.acronym,
-        style:
-            AppTextStyles.normalTextBold.copyWith(color: AppColors.titlePurple),
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 4),
-          Text(
-            subject.name,
-            style: AppTextStyles.smallTextBold.copyWith(color: AppColors.gray),
-          ),
-          const SizedBox(height: 4),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Notas: ',
-                  style: AppTextStyles.smallerTextBold.copyWith(
-                    color: AppColors.inputText,
-                  ),
-                ),
-                TextSpan(
-                  text: subject.grades?.join(', ') ?? 'N/A',
-                  style: AppTextStyles.smallerText.copyWith(
-                    color: AppColors.gray,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 4),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Faltas: ',
-                  style: AppTextStyles.smallerTextBold.copyWith(
-                    color: AppColors.inputText,
-                  ),
-                ),
-                TextSpan(
-                  text: '${subject.abscence}',
-                  style: AppTextStyles.smallerText.copyWith(
-                    color: AppColors.gray,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      trailing: Wrap(
-        children: [
-          CircleAvatar(
-            backgroundColor: AppColors.pink,
-            radius: 26,
-            child: IconButton(
-              icon: const Icon(Icons.edit, size: 30),
-              onPressed: () {
-                _showEditModal(subject);
-              },
-              color: AppColors.white,
-            ),
-          ),
-          const SizedBox(width: 8),
-          CircleAvatar(
-            backgroundColor: AppColors.pink,
-            radius: 26,
-            child: IconButton(
-              icon: const Icon(Icons.schedule, size: 30),
-              onPressed: () {
-                _navigateToSchedulesPage(subject.id);
-              },
-              color: AppColors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+Widget _buildSubjectTile(SubjectModel item) {
+  return ListTile(
+    title: Text(item.name, style: AppTextStyles.normalText),
+    subtitle: Text(item.acronym, style: AppTextStyles.smallText),
+    onTap: () {
+      _navigateToSubjectDetailPage(item);
+    },
+  );
+}
+
+void _navigateToSubjectDetailPage(SubjectModel subject) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => SubjectDetailPage(subject: subject),
+    ),
+  );
+}
 
 Future<void> _updateAndReloadPage() async {
   Navigator.pushReplacement(

@@ -18,3 +18,16 @@ class AppColors {
   static const Color whiteSmoke = Color(0xFFF5F5F5);
   static const Color lightBlack = Colors.black54;
 }
+
+class AppNewColors {
+  AppNewColors._();
+
+  static const Color pink = Color(0xFFB3093F);
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color black = Color(0xFF000000);
+  static const Color darkBlue = Color(0xFF09035F);
+  static const Color darkGray = Color(0xFF686464);
+  static const Color textGray = Color(0xFF464444);
+  static const Color lightGray = Color(0xFFD9D9D9);
+  static const Color lightBlue = Color(0xFF64B7CC);
+}

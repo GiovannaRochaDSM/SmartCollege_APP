@@ -24,6 +24,8 @@ dependencies:
   workmanager: ^0.5.2
   flutter_local_notifications: ^17.2.3
   easy_date_timeline: ^1.1.3
+  flutter_file_dialog: ^3.0.2
+  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:
@@ -37,8 +39,23 @@ flutter:
     - assets/images/man.png
     - assets/images/emoji.png
     - assets/images/wind.png
+    - assets/images/bond.png
+    - assets/images/book.png
+    - assets/images/calendar.png
+    - assets/images/couple.png
+    - assets/images/feed.png
+    - assets/images/home.png
+    - assets/images/download.png
     
   fonts:
     - family: Nunito
       fonts:
         - asset: assets/fonts/Nunito.ttf
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-ExtraLight.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-Regular.ttf
+    - family: BalloTamma
+      fonts:
+        - asset: assets/fonts/BalooTamma.ttf

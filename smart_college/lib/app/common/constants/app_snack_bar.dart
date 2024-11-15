@@ -495,4 +495,22 @@ class AppSnackBar {
     duration: Duration(seconds: 2),
     backgroundColor: Colors.redAccent,
   );
+
+  static const generatedFileSuccess = SnackBar(
+    content: Text(
+      'Arquivo gerado com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const generatedFileError = SnackBar(
+    content: Text(
+      'Erro ao gerar o arquivo.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
 }
