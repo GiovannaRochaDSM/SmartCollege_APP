@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/pages/task_page.dart';
 import 'package:smart_college/app/pages/schedule_page.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
@@ -315,18 +314,6 @@ class _SubjectPageState extends State<SubjectPage> {
             backgroundColor: AppColors.pink,
             radius: 26,
             child: IconButton(
-              icon: const Icon(Icons.format_list_bulleted_rounded, size: 30),
-              onPressed: () {
-                _navigateToTasksPage(subject.id);
-              },
-              color: AppColors.white,
-            ),
-          ),
-          const SizedBox(width: 8),
-          CircleAvatar(
-            backgroundColor: AppColors.pink,
-            radius: 26,
-            child: IconButton(
               icon: const Icon(Icons.schedule, size: 30),
               onPressed: () {
                 _navigateToSchedulesPage(subject.id);
@@ -352,7 +339,7 @@ Future<void> _updateAndReloadPage() async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return NewSubjectModal();
+        return const NewSubjectModal();
       },
     ).then((result) {
       if (result != null && result == true) {
@@ -386,15 +373,6 @@ void _deleteSubject(String subjectId) {
     .showSnackBar(AppSnackBar.subjectDeletedError);
   });
 }
-
-  void _navigateToTasksPage(String subjectId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TaskPage(subjectId: subjectId),
-      ),
-    );
-  }
 
   void _navigateToSchedulesPage(String subjectId) {
     Navigator.push(

@@ -23,7 +23,7 @@ class _MetricsPageState extends State<MetricsPage> {
   }
 
   Future<void> _fetchTasks() async {
-    tasks = await TaskHelper.fetchTasks();
+    tasks = await TaskHelper.fetchAllTasks();
     setState(() {});
   }
 

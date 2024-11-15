@@ -8,6 +8,7 @@ abstract class ITaskRepository {
   Future<bool> updateTask(TaskModel task, String? token);
   Future<bool> addTask(TaskModel task, String? token);
   Future<bool> deleteTask(String taskId, String? token);
+    Future<bool> updateTaskStatus(String taskId, String status, String? token);
 }
 
 class TaskRepository implements ITaskRepository {
@@ -84,6 +85,24 @@ class TaskRepository implements ITaskRepository {
       return true;
     } else {
       throw Exception('Falha ao excluir a tarefa. Status code: ${response.statusCode}');
+    }
+  }
+
+  @override
+  Future<bool> updateTaskStatus(String taskId, String status, String? token) async {
+    final response = await client.put(
+      url: '${AppRoutes.task}$taskId',
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'status': status}), 
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Falha ao atualizar o status da tarefa. Status code: ${response.statusCode}');
     }
   }
 }

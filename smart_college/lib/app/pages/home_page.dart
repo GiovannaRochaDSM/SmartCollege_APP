@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/pages/task_page.dart';
+import 'package:smart_college/app/pages/task_timeline.dart';
 import 'package:smart_college/app/pages/user_page.dart';
 import 'package:smart_college/app/pages/subject_page.dart';
 import 'package:smart_college/app/pages/schedule_page.dart';

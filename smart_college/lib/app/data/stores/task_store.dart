@@ -37,4 +37,12 @@ class TaskStore {
       isLoading.value = false;
     }
   }
+
+  Future<bool> updateTaskStatus(String taskId, String status, String? token) async {
+    try {
+      return await repository.updateTaskStatus(taskId, status, token);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

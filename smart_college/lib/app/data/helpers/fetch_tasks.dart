@@ -5,7 +5,7 @@ import 'package:smart_college/app/common/constants/app_routes.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 
 class TaskHelper {
-  static Future<List<TaskModel>> fetchTasks() async {
+  static Future<List<TaskModel>> fetchAllTasks() async {
     String? token = await AppStrings.secureStorage.read(key: 'token');
     final response = await http.get(
       Uri.parse(AppRoutes.task),
@@ -20,5 +20,47 @@ class TaskHelper {
     } else {
       throw Exception('Falha ao carregar as tarefas');
     }
+  }
+
+  static Future<List<TaskModel>> fetchTasksByDate({DateTime? selectedDate}) async {
+    String? token = await AppStrings.secureStorage.read(key: 'token');
+    final response = await http.get(
+      Uri.parse(AppRoutes.task),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      List<TaskModel> tasks = jsonResponse.map((data) => TaskModel.fromMap(data)).toList();
+
+      if (selectedDate != null) {
+        tasks = tasks.where((task) {
+          if (task.deadline != null) {
+            bool isSameDayResult = isSameDay(task.deadline!, selectedDate);
+            return isSameDayResult;
+          }
+          return false;
+        }).toList();
+      } else {
+        DateTime now = DateTime.now();
+        tasks = tasks.where((task) {
+          if (task.deadline != null) {
+            bool isBeforeOrSameDay = task.deadline!.isBefore(now) || isSameDay(task.deadline!, now);
+            return isBeforeOrSameDay;
+          }
+          return false;
+        }).toList();
+      }
+
+      return tasks;
+    } else {
+      throw Exception('Falha ao carregar as tarefas');
+    }
+  }
+
+  static bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 }

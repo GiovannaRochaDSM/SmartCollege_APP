@@ -51,7 +51,7 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   Future<List<TaskModel>> getTasksBySubject(String? subjectId) async {
-    final tasks = await TaskHelper.fetchTasks();
+    final tasks = await TaskHelper.fetchAllTasks();
     if (subjectId != null) {
       return tasks.where((task) => task.subjectId == subjectId).toList();
     } else {
@@ -60,7 +60,7 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   Future<List<TaskModel>> getTasksByStatus(String? status) async {
-    final tasks = await TaskHelper.fetchTasks();
+    final tasks = await TaskHelper.fetchAllTasks();
     if (status != null) {
       return tasks.where((task) => task.status == status).toList();
     } else {
@@ -76,7 +76,7 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   Future<List<TaskModel>> getFilteredTasks() async {
-    List<TaskModel> tasks = await TaskHelper.fetchTasks();
+    List<TaskModel> tasks = await TaskHelper.fetchAllTasks();
 
     if (selectedSubjectId != null) {
       tasks =
@@ -101,7 +101,7 @@ class _TaskPageState extends State<TaskPage> {
     setState(() {
       selectedSubjectId = null;
       selectedStatus = null;
-      futureTasks = TaskHelper.fetchTasks();
+      futureTasks = TaskHelper.fetchAllTasks();
     });
   }
 
@@ -599,7 +599,7 @@ class _TaskPageState extends State<TaskPage> {
     );
 
     setState(() {
-      futureTasks = TaskHelper.fetchTasks();
+      futureTasks = TaskHelper.fetchAllTasks();
     });
   }
 
