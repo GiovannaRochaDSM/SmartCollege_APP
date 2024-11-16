@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:smart_college/app/pages/feed_page.dart';
+import 'package:smart_college/app/pages/feed/feed_page.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/data/models/feed_model.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/feed_repository.dart';
@@ -29,7 +29,6 @@ class _EditPublicationModalState extends State<EditPublicationModal> {
   late Image imagemReal;
   UserModel? currentUser;
   String? _existingImageUrl;
-  late IHttpClient _httpClient;
   late Future<UserModel?> futureUser;
   late TextEditingController _titleController;
   late Future<List<FeedModel>> futurePublications;
@@ -39,7 +38,6 @@ class _EditPublicationModalState extends State<EditPublicationModal> {
   @override
   void initState() {
     super.initState();
-    _httpClient = HttpClient();
     _existingImageUrl = widget.publication.image;
     _titleController = TextEditingController(text: widget.publication.title);
     _publicationController = TextEditingController(text: widget.publication.publication);
@@ -57,8 +55,7 @@ class _EditPublicationModalState extends State<EditPublicationModal> {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      File? compressedImage =
-          (await compressImage(File(pickedFile.path))) as File?;
+      File? compressedImage = (await compressImage(File(pickedFile.path))) as File?;
 
       setState(() {
         _selectedImage = compressedImage;
@@ -94,15 +91,14 @@ class _EditPublicationModalState extends State<EditPublicationModal> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            const FeedPage(),
+        builder: (context) => const FeedPage(),
       ),
     );
   }
 
   Future<void> _updatePublication(FeedModel feed) async {
     try {
-      String? token = await AppStrings.secureStorage.read(key: 'token');
+      String? token = await AuthService.getToken();
 
       FeedModel updatedFeed = FeedModel(
         id: feed.id,
@@ -138,17 +134,28 @@ class _EditPublicationModalState extends State<EditPublicationModal> {
   }
 
   Widget _buildImage() {
-    if (_selectedImage != null) {
-      return Image.file(_selectedImage!, height: 150);
-    } else if (_existingImageUrl != null && _existingImageUrl!.isNotEmpty) {
-      return Image.memory(const Base64Decoder().convert(_existingImageUrl!),
-          height: 150);
-    } else {
-      return const SizedBox(
-        height: 150,
-        child: Icon(Icons.image, size: 50),
-      );
-    }
+    return GestureDetector(
+      onTap: pickImage,
+      child: _selectedImage != null
+          ? Image.file(
+              _selectedImage!,
+              height: 250,
+              width: 250,
+              fit: BoxFit.cover,
+            )
+          : (_existingImageUrl != null && _existingImageUrl!.isNotEmpty
+              ? Image.memory(
+                  const Base64Decoder().convert(_existingImageUrl!),
+                  height: 250,
+                  width: 250,
+                  fit: BoxFit.cover,
+                )
+              : const SizedBox(
+                  height: 250,
+                  width: 250, 
+                  child: Icon(Icons.image, size: 80),
+                )),
+    );
   }
 
   @override
@@ -161,47 +168,62 @@ class _EditPublicationModalState extends State<EditPublicationModal> {
           width: 370,
           child: Card(
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(0),
             ),
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            elevation: 10,
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            elevation: 0,
+            color: Colors.white,
             child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0), 
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(7.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Text(
                       'Editar Publicação',
                       textAlign: TextAlign.center,
-                      style: AppTextStyles.normalTextBold.copyWith(color: AppColors.titlePurple),
+                      style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.darkBlue),
                     ),
                   ),
+                  const SizedBox(height: 10),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: TextField(
                       controller: _titleController,
-                      decoration: const InputDecoration(labelText: 'Título'),
+                      decoration: InputDecoration(
+                        labelText: 'Título',
+                        labelStyle: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+                      ),
+                      style: AppNewTextStyles.smallerPoppinsRegular
+                          .copyWith(color: AppNewColors.textGray),
                     ),
                   ),
+                  const SizedBox(height: 12),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextField(
                       controller: _publicationController,
-                      decoration: const InputDecoration(labelText: 'Conteúdo'),
+                      decoration: InputDecoration(
+                        labelText: 'Conteúdo',
+                        labelStyle: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
+                      ),
+                      style: AppNewTextStyles.smallerPoppinsRegular.copyWith(color: AppNewColors.textGray),
                     ),
                   ),
-
+                  const SizedBox(height: 12),
                   _buildImage(),
-
                   TextButton.icon(
                     onPressed: pickImage,
                     icon: const Icon(Icons.add_photo_alternate_outlined,
-                        color: AppColors.titlePurple),
+                      color: AppNewColors.darkBlue),
                     label: Text('Selecionar nova imagem',
-                        style: AppTextStyles.smallText.copyWith(color: AppColors.titlePurple)),
+                      style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.darkBlue)),
                   ),
+                  const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -211,16 +233,25 @@ class _EditPublicationModalState extends State<EditPublicationModal> {
                         },
                         child: Text(
                           'Cancelar',
-                          style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                          style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
                         ),
                       ),
                       TextButton(
                         onPressed: () {
                           _updatePublication(widget.publication);
                         },
+                        style: TextButton.styleFrom(
+                          side: const BorderSide(
+                            color: AppNewColors.darkBlue,
+                            width: 1,
+                          ),
+                          shape: RoundedRectangleBorder(
+                             borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
                         child: Text(
                           'Salvar',
-                          style: AppTextStyles.smallText.copyWith(color: AppColors.titlePurple),
+                          style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.darkBlue),
                         ),
                       ),
                     ],

@@ -4,27 +4,27 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:smart_college/app/pages/feed_page.dart';
+import 'package:smart_college/app/pages/feed/feed_page.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/feed_model.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/data/helpers/fetch_user.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
-import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/feed_repository.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
 import 'package:smart_college/app/common/widgets/modals/feed/edit_publication_modal.dart';
 
-class DetailPage extends StatefulWidget {
+class DetailPublicationPage extends StatefulWidget {
   final String publicationId;
   final String universityId;
   final String userPhoto;
   final int likes;
 
-  const DetailPage(
+  const DetailPublicationPage(
       {super.key,
       required this.publicationId,
       required this.universityId,
@@ -32,10 +32,10 @@ class DetailPage extends StatefulWidget {
       required this.likes});
 
   @override
-  _DetailPageState createState() => _DetailPageState();
+  _DetailPublicationPageState createState() => _DetailPublicationPageState();
 }
 
-class _DetailPageState extends State<DetailPage> {
+class _DetailPublicationPageState extends State<DetailPublicationPage> {
   File? _imageFile;
   bool isNull = true;
   late Image imagemReal;
@@ -62,11 +62,11 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future<FeedModel> fetchSinglePublication(String publicationId) async {
-    String? token = await AppStrings.secureStorage.read(key: 'token');
+    String? token = await AuthService.getToken();
 
     try {
       final publication = await feedRepository.getPublicationById(publicationId, token);
-      
+
       return publication;
     } catch (e) {
       throw Exception('Falha ao buscar a publicação.');
@@ -85,6 +85,7 @@ class _DetailPageState extends State<DetailPage> {
   Future<void> pickImage(ImageSource source) async {
     try {
       final pickedFile = await _imagePicker.pickImage(source: source);
+
       if (pickedFile != null) {
         setState(() {
           _imageFile = File(pickedFile.path);
@@ -120,15 +121,18 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   Future<void> deletePublication(String publicationId) async {
-    String? token = await AppStrings.secureStorage.read(key: 'token');
+    String? token = await AuthService.getToken();
 
     try {
-      bool isDeleted =
-          await feedRepository.deletePublication(publicationId, token);
+      bool isDeleted = await feedRepository.deletePublication(publicationId, token);
+
       if (isDeleted) {
         setState(() {
           futurePublication;
         });
+        _updateAndReload();
+        
+        ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.publicationDeletedSuccess);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.feedUpdatedSuccess);
@@ -137,35 +141,55 @@ class _DetailPageState extends State<DetailPage> {
 
   Future<bool> _confirmDelete(BuildContext context) async {
     return await showDialog<bool>(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Excluir Publicação',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.normalText.copyWith(color: AppColors.titlePurple)),
-              content: Text('Você tem certeza que deseja excluir esta publicação?',
-                  style: AppTextStyles.smallerText.copyWith(color: AppColors.lightBlack)),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('Cancelar',
-                      style: AppTextStyles.smallerText.copyWith(color: AppColors.gray)),
+      context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Excluir Publicação',
+              textAlign: TextAlign.center,
+              style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.darkBlue),
+            ),
+            content: Text(
+              'Você tem certeza que deseja excluir esta publicação?',
+              style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  'Cancelar',
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
                 ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(true),
-                  child: Text('Excluir',
-                      style: AppTextStyles.smallerText.copyWith(color: AppColors.titlePurple)),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: TextButton.styleFrom(
+                  side: const BorderSide(
+                    color: AppNewColors.red,
+                    width: 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-              ],
-            );
-          },
-        ) ??
-        false;
+                child: Text(
+                  'Excluir',
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.red),
+                ),
+              ),
+            ],
+            backgroundColor: Colors.white,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+          );
+        },
+    ) ??
+    false;
   }
 
   Future<void> updateFeed(FeedModel feed) async {
     try {
-      String? token = await AppStrings.secureStorage.read(key: 'token');
+      String? token = await AuthService.getToken();
 
       FeedModel updatedFeed = FeedModel(
         id: feed.id,
@@ -210,22 +234,21 @@ class _DetailPageState extends State<DetailPage> {
       },
     ).then((result) {
       if (result != null && result == true) {
-        _updateAndReloadPage(subject.id, subject.universityId,
-            subject.userPhoto!, subject.likes);
+        _updateAndReloadPage(subject.id, subject.universityId, subject.userPhoto!, subject.likes);
       }
     });
   }
 
-  Future<void> _updateAndReloadPage(String publicationId, String universityId,
-      String userPhoto, int likes) async {
+  Future<void> _updateAndReloadPage(String publicationId, String universityId,String userPhoto, int likes) async {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => DetailPage(
-            publicationId: publicationId,
-            universityId: universityId,
-            userPhoto: userPhoto,
-            likes: likes),
+        builder: (context) => DetailPublicationPage(
+          publicationId: publicationId,
+          universityId: universityId,
+          userPhoto: userPhoto,
+          likes: likes,
+        ),
       ),
     );
   }
@@ -242,10 +265,10 @@ class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.purple,
+      backgroundColor: AppNewColors.darkBlue,
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: AppColors.purple,
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
+        backgroundColor: AppNewColors.darkBlue,
         actions: [
           FutureBuilder<FeedModel>(
             future: futurePublication,
@@ -260,7 +283,7 @@ class _DetailPageState extends State<DetailPage> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.mode_edit_outlined,
-                        color: Colors.white, size: 30.0),
+                      color: Colors.white, size: 30.0),
                     onPressed: () {
                       if (publication != null) {
                         _showEditModal(publication);
@@ -275,7 +298,6 @@ class _DetailPageState extends State<DetailPage> {
                         _confirmDelete(context).then((shouldDelete) {
                           if (shouldDelete) {
                             deletePublication(publication.id);
-                            _updateAndReload();
                           }
                         });
                       }
@@ -292,8 +314,7 @@ class _DetailPageState extends State<DetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            padding:
-                const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30.0),
+            padding: const EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30.0),
           ),
           Expanded(
             child: Container(
@@ -347,15 +368,15 @@ class _DetailPageState extends State<DetailPage> {
                                           const SizedBox(height: 8.0),
                                           Text(
                                             publication?.userName ?? 'Usuário desconhecido',
-                                            style: AppTextStyles.smallerText,
+                                            style: AppNewTextStyles.poppinsMedium.copyWith(color:AppNewColors.textGray),
                                           ),
                                           Text(
                                             publication?.userEmail ?? 'Email desconhecido',
-                                            style: AppTextStyles.smallerText.copyWith(color: Colors.grey),
+                                            style: AppNewTextStyles.smallExtraLight.copyWith(color:AppNewColors.textGray),
                                           ),
                                           Text(
                                             publication?.universityName ?? 'Universidade desconhecida',
-                                            style: AppTextStyles.smallerText.copyWith(color: Colors.grey),
+                                            style: AppNewTextStyles.smallExtraLight.copyWith(color:AppNewColors.textGray),
                                           ),
                                         ],
                                       ),
@@ -368,16 +389,15 @@ class _DetailPageState extends State<DetailPage> {
                                     padding: const EdgeInsets.only(right: 1.0, top: 4.0),
                                     child: Text(
                                       DateFormat('dd/MM/yyyy').format(publication?.dateTime ?? DateTime.now()),
-                                      style: AppTextStyles.tinyText.copyWith(color: Colors.grey),
+                                      style: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 10),
                                 ListTile(
                                   title: Center(
-                                    child: Text(
-                                      publication?.title ?? 'Título não disponível',
-                                      style: AppTextStyles.normalTextBold,
+                                    child: Text(publication?.title ?? 'Título não disponível',
+                                      style: AppNewTextStyles.bigPoppinsMedium.copyWith(color: AppNewColors.textGray),
                                     ),
                                   ),
                                   subtitle: Column(
@@ -385,28 +405,42 @@ class _DetailPageState extends State<DetailPage> {
                                     children: [
                                       if (publication?.publication != null && publication!.publication!.isNotEmpty)
                                         Padding(
-                                          padding: const EdgeInsets.symmetric( vertical: 8.0),
-                                          child: Text(publication.publication!),
+                                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                          child: Text(publication.publication!,
+                                            style: AppNewTextStyles.smallExtraLight.copyWith(color:AppNewColors.textGray),
+                                          ),
                                         ),
                                       if (publication?.image != null && publication!.image!.isNotEmpty)
                                         Padding(
-                                          padding: const EdgeInsets.only(top: 8.0),
+                                          padding: const EdgeInsets.only(top: 60.0),
                                           child: Center(
-                                            child: Image.memory(base64Decode(publication.image!),
+                                            child: Image.memory(
+                                              base64Decode(publication.image!),
                                               fit: BoxFit.cover,
-                                              height: 300,
-                                              width: 300,
+                                              height: 330,
+                                              width: 330,
                                             ),
                                           ),
                                         ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        'Quantidade de curtidas: ${publication?.likes ?? 0}',
-                                        style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+                                      const SizedBox(height: 25),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Icons.favorite,
+                                            color: AppNewColors.red, 
+                                            size: 25,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            '${publication?.likes ?? 0}',
+                                            style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ),
+                                )
                               ],
                             ),
                           ),

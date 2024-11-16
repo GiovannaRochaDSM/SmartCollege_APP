@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/pages/bond_page.dart';
-import 'package:smart_college/app/pages/feed_page.dart';
+import 'package:smart_college/app/pages/feed/feed_page.dart';
 import 'package:smart_college/app/pages/home_page.dart';
 import 'package:smart_college/app/pages/user_page.dart';
 import 'package:smart_college/app/pages/task_timeline.dart';

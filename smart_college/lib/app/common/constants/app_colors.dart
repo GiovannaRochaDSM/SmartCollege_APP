@@ -30,4 +30,5 @@ class AppNewColors {
   static const Color textGray = Color(0xFF464444);
   static const Color lightGray = Color(0xFFD9D9D9);
   static const Color lightBlue = Color(0xFF64B7CC);
+  static const Color red = Color(0xFFFF4433);
 }

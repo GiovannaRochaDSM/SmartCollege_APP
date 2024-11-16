@@ -487,6 +487,15 @@ class AppSnackBar {
     backgroundColor: Colors.redAccent,
   );
 
+  static const deletePublicationSuccess = SnackBar(
+    content: Text(
+      'Publicação excluída com sucesso.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
   static const deletePublicationError = SnackBar(
     content: Text(
       'Erro ao excluir publicação.',

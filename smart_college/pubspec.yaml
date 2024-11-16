@@ -56,6 +56,6 @@ flutter:
         - asset: assets/fonts/Poppins-ExtraLight.ttf
         - asset: assets/fonts/Poppins-Medium.ttf
         - asset: assets/fonts/Poppins-Regular.ttf
-    - family: BalloTamma
+    - family: BaloTamma
       fonts:
         - asset: assets/fonts/BalooTamma.ttf
