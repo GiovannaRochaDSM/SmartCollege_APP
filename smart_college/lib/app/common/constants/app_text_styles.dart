@@ -15,7 +15,7 @@ class AppTextStyles {
     fontWeight: FontWeight.w800,
   );
 
-    static const TextStyle bigTextBold = TextStyle(
+  static const TextStyle bigTextBold = TextStyle(
     fontFamily: 'Nunito',
     fontSize: 41.0,
     fontWeight: FontWeight.w800,
@@ -81,7 +81,19 @@ class AppNewTextStyles {
 
   static const TextStyle balooTitle = TextStyle(
     fontFamily: 'BalooTamma',
-    fontSize: 24,
+    fontSize: 25,
+    fontWeight: FontWeight.w900,
+  );
+
+    static const TextStyle bigBalooTitle = TextStyle(
+    fontFamily: 'BalooTamma',
+    fontSize: 40,
+    fontWeight: FontWeight.w900,
+  );
+
+  static const TextStyle smallBalooTitle = TextStyle(
+    fontFamily: 'BalooTamma',
+    fontSize: 15,
     fontWeight: FontWeight.w900,
   );
 
@@ -91,9 +103,21 @@ class AppNewTextStyles {
     fontWeight: FontWeight.w500,
   );
 
-  static const TextStyle poppinsExtraLight = TextStyle(
+  static const TextStyle mediumPoppinsMedium = TextStyle(
     fontFamily: 'Poppins',
-    fontSize: 13,
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const TextStyle bigPoppinsMedium = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 32,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const TextStyle mediumExtraLight = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 22,
     fontWeight: FontWeight.w200,
   );
 
@@ -103,9 +127,15 @@ class AppNewTextStyles {
     fontWeight: FontWeight.w200,
   );
 
-  static const TextStyle poppinsRegular = TextStyle(
+  static const TextStyle smallerPoppinsRegular = TextStyle(
     fontFamily: 'Poppins',
-    fontSize: 12,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle smallPoppinsRegular = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 16,
     fontWeight: FontWeight.w400,
   );
 }

@@ -41,11 +41,9 @@ class _BondPageState extends State<BondPage> {
   }
 
   Future<void> acceptBond(String userId, String universityId) async {
-    final success =
-        await bondRepository.acceptBond(userId, universityId, token);
+    final success = await bondRepository.acceptBond(userId, universityId, token);
     if (success) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.bondAcceptedSuccess);
+      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.bondAcceptedSuccess);
       _loadBonds();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.bondAcceptedError);
@@ -55,8 +53,7 @@ class _BondPageState extends State<BondPage> {
   Future<void> rejectBond(String userId) async {
     final success = await bondRepository.rejectBond(userId, token);
     if (success) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.bondRejectedSuccess);
+      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.bondRejectedSuccess);
       _loadBonds();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.bondRejectedError);
@@ -66,48 +63,79 @@ class _BondPageState extends State<BondPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(toolbarHeight: 65,
-        iconTheme: const IconThemeData(color: Colors.white, size: 25),
-        title: Text('VÍNCULOS',
-        style: AppTextStyles.normalText.copyWith(color: AppColors.white),
-        textAlign: TextAlign.right,
+      appBar: AppBar(
+        toolbarHeight: 78,
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
+        title: Text(
+          'Vínculos',
+          style: AppNewTextStyles.balooTitle.copyWith(color: AppColors.white),
+          textAlign: TextAlign.center,
         ),
-      flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.purple, AppColors.pink],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+        centerTitle: true, 
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(50),
           ),
         ),
-        backgroundColor: AppColors.purple,
+        backgroundColor: AppNewColors.pink,
       ),
       drawer: const CustomDrawer(),
-      body: ListView.separated(
-        separatorBuilder: (context, index) => const Divider(height: 1, color: Colors.grey),
-        itemCount: bonds.length,
-        itemBuilder: (context, index) {
-          final bond = bonds[index];
-          return ListTile(
-            title: Text('Solicitação de ${bond.userName}'),
-            subtitle: Text(
-                '${bond.universityName}\n${bond.userEmail}'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.check_rounded, color: Colors.green),
-                  onPressed: () => acceptBond(bond.userId, bond.universityId),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.clear_rounded, color: Colors.red),
-                  onPressed: () => rejectBond(bond.userId),
-                ),
-              ],
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Aceite ou rejeite as solicitações de vínculo com a sua instituição. Em caso de dúvidas, o e-mail do solicitante está disponível para entrar em contato.',
+              style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.black),
+              textAlign: TextAlign.center,
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: ListView.separated(separatorBuilder: (context, index) =>
+                const Divider(height: 1, color: Colors.grey),
+              itemCount: bonds.length,
+              itemBuilder: (context, index) {
+                final bond = bonds[index];
+                return Card(
+                  color: AppNewColors.lightGray,
+                  margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 3.0),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero,
+                    side: BorderSide.none,
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16.0),
+                    title: Text(
+                      'Solicitação de ${bond.userName}',
+                      style: AppNewTextStyles.poppinsMedium.copyWith(color: AppNewColors.textGray),
+                    ),
+                    subtitle: Text(
+                      '${bond.universityName}\n${bond.userEmail}',
+                      style: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.check_rounded,
+                            color: Colors.green),
+                            iconSize: 33,
+                          onPressed: () =>acceptBond(bond.userId, bond.universityId),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.clear_rounded,
+                            color: Colors.red),
+                            iconSize: 33,
+                          onPressed: () => rejectBond(bond.userId),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
