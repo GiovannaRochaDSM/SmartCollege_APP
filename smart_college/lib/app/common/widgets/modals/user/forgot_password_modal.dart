@@ -4,7 +4,7 @@ import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/user_repository.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
 import 'package:smart_college/app/common/widgets/modals/user/auth_code_forgot.dart';
 
@@ -82,7 +82,7 @@ class _ForgotPasswordModalState extends State<ForgotPasswordModal> {
               ),
             ),
             const SizedBox(height: 70),
-            PrimaryButton(
+            CustomPrimaryButton(
               text: 'Enviar',
               onPressed: () {
                 _resetPassword(context);

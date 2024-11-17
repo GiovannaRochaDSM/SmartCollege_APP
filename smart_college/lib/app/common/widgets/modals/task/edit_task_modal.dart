@@ -8,7 +8,7 @@ import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/task_repository.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 
 class EditTaskModal extends StatefulWidget {
   final TaskModel task;
@@ -56,7 +56,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 65,
+        toolbarHeight: 78,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'EDITAR TAREFA',
@@ -209,7 +209,7 @@ class _EditTaskModalState extends State<EditTaskModal> {
               ],
             ),
             const SizedBox(height: 30),
-            PrimaryButton(
+            CustomPrimaryButton(
               text: 'Salvar',
               onPressed: () async {
                 await _updateTask(context);

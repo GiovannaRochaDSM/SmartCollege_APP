@@ -8,7 +8,7 @@ import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/task_repository.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 
 class NewTaskModal extends StatefulWidget {
   const NewTaskModal({super.key});
@@ -49,7 +49,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 65,
+        toolbarHeight: 78,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           'NOVA TAREFA',
@@ -161,7 +161,7 @@ class _NewTaskModalState extends State<NewTaskModal> {
               ],
             ),
             const SizedBox(height: 30),
-            PrimaryButton(
+            CustomPrimaryButton(
               text: 'Adicionar',
               onPressed: () async {
                 await _addTask(context);

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 
-class PrimaryButton extends StatelessWidget {
+class CustomPrimaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
   final Color? textColor;
   final Color? buttonColor; 
   final Color? borderColor;
 
-  const PrimaryButton({
+  const CustomPrimaryButton({
     super.key,
     this.onPressed,
     required this.text,
@@ -43,9 +43,7 @@ class PrimaryButton extends StatelessWidget {
         child: Align(
           child: Text(
             text,
-            style: AppTextStyles.normalText.copyWith(
-              color: buttonTextColor,
-            ),
+            style: AppNewTextStyles.mediumExtraLight.copyWith(color: buttonTextColor),
           ),
         ),
       ),

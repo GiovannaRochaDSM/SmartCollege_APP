@@ -109,7 +109,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 65,
+        toolbarHeight: 78,
         iconTheme: const IconThemeData(color: Colors.white, size: 25),
         title: Text(
           'TAREFAS',

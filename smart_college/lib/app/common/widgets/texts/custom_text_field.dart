@@ -7,44 +7,45 @@ class CustomTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.keyboardType,
-    required this.labelText,
-    this.prefixIcon, 
+    this.prefixIcon,
     this.validator,
+    this.readOnly = false,
   });
 
   final TextEditingController controller;
   final TextInputType keyboardType;
-  final String labelText;
   final Widget? prefixIcon;
   final String? Function(String?)? validator;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      height: 45,
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
         validator: validator,
+        readOnly: readOnly,
         style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
         decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: AppTextStyles.smallText.copyWith(color: AppColors.gray),
           prefixIcon: prefixIcon,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
-            borderSide: const BorderSide(color: AppColors.purple),
+          filled: true,
+          fillColor: Colors.grey[200],
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.zero,
+            borderSide: BorderSide(color: AppNewColors.lightGray),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: AppColors.purple),
-            borderRadius: BorderRadius.circular(20.0),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: AppNewColors.lightGray),
+            borderRadius: BorderRadius.zero,
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
-            borderSide: const BorderSide(color: AppColors.purple),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.zero,
+            borderSide: BorderSide(color: AppNewColors.lightGray),
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+          contentPadding: const EdgeInsets.symmetric(vertical: 9.0, horizontal: 20.0),
         ),
       ),
     );

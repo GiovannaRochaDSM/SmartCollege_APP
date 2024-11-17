@@ -85,6 +85,12 @@ class AppNewTextStyles {
     fontWeight: FontWeight.w900,
   );
 
+  static const TextStyle mediumBalooTitle = TextStyle(
+    fontFamily: 'BalooTamma',
+    fontSize: 30,
+    fontWeight: FontWeight.w900,
+  );
+
     static const TextStyle bigBalooTitle = TextStyle(
     fontFamily: 'BalooTamma',
     fontSize: 40,
@@ -136,6 +142,12 @@ class AppNewTextStyles {
   static const TextStyle smallPoppinsRegular = TextStyle(
     fontFamily: 'Poppins',
     fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle mediumPoppinsRegular = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 19,
     fontWeight: FontWeight.w400,
   );
 }

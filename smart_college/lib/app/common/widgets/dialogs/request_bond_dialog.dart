@@ -8,7 +8,7 @@ import 'package:smart_college/app/data/models/university_model.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/data/repositories/bond_repository.dart';
 import 'package:smart_college/app/data/repositories/user_repository.dart';
-import 'package:smart_college/app/pages/user_page.dart';
+import 'package:smart_college/app/pages/user/user_page.dart';
 
 class RequestBondDialog extends StatefulWidget {
   final String userId;

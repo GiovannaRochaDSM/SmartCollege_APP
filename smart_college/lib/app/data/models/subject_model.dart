@@ -5,16 +5,12 @@ class SubjectModel {
   final String id;
   late String name;
   final String acronym;
-  final List<int>? grades;
-  final int? abscence;
   late final String? notes;
 
   SubjectModel({
     required this.id,
     required this.name,
     required this.acronym,
-    this.grades,
-    this.abscence,
     this.notes,
   });
 
@@ -23,12 +19,6 @@ class SubjectModel {
       id: map['_id'] ?? '',
       name: map['name'] ?? '',
       acronym: map['acronym'] ?? '',
-      grades: (map['grades'] as List<dynamic>?)
-          ?.map((grade) => grade is int ? grade : int.parse(grade.toString()))
-          .toList(),
-      abscence: map['abscence'] is int
-          ? map['abscence']
-          : int.parse(map['abscence'].toString()),
       notes: map['notes'],
     );
   }
@@ -38,8 +28,6 @@ class SubjectModel {
       '_id': id,
       'name': name,
       'acronym': acronym,
-      'grades': grades?.map((grade) => grade.toString()).toList(),
-      'abscence': abscence,
       'notes': notes,
     };
   }
@@ -48,8 +36,6 @@ class SubjectModel {
     String content = 'ID: $id\n';
     content += 'Nome: $name\n';
     content += 'Sigla: $acronym\n';
-    content += 'Notas: ${grades?.join(", ") ?? "Nenhuma nota"}\n';
-    content += 'Faltas: $abscence\n';
     content += 'Anotações: ${notes ?? "Nenhuma anotação"}\n';
     final file = File('materia_$id.txt');
     await file.writeAsString(content);

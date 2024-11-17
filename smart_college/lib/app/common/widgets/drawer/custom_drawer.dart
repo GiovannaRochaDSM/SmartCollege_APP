@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/pages/bond_page.dart';
-import 'package:smart_college/app/pages/feed/feed_page.dart';
 import 'package:smart_college/app/pages/home_page.dart';
-import 'package:smart_college/app/pages/user_page.dart';
+import 'package:smart_college/app/pages/metrics_page.dart';
 import 'package:smart_college/app/pages/task_timeline.dart';
-import 'package:smart_college/app/pages/subject_page.dart';
-import 'package:smart_college/app/pages/schedule_page.dart';
-import 'package:smart_college/app/data/services/auth_service.dart';
+import 'package:smart_college/app/pages/feed/feed_page.dart';
+import 'package:smart_college/app/pages/user/user_page.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/data/helpers/fetch_user.dart';
+import 'package:smart_college/app/pages/subject/subject_page.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/pages/metrics_page.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -157,19 +156,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const SubjectPage(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            title: Text('Horários',
-                style:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray)),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SchedulePage(),
                 ),
               );
             },

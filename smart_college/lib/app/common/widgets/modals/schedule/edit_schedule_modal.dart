@@ -7,7 +7,7 @@ import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 import 'package:smart_college/app/data/repositories/schedule_repository.dart';
 
 class EditScheduleModal extends StatefulWidget {
@@ -49,7 +49,7 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 65,
+        toolbarHeight: 78,
         title: Text(
           'EDITAR HORÁRIO',
           style: AppTextStyles.normalText.copyWith(color: AppColors.white),
@@ -64,9 +64,7 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
             ),
           ),
         ),
-        iconTheme: const IconThemeData(
-          color: AppColors.white,
-        ),
+        iconTheme: const IconThemeData(color: AppColors.white, size: 30),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 70, 20, 10),
@@ -157,7 +155,7 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
               ),
             ),
             const SizedBox(height: 80),
-            PrimaryButton(
+            CustomPrimaryButton(
               text: 'Salvar',
               onPressed: () async {
                 await _editSchedule(context);

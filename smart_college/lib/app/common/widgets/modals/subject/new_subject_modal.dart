@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
+import 'package:smart_college/app/pages/subject/subject_page.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/subject_repository.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_elevated_button.dart';
 
 class NewSubjectModal extends StatefulWidget {
   const NewSubjectModal({super.key});
@@ -18,8 +19,7 @@ class NewSubjectModal extends StatefulWidget {
 class _NewSubjectModalState extends State<NewSubjectModal> {
   late TextEditingController _nameController;
   late TextEditingController _acronymController;
-  late TextEditingController _gradesController;
-  late TextEditingController _absenceController;
+  late TextEditingController _notesController;
 
   late IHttpClient _httpClient;
 
@@ -28,8 +28,7 @@ class _NewSubjectModalState extends State<NewSubjectModal> {
     super.initState();
     _nameController = TextEditingController();
     _acronymController = TextEditingController();
-    _gradesController = TextEditingController();
-    _absenceController = TextEditingController();
+    _notesController = TextEditingController();
 
     _httpClient = HttpClient();
   }
@@ -38,47 +37,32 @@ class _NewSubjectModalState extends State<NewSubjectModal> {
   void dispose() {
     _nameController.dispose();
     _acronymController.dispose();
-    _gradesController.dispose();
-    _absenceController.dispose();
+    _notesController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 65,
-        title: Text(
-          'NOVA MATÉRIA',
-          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
-          textAlign: TextAlign.center,
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.purple, AppColors.pink],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-        iconTheme: const IconThemeData(
-          color: AppColors.white,
-        ),
-      ),
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 70, 20, 10),
+        padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text(
+              'Nova matéria',
+              style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.lightBlue),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
                 labelText: 'Nome',
-                labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                labelStyle: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                 enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                  borderSide: BorderSide(color: AppNewColors.textGray, width: 1.0),
                 ),
               ),
             ),
@@ -87,45 +71,33 @@ class _NewSubjectModalState extends State<NewSubjectModal> {
               controller: _acronymController,
               decoration: InputDecoration(
                 labelText: 'Sigla',
-                labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                labelStyle: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                 enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                  borderSide: BorderSide(color: AppNewColors.textGray, width: 1.0),
                 ),
               ),
             ),
-            const SizedBox(height: 45),
+            const SizedBox(height: 20),
             TextField(
-              controller: _gradesController,
+              controller: _notesController,
               decoration: InputDecoration(
-                labelText: 'Notas',
-                labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                labelText: 'Anotações',
+                labelStyle: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                 enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                  borderSide: BorderSide(color: AppNewColors.textGray, width: 1.0),
                 ),
               ),
-              keyboardType: TextInputType.number,
+              maxLines: 5,
+              keyboardType: TextInputType.multiline,
             ),
-            const SizedBox(height: 45),
-            TextField(
-              controller: _absenceController,
-              decoration: InputDecoration(
-                labelText: 'Faltas',
-                labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
-                ),
-              ),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 80),
-            PrimaryButton(
+            const SizedBox(height: 30),
+            CustomElevatedButton(
               text: 'Adicionar',
               onPressed: () {
                 _addSubject(context);
               },
+              buttonColor: AppNewColors.lightBlue,
+              borderColor: AppNewColors.lightBlue,
             ),
           ],
         ),
@@ -137,50 +109,47 @@ class _NewSubjectModalState extends State<NewSubjectModal> {
     try {
       String newName = _nameController.text;
       String newAcronym = _acronymController.text;
-      List<int>? newGrades;
-      int? newAbsence;
-
-      if (_gradesController.text.isNotEmpty) {
-        newGrades = _gradesController.text
-            .split(',')
-            .map((grade) => int.parse(grade.trim()))
-            .toList();
-      }
-
-      if (_absenceController.text.isNotEmpty) {
-        newAbsence = int.parse(_absenceController.text);
-      }
+      String newNotes = _notesController.text;
 
       SubjectModel newSubject = SubjectModel(
         id: '',
         name: newName,
         acronym: newAcronym,
-        grades: newGrades,
-        abscence: newAbsence,
+        notes: newNotes,
       );
 
       await _performAdd(newSubject);
 
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.subjectAddSuccess);
-
-      Navigator.of(context).pop(true);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.subjectAddError);
     }
   }
 
   Future<void> _performAdd(SubjectModel newSubject) async {
-    final SubjectRepository subjectRepository =
-        SubjectRepository(client: _httpClient);
+    final SubjectRepository subjectRepository = SubjectRepository(client: _httpClient);
     String? token = await AppStrings.secureStorage.read(key: 'token');
-    await subjectRepository.addSubject(newSubject, token);
-  }
-}
 
-void showNewSubjectModal(BuildContext context) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (context) => const NewSubjectModal(),
-    ),
-  );
+    try {
+      bool success = await subjectRepository.addSubject(newSubject, token);
+
+      if (success) {
+        print(success);
+        _updateAndReloadPage();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.subjectAddError);
+    }
+  }
+
+  Future<void> _updateAndReloadPage() async {
+    Navigator.pop(context, true);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SubjectPage(),
+      ),
+    );
+  }
 }

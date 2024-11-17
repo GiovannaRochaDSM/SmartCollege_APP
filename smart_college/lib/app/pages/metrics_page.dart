@@ -36,7 +36,7 @@ class _MetricsPageState extends State<MetricsPage> {
   }
 
   int getInProgressTasksCount() {
-    return tasks.where((task) => task.status == 'Em andamento').length;
+    return tasks.where((task) => task.status == 'Em progresso').length;
   }
 
   int getTasksCountByCategory(String category) {
@@ -69,7 +69,7 @@ class _MetricsPageState extends State<MetricsPage> {
           ),
         ),
         backgroundColor: AppColors.purple,
-        iconTheme: const IconThemeData(color: AppColors.white),
+        iconTheme: const IconThemeData(color: AppColors.white, size: 30),
       ),
       drawer: const CustomDrawer(),
       body: SingleChildScrollView(
@@ -124,7 +124,7 @@ class _MetricsPageState extends State<MetricsPage> {
                     child: Column(
                       children: [
                         Text(
-                          'Tarefas em Andamento',
+                          'Tarefas Em progresso',
                           style: AppTextStyles.smallerTextBold.copyWith(color: AppColors.inputText),
                         ),
                         SizedBox(

@@ -522,4 +522,22 @@ class AppSnackBar {
     duration: Duration(seconds: 2),
     backgroundColor: Colors.redAccent,
   );
+
+  static const permissioGranted = SnackBar(
+    content: Text(
+      'Permissão concedida.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
+
+  static const permissioDenied = SnackBar(
+    content: Text(
+      'Permissão negada.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
 }

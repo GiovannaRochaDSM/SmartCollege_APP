@@ -3,7 +3,7 @@ import 'package:smart_college/app/pages/login_page.dart';
 import 'package:smart_college/app/pages/register_page.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -54,7 +54,7 @@ class _OnboardingPage extends State<OnboardingPage> {
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: PrimaryButton(
+                child: CustomPrimaryButton(
                   text: 'Cadastre-se',
                   onPressed: () {
                     Navigator.pushReplacement(
@@ -74,7 +74,7 @@ class _OnboardingPage extends State<OnboardingPage> {
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: PrimaryButton(
+                child: CustomPrimaryButton(
                   text: 'Entre',
                   onPressed: () {
                     Navigator.pushReplacement(

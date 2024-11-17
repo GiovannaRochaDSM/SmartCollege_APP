@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -21,17 +22,17 @@ class CustomTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       textAlign: TextAlign.center,
-      style: const TextStyle(color: AppColors.inputText),
+      style: const TextStyle(color: AppNewColors.textGray),
       decoration: InputDecoration(
         border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          borderRadius: BorderRadius.all(Radius.circular(0.0)),
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: AppColors.filledTextField,
+        fillColor: AppNewColors.lightGray,
         contentPadding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
         hintText: 'Digite aqui',
-        hintStyle: const TextStyle(color: AppColors.gray),
+        hintStyle: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
         alignLabelWithHint: true,
         suffixIcon: suffixIcon,
       ),

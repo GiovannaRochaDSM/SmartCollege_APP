@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
 import 'package:smart_college/app/pages/home_page.dart';
+import 'package:smart_college/app/pages/onboarding_page.dart';
 import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
-import 'package:smart_college/app/pages/onboarding_page.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 
 class AuthCodeModal extends StatefulWidget {
   const AuthCodeModal({super.key});
@@ -61,7 +61,7 @@ class _AuthCodeModalState extends State<AuthCodeModal> {
                   ),
                 ),
                 const SizedBox(height: 120),
-                PrimaryButton(
+                CustomPrimaryButton(
                   text: 'Este é o código',
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {

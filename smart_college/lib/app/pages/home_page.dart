@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/pages/task_timeline.dart';
-import 'package:smart_college/app/pages/user_page.dart';
-import 'package:smart_college/app/pages/subject_page.dart';
-import 'package:smart_college/app/pages/schedule_page.dart';
+import 'package:smart_college/app/pages/user/user_page.dart';
+import 'package:smart_college/app/data/models/task_model.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
 import 'package:smart_college/app/data/helpers/fetch_user.dart';
+import 'package:smart_college/app/data/helpers/fetch_tasks.dart';
+import 'package:smart_college/app/pages/subject/subject_page.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
+import 'package:smart_college/app/common/widgets/modals/home/home_card.dart';
+import 'package:smart_college/app/common/widgets/modals/home/task_progress_chart.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,11 +21,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<UserModel> _futureUser;
+  List<TaskModel> tasks = [];
 
   @override
   void initState() {
     super.initState();
     _futureUser = fetchUser();
+    _fetchTasks();
   }
 
   Future<UserModel> fetchUser() async {
@@ -34,17 +39,42 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _fetchTasks() async {
+    tasks = await TaskHelper.fetchAllTasks();
+    setState(() {});
+  }
+
+  int getTotalTasksCount() {
+    return tasks.length;
+  }
+
+  int getPendingTasksCount() {
+    return tasks.where((task) => task.status == 'Pendente').length;
+  }
+
+  int getInProgressTasksCount() {
+    return tasks.where((task) => task.status == 'Em progresso').length;
+  }
+
+  int getCompletedTasksCount() {
+    return tasks.where((task) => task.status == 'Concluída').length;
+  }
+
+  int getTasksCountByCategory(String category) {
+    return tasks.where((task) => task.category == category).length;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppNewColors.white,
       appBar: AppBar(
-        toolbarHeight: 50,
+        toolbarHeight: 78,
         backgroundColor: Colors.white,
         elevation: 0,
         leading: Builder(
           builder: (context) => IconButton(
-            icon:
-                const Icon(Icons.menu, color: AppColors.purple, size: 40),
+            icon: const Icon(Icons.menu, color: AppNewColors.darkGray, size: 30),
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },
@@ -53,7 +83,7 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: const CustomDrawer(),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 60, 20, 10),
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,36 +105,41 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 40),
                                 Text(
                                   'Olá, ${user.nickname}.',
-                                  style: AppTextStyles.bigTextBold,
+                                  style: AppNewTextStyles.mediumBalooTitle,
                                 ),
                                 const SizedBox(height: 20),
                                 const Text(
                                   'Descubra no que você pode evoluir hoje.',
-                                  style: AppTextStyles.smallText,
+                                  style: AppNewTextStyles.mediumPoppinsRegular,
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: 150,
-                            height: 160,
+                            width: 170,
+                            height: 170,
                             child: Image.asset(
-                              'assets/images/man.png',
+                              'assets/images/couple.png',
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 110),
+                      TaskProgressChart(
+                        pendingTasksCount: getPendingTasksCount(),
+                        inProgressTasksCount: getInProgressTasksCount(),
+                        completedTasksCount: getCompletedTasksCount(),
+                        totalTasksCount: getTotalTasksCount(),
+                      ),
+                      const SizedBox(height: 30),
                       const Text(
                         'Organize-se conosco:',
-                        style: AppTextStyles.normalText,
+                        style: AppNewTextStyles.mediumPoppinsRegular,
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 20),
                       SizedBox(
-                        height: 190,
+                        height: 150,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: [
@@ -124,19 +159,8 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SubjectPage()),
-                                );
-                              },
-                            ),
-                            HomeCard(
-                              title: 'Horário',
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SchedulePage()),
+                                    builder: (context) =>
+                                      const SubjectPage()),
                                 );
                               },
                             ),
@@ -146,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const UserPage()),
+                                    builder: (context) => const UserPage()),
                                 );
                               },
                             ),
@@ -159,63 +183,6 @@ class _HomePageState extends State<HomePage> {
                   return Container();
                 }
               },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class HomeCard extends StatelessWidget {
-  final String title;
-  final VoidCallback onTap;
-
-  const HomeCard({
-    super.key,
-    required this.title,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 150,
-        margin: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.purple, AppColors.pink],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                title,
-                style:
-                    AppTextStyles.normalText.copyWith(color: AppColors.white),
-              ),
-            ),
-            const Spacer(),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0, right: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Icon(
-                    Icons.arrow_forward,
-                    size: 50,
-                    color: AppColors.whiteSmoke,
-                  )
-                ],
-              ),
             ),
           ],
         ),

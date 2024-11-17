@@ -85,7 +85,7 @@ class TaskHelper {
   static Future<int> countPendingOrOngoingTasks({required String subjectId}) async {
     List<TaskModel> tasks = await fetchTasksFilterSubjects(subjectId: subjectId);
     int count = tasks.where((task) =>
-        task.status == 'Pendente' || task.status == 'Em andamento').length;
+        task.status == 'Pendente' || task.status == 'Em progresso').length;
     return count;
   }
 }

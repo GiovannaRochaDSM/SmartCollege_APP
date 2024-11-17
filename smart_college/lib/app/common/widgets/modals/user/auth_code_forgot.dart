@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
+import 'package:smart_college/app/pages/onboarding_page.dart';
 import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 import 'package:smart_college/app/common/widgets/modals/user/reset_password_modal.dart';
-import 'package:smart_college/app/pages/onboarding_page.dart';
 
 class AuthCodeForgotModal extends StatefulWidget {
   const AuthCodeForgotModal({super.key});
@@ -62,7 +62,7 @@ class _AuthCodeModalForgotState extends State<AuthCodeForgotModal> {
                   ),
                 ),
                 const SizedBox(height: 120),
-                PrimaryButton(
+                CustomPrimaryButton(
                   text: 'Este é o código',
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {

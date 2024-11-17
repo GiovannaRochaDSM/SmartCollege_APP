@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
-import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/models/schedule_model.dart';
-import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 import 'package:smart_college/app/data/repositories/schedule_repository.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_elevated_button.dart';
 
-class NewSchedulePage extends StatefulWidget {
-  const NewSchedulePage({super.key});
+class NewScheduleModal extends StatefulWidget {
+  final BuildContext parentContext;
+  final String subjectId;
+
+  const NewScheduleModal({super.key, required this.parentContext, required this.subjectId});
 
   @override
-  _NewSchedulePageState createState() => _NewSchedulePageState();
+  _NewScheduleModalState createState() => _NewScheduleModalState();
 }
 
-class _NewSchedulePageState extends State<NewSchedulePage> {
+class _NewScheduleModalState extends State<NewScheduleModal> {
   late TextEditingController _roomController;
   late TimeOfDay _selectedTime;
-  String? _selectedSubjectId;
   String? _selectedDayOfWeek;
-  List<SubjectModel> _subjects = [];
+
   late IHttpClient _httpClient;
 
   @override
@@ -31,8 +31,6 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
     _roomController = TextEditingController();
     _selectedTime = TimeOfDay.now().replacing(minute: 0);
     _httpClient = HttpClient();
-
-    _fetchSubjects();
   }
 
   @override
@@ -44,39 +42,27 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 65,
-        title: Text(
-          'NOVO HORÁRIO',
-          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
-          textAlign: TextAlign.center,
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.purple, AppColors.pink],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-        iconTheme: const IconThemeData(
-          color: AppColors.white,
-        ),
-      ),
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 70, 20, 10),
+        padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text(
+              'Novo Horário',
+              style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.darkBlue),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
             TextField(
               controller: _roomController,
-              decoration: InputDecoration(labelText: 'Sala',
-              labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
+              decoration: InputDecoration(
+                labelText: 'Sala',
+                labelStyle: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                 enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
-                ),),
+                  borderSide: BorderSide(color: AppNewColors.textGray, width: 1.0),
+                ),
+              ),
             ),
             const SizedBox(height: 45),
             InkWell(
@@ -84,16 +70,15 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
               child: InputDecorator(
                 decoration: InputDecoration(
                   labelText: 'Hora',
-                  labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
-                ),
+                  labelStyle: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
+                  enabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppNewColors.textGray, width: 1.0),
+                  ),
                   border: const OutlineInputBorder(),
                 ),
                 child: Text(
                   _formatTimeOfDay(_selectedTime),
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
             ),
@@ -119,38 +104,22 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
                   _selectedDayOfWeek = value;
                 });
               },
-              decoration: InputDecoration(labelText: 'Dia da Semana', labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
+              decoration: InputDecoration(
+                labelText: 'Dia da Semana',
+                labelStyle: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                 enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
-                ),),
+                  borderSide: BorderSide(color: AppNewColors.textGray, width: 1.0),
+                ),
+              ),
             ),
-            const SizedBox(height: 45),
-            DropdownButtonFormField<String>(
-              value: _selectedSubjectId,
-              items: _subjects.map((subject) {
-                return DropdownMenuItem<String>(
-                  value: subject.id,
-                  child: Text(subject.name),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedSubjectId = value;
-                });
-              },
-              decoration: InputDecoration(labelText: 'Matéria', labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
-                ),),
-            ),
-            const SizedBox(height: 80),
-            PrimaryButton(
+            const SizedBox(height: 30),
+            CustomElevatedButton(
               text: 'Adicionar',
-              onPressed: () async {
-                await _addSchedule(context);
+              onPressed: () {
+                _addSchedule(context);
               },
+              buttonColor: AppNewColors.darkBlue,
+              borderColor: AppNewColors.darkBlue,
             ),
           ],
         ),
@@ -158,46 +127,45 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
     );
   }
 
-  Future<void> _fetchSubjects() async {
-      List<SubjectModel> subjects = await SubjectHelper.fetchSubjects();
-      setState(() {
-        _subjects = subjects;
-      });
-  }
-
   Future<void> _addSchedule(BuildContext context) async {
-    try {
-      if (_selectedDayOfWeek == null || _selectedSubjectId == null || _roomController.text.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Preencha todos os campos'),
-          duration: Duration(seconds: 2),
-        ));
-        return;
-      }
-
-      ScheduleModel newSchedule = ScheduleModel(
-        id: '',
-        dayWeek: _selectedDayOfWeek!,
-        room: _roomController.text,
-        time: '${_selectedTime.hour}:${_selectedTime.minute.toString().padLeft(2, '0')}',
-        subjectId: _selectedSubjectId!,
-      );
-
-      await _performAdd(newSchedule);
-
-      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.scheduleAddSuccess);
-
-      Navigator.of(context).pop(true);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.scheduleAddError);
+  try {
+    if (_selectedDayOfWeek == null || _roomController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Preencha todos os campos'),
+        duration: Duration(seconds: 2),
+      ));
+      print("Campos obrigatórios não preenchidos.");
+      return;
     }
+
+    ScheduleModel newSchedule = ScheduleModel(
+      id: '',
+      dayWeek: _selectedDayOfWeek!,
+      room: _roomController.text,
+      time: '${_selectedTime.hour}:${_selectedTime.minute.toString().padLeft(2, '0')}',
+      subjectId: widget.subjectId,
+    );
+    await _performAdd(newSchedule);
+
+    ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.scheduleAddSuccess);
+    Navigator.pop(context);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.scheduleAddError);
   }
+}
+
 
   Future<void> _performAdd(ScheduleModel newSchedule) async {
+  try {
     final ScheduleRepository scheduleRepository = ScheduleRepository(client: _httpClient);
     String? token = await AppStrings.secureStorage.read(key: 'token');
+
     await scheduleRepository.addSchedule(newSchedule, token);
+  } catch (e) {
+    throw Exception("Erro ao adicionar horário no servidor.");
   }
+}
+
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(
@@ -220,14 +188,4 @@ class _NewSchedulePageState extends State<NewSchedulePage> {
   String _formatTimeOfDay(TimeOfDay time) {
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
   }
-}
-
-void showNewSchedulePage(BuildContext context) {
-  Navigator.of(context).push(
-    MaterialPageRoute(
-      builder: (BuildContext context) {
-        return const NewSchedulePage();
-      },
-    ),
-  );
 }

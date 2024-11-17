@@ -8,9 +8,9 @@ import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/user_repository.dart';
-import 'package:smart_college/app/common/widgets/buttons/primary_button.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 
 class ResetPasswordModal extends StatefulWidget {
   const ResetPasswordModal({super.key});
@@ -40,29 +40,26 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
       child: Stack(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 120),
+            padding: const EdgeInsets.all(24),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   'Redefinir senha',
-                  style: AppTextStyles.biggerText
-                      .copyWith(color: AppColors.titlePurple),
+                  style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.lightBlue),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 Text(
                   'Crie uma nova senha de acordo com nossos parâmetros',
-                  style:
-                      AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                  style: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 Text(
                   'Nova Senha',
-                  style:
-                      AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                  style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
@@ -83,18 +80,15 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
                       });
                     },
                     icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
                       color: AppColors.gray,
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 30),
                 Text(
                   'Confirmar Senha',
-                  style:
-                      AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                  style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
@@ -117,19 +111,20 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
                       });
                     },
                     icon: Icon(
-                      _isConfirmPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
                       color: AppColors.gray,
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
-                PrimaryButton(
+                const SizedBox(height: 50),
+                CustomPrimaryButton(
                   text: 'Alterar',
                   onPressed: () {
                     _changePassword(context);
                   },
+                  textColor: AppNewColors.white,
+                  borderColor: AppNewColors.lightBlue,
+                  buttonColor: AppNewColors.lightBlue,
                 ),
                 const SizedBox(height: 10),
                 CustomTextButton(
@@ -142,12 +137,12 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
             ),
           ),
           Positioned(
-            top: 16,
-            right: 16,
+            top: 20,
+            right: 18,
             child: IconButton(
-              icon:
-                  const Icon(Icons.help_outline_rounded, color: AppColors.gray),
+              icon: const Icon(Icons.help_outline_rounded, color: AppNewColors.darkGray),
               onPressed: _showPasswordPolicyAlert,
+              iconSize: 30.0,
             ),
           ),
         ],
@@ -161,31 +156,25 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Política de Senha',
-              style: AppTextStyles.mediumTextBold
-                  .copyWith(color: AppColors.titlePurple),
-                  textAlign: TextAlign.center),
+              style: AppTextStyles.mediumTextBold.copyWith(color: AppColors.titlePurple),
+              textAlign: TextAlign.center),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text('A senha deve conter:',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.inputText)),
+                    style: AppTextStyles.smallerText.copyWith(color: AppColors.inputText)),
                 Text('- Pelo menos uma letra maiúscula',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray)),
+                    style: AppTextStyles.smallerText.copyWith(color: AppColors.gray)),
                 Text('- Pelo menos um caractere especial',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray)),
+                    style: AppTextStyles.smallerText.copyWith(color: AppColors.gray)),
                 Text('- Pelo menos 8 caracteres',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray)),
+                    style: AppTextStyles.smallerText.copyWith(color: AppColors.gray)),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK', style: AppTextStyles.smallerTextBold
-                  .copyWith(color: AppColors.titlePurple)),
+              child: Text('OK', style: AppTextStyles.smallerTextBold.copyWith(color: AppColors.titlePurple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -236,22 +225,4 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
     return password.length >= 8 &&
         RegExp(r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$').hasMatch(password);
   }
-}
-
-void showResetPasswordModal(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (BuildContext context) {
-      return SingleChildScrollView(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: const ResetPasswordModal(),
-      );
-    },
-  );
 }
