@@ -39,9 +39,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Drawer(
+      width: MediaQuery.of(context).size.width * 0.5,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -51,22 +52,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const DrawerHeader(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [AppColors.purple, AppColors.pink],
-                    ),
+                    color: AppNewColors.darkBlue,
                   ),
                   child: Center(child: CircularProgressIndicator()),
                 );
               } else if (snapshot.hasError) {
                 return DrawerHeader(
                   decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [AppColors.purple, AppColors.pink],
-                    ),
+                    color: AppNewColors.darkBlue,
                   ),
                   child: Center(
                     child: Text(
@@ -83,38 +76,32 @@ class _CustomDrawerState extends State<CustomDrawer> {
               } else if (snapshot.hasData) {
                 final user = snapshot.data!;
                 final displayName = user.nickname ?? user.name;
-
                 return DrawerHeader(
                   decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [AppColors.purple, AppColors.pink],
-                    ),
+                    color: AppNewColors.darkBlue,
                   ),
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          child: CircleAvatar(
-                            backgroundColor: Colors.grey[200],
-                            radius: 50,
-                            backgroundImage: imagemReal?.image,
-                            child: imagemReal == null
-                                ? const Icon(Icons.camera_alt,
-                                    size: 50, color: Colors.white)
-                                : null,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          displayName,
-                          style: AppTextStyles.normalText
-                              .copyWith(color: AppColors.white),
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.grey[200],
+                        radius: 50,
+                        backgroundImage: imagemReal?.image,
+                        child: imagemReal == null
+                            ? const Icon(
+                                Icons.camera_alt,
+                                size: 20,
+                                color: Colors.white,
+                              )
+                            : null,
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        displayName,
+                        style: AppNewTextStyles.smallPoppinsRegular
+                            .copyWith(color: AppNewColors.white),
+                      ),
+                    ],
                   ),
                 );
               }
@@ -123,8 +110,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Home',
-                style:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray)),
+                style: AppNewTextStyles.mediumPoppinsRegular
+                    .copyWith(color: AppNewColors.textGray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -136,8 +123,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Tarefas',
-                style:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray)),
+                style: AppNewTextStyles.mediumPoppinsRegular
+                    .copyWith(color: AppNewColors.textGray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -149,8 +136,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Matérias',
-                style:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray)),
+                style: AppNewTextStyles.mediumPoppinsRegular
+                    .copyWith(color: AppNewColors.textGray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -162,8 +149,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Métricas',
-                style:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray)),
+                style: AppNewTextStyles.mediumPoppinsRegular
+                    .copyWith(color: AppNewColors.textGray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -185,7 +172,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       ListTile(
                         title: Text('Vínculos',
                             style: AppTextStyles.normalText
-                                .copyWith(color: AppColors.gray)),
+                                .copyWith(color: AppNewColors.textGray)),
                         onTap: () {
                           Navigator.pushReplacement(
                             context,
@@ -199,7 +186,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       ListTile(
                         title: Text('Feed',
                             style: AppTextStyles.normalText
-                                .copyWith(color: AppColors.gray)),
+                                .copyWith(color: AppNewColors.textGray)),
                         onTap: () {
                           Navigator.pushReplacement(
                             context,
@@ -217,8 +204,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           ListTile(
             title: Text('Meu perfil',
-                style:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray)),
+                style: AppNewTextStyles.mediumPoppinsRegular
+                    .copyWith(color: AppNewColors.textGray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -232,8 +219,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
           const Divider(),
           ListTile(
             title: Text('Sair',
-                style:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray)),
+                style: AppNewTextStyles.mediumPoppinsRegular
+                    .copyWith(color: AppNewColors.textGray)),
             onTap: () {
               AuthService.logout(context);
             },

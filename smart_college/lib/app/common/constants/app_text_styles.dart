@@ -80,25 +80,25 @@ class AppNewTextStyles {
   AppNewTextStyles._();
 
   static const TextStyle balooTitle = TextStyle(
-    fontFamily: 'BalooTamma',
+    fontFamily: 'BaloTamma',
     fontSize: 25,
     fontWeight: FontWeight.w900,
   );
 
   static const TextStyle mediumBalooTitle = TextStyle(
-    fontFamily: 'BalooTamma',
+    fontFamily: 'BaloTamma',
     fontSize: 30,
     fontWeight: FontWeight.w900,
   );
 
     static const TextStyle bigBalooTitle = TextStyle(
-    fontFamily: 'BalooTamma',
+    fontFamily: 'BaloTamma',
     fontSize: 40,
     fontWeight: FontWeight.w900,
   );
 
   static const TextStyle smallBalooTitle = TextStyle(
-    fontFamily: 'BalooTamma',
+    fontFamily: 'BaloTamma',
     fontSize: 15,
     fontWeight: FontWeight.w900,
   );

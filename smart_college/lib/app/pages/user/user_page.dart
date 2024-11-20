@@ -493,22 +493,6 @@ class _UserPageState extends State<UserPage> {
                 leading: const CircleAvatar(
                   backgroundColor: AppColors.purple,
                   child: Icon(
-                    Icons.camera_alt,
-                    color: AppColors.white,
-                  ),
-                ),
-                title: Text('Tirar foto',
-                    style: AppTextStyles.smallTextBold
-                        .copyWith(color: AppColors.gray)),
-                onTap: () {
-                  Navigator.of(context).pop();
-                  pickImage(ImageSource.camera);
-                },
-              ),
-              ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: AppColors.purple,
-                  child: Icon(
                     Icons.delete_outline_rounded,
                     color: AppColors.white,
                   ),

@@ -56,152 +56,155 @@ class _LoginPage extends State<LoginPage> {
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 25.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'SmartCollege',
-                      style: AppTextStyles.bigText.copyWith(color: AppColors.gray),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'E-MAIL',
-                      style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (email) {
-                          if (email == null || email.isEmpty) {
-                            return 'Por favor, digite seu e-mail';
-                          } else if (!RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(email)) {
-                            return 'Por favor, digite um e-mail correto';
-                          }
-                          return null;
-                        },
-                        decoration: InputDecoration(
-                          labelStyle:
-                              AppTextStyles.smallerText.copyWith(color: AppColors.gray),
-                          prefixIcon: const Icon(Icons.email_rounded, color: AppColors.purple),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(color: AppColors.gray),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(color: AppColors.gray),
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
-                        ),
+                child: Form(
+                  key: _formkey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'SmartCollege',
+                        style: AppTextStyles.bigText.copyWith(color: AppColors.gray),
+                        textAlign: TextAlign.center,
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'SENHA',
-                      style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
-                    ),
-                    const SizedBox(height: 5),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextFormField(
-                        controller: _passwordController,
-                        keyboardType: TextInputType.text,
-                        validator: (password) {
-                          if (password == null || password.isEmpty) {
-                            return 'Por favor, digite sua senha';
-                          } else if (password.length < 8) {
-                            return 'Por favor, digite uma senha válida';
-                          } else if (!RegExp(
-                                  r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$')
-                              .hasMatch(password)) {
-                            return 'Por favor, digite uma senha válida';
-                          }
-                          return null;
-                        },
-                        obscureText: !_isPasswordVisible,
-                        decoration: InputDecoration(
-                          labelStyle:
-                              AppTextStyles.smallerText.copyWith(color: AppColors.gray),
-                          prefixIcon: const Icon(Icons.key, color: AppColors.purple),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
-                            icon: Icon(
-                              _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                              color: AppColors.purple,
+                      const SizedBox(height: 20),
+                      Text(
+                        'E-MAIL',
+                        style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                      ),
+                      const SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: TextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (email) {
+                            if (email == null || email.isEmpty) {
+                              return 'Por favor, digite seu e-mail';
+                            } else if (!RegExp(
+                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(email)) {
+                              return 'Por favor, digite um e-mail correto';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            labelStyle:
+                            AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+                            prefixIcon: const Icon(Icons.email_rounded, color: AppColors.purple),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              borderSide: const BorderSide(color: AppColors.gray),
                             ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              borderSide: const BorderSide(color: AppColors.gray),
+                            ),
+                            contentPadding:
+                            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(color: AppColors.gray),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            borderSide: const BorderSide(color: AppColors.gray),
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 1),
-                    CustomTextButton(
-                      text: 'Esqueci minha senha',
-                      onPressed: () {
-                        _showForgotPasswordModal(context);
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    CustomElevatedButton(
-                      text: 'Entrar',
-                      onPressed: () async {
-                        FocusScopeNode currentFocus = FocusScope.of(context);
+                      const SizedBox(height: 20),
+                      Text(
+                        'SENHA',
+                        style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                      ),
+                      const SizedBox(height: 5),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: TextFormField(
+                          controller: _passwordController,
+                          keyboardType: TextInputType.text,
+                          validator: (password) {
+                            if (password == null || password.isEmpty) {
+                              return 'Por favor, digite sua senha';
+                            } else if (password.length < 8) {
+                              return 'Por favor, digite uma senha válida';
+                            } else if (!RegExp(
+                              r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$')
+                                .hasMatch(password)) {
+                              return 'Por favor, digite uma senha válida';
+                            }
+                            return null;
+                          },
+                          obscureText: !_isPasswordVisible,
+                          decoration: InputDecoration(
+                            labelStyle:
+                            AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+                            prefixIcon: const Icon(Icons.key, color: AppColors.purple),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordVisible = !_isPasswordVisible;
+                                });
+                              },
+                              icon: Icon(
+                                _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                                color: AppColors.purple,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              borderSide: const BorderSide(color: AppColors.gray),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              borderSide: const BorderSide(color: AppColors.gray),
+                            ),
+                            contentPadding: 
+                            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 1),
+                      CustomTextButton(
+                        text: 'Esqueci minha senha',
+                        onPressed: () {
+                          _showForgotPasswordModal(context);
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      CustomElevatedButton(
+                        text: 'Entrar',
+                        onPressed: () async {
+                          FocusScopeNode currentFocus = FocusScope.of(context);
                         if (_formkey.currentState!.validate()) {
-                          bool isLogged = await AuthService.login(
+                             bool isLogged = await AuthService.login(
                               _emailController.text, _passwordController.text);
                           if (!currentFocus.hasPrimaryFocus) {
                             currentFocus.unfocus();
                           }
-                          if (isLogged) {
-                            Navigator.pushReplacement(
+                            if (isLogged) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const AuthCodeModal(),
+                                ),
+                              );
+                            } else {
+                              _passwordController.clear();
+                             ScaffoldMessenger.of(context).showSnackBar(
+                                AppSnackBar.invalidEmailOrPassword);
+                            }
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 40),
+                      Text(
+                        'Ainda não possui uma conta?',
+                        style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                      ),
+                      CustomTextButton(
+                        text: 'Cadastre-se aqui',
+                        onPressed: () {
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const AuthCodeModal(),
-                              ),
-                            );
-                          } else {
-                            _passwordController.clear();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                AppSnackBar.invalidEmailOrPassword);
-                          }
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 40),
-                    Text(
-                      'Ainda não possui uma conta?',
-                      style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
-                    ),
-                    CustomTextButton(
-                      text: 'Cadastre-se aqui',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const RegisterPage()));
-                      },
-                    ),
-                  ],
+                                  builder: (context) => const RegisterPage()));
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -211,20 +214,32 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  void _showForgotPasswordModal(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const ForgotPasswordModal();
-      },
-    ).then((result) {
-      if (result != null && result is String) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result)),
-        );
-      }
-    });
-  }
+void _showForgotPasswordModal(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+        child: Container(
+          color: Colors.white,
+          constraints: const BoxConstraints(maxHeight: 600),
+          child: const ForgotPasswordModal(),
+        ),
+      );
+    },
+  ).then((result) {
+    if (result != null && result is String) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(result)),
+      );
+    }
+  });
+}
 
   void _showPasswordPolicyAlert() {
     showDialog(

@@ -3,7 +3,7 @@ import 'package:smart_college/app/pages/login_page.dart';
 import 'package:smart_college/app/pages/register_page.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_elevated_button.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -24,8 +24,8 @@ class _OnboardingPage extends State<OnboardingPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.white,
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 50.0),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -54,7 +54,7 @@ class _OnboardingPage extends State<OnboardingPage> {
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: CustomPrimaryButton(
+                child: CustomElevatedButton(
                   text: 'Cadastre-se',
                   onPressed: () {
                     Navigator.pushReplacement(
@@ -69,12 +69,13 @@ class _OnboardingPage extends State<OnboardingPage> {
               const SizedBox(height: 30),
               Text(
                 'Já se organiza conosco?',
-                style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                style: AppNewTextStyles.smallPoppinsRegular
+                    .copyWith(color: AppColors.gray),
               ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: CustomPrimaryButton(
+                child: CustomElevatedButton(
                   text: 'Entre',
                   onPressed: () {
                     Navigator.pushReplacement(

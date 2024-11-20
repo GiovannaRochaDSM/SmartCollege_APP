@@ -309,7 +309,7 @@ class AppSnackBar {
 
   static const scheduleUpdateSuccess = SnackBar(
     content: Text(
-      'Horário adicionado com sucesso.',
+      'Horário atualizado com sucesso.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
@@ -318,7 +318,7 @@ class AppSnackBar {
 
   static const scheduleUpdateError = SnackBar(
     content: Text(
-      'Erro ao adicionar horário.',
+      'Erro ao atualizar horário.',
       textAlign: TextAlign.center,
     ),
     duration: Duration(seconds: 2),
@@ -539,5 +539,14 @@ class AppSnackBar {
     ),
     duration: Duration(seconds: 2),
     backgroundColor: Colors.redAccent,
+  );
+
+  static const taskCompleted = SnackBar(
+    content: Text(
+      'Tarefa concluída',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
   );
 }

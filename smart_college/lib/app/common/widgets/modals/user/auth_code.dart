@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_elevated_button.dart';
 import 'package:smart_college/app/pages/home_page.dart';
 import 'package:smart_college/app/pages/onboarding_page.dart';
 import 'package:smart_college/app/data/services/auth_service.dart';
@@ -61,7 +62,7 @@ class _AuthCodeModalState extends State<AuthCodeModal> {
                   ),
                 ),
                 const SizedBox(height: 120),
-                CustomPrimaryButton(
+                CustomElevatedButton(
                   text: 'Este é o código',
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
@@ -89,7 +90,7 @@ class _AuthCodeModalState extends State<AuthCodeModal> {
                   },
                 ),
                 const SizedBox(height: 10),
-                CustomTextButton(
+                CustomElevatedButton(
                   text: 'Cancelar',
                   onPressed: () {
                     Navigator.pushReplacement(

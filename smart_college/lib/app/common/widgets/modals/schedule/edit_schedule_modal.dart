@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
-import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/models/schedule_model.dart';
-import 'package:smart_college/app/data/helpers/fetch_subjects.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
-import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 import 'package:smart_college/app/data/repositories/schedule_repository.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_elevated_button.dart';
 
 class EditScheduleModal extends StatefulWidget {
   final ScheduleModel schedule;
@@ -22,9 +20,7 @@ class EditScheduleModal extends StatefulWidget {
 class _EditScheduleModalState extends State<EditScheduleModal> {
   late TextEditingController _roomController;
   late TimeOfDay _selectedTime;
-  String? _selectedSubjectId;
-  late String _selectedDayOfWeek; 
-  List<SubjectModel> _subjects = [];
+  String? _selectedDayOfWeek;
   late IHttpClient _httpClient;
 
   @override
@@ -32,11 +28,8 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
     super.initState();
     _roomController = TextEditingController(text: widget.schedule.room ?? '');
     _selectedTime = _parseTimeOfDay(widget.schedule.time);
-    _selectedSubjectId = widget.schedule.subjectId;
     _selectedDayOfWeek = widget.schedule.dayWeek;
     _httpClient = HttpClient();
-
-    _fetchSubjects();
   }
 
   @override
@@ -48,37 +41,25 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 78,
-        title: Text(
-          'EDITAR HORÁRIO',
-          style: AppTextStyles.normalText.copyWith(color: AppColors.white),
-          textAlign: TextAlign.center,
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.purple, AppColors.pink],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-        ),
-        iconTheme: const IconThemeData(color: AppColors.white, size: 30),
-      ),
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 70, 20, 10),
+        padding: const EdgeInsets.fromLTRB(20, 30, 20, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text(
+              'Editar Horário',
+              style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.darkBlue),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
             TextField(
               controller: _roomController,
               decoration: InputDecoration(
                 labelText: 'Sala',
-                labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                labelStyle: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                 enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                  borderSide: BorderSide(color: AppNewColors.textGray, width: 1.0),
                 ),
               ),
             ),
@@ -88,38 +69,15 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
               child: InputDecorator(
                 decoration: InputDecoration(
                   labelText: 'Hora',
-                  labelStyle:
-                      AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                  labelStyle: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                   enabledBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                    borderSide: BorderSide(color: AppNewColors.textGray, width: 1.0),
                   ),
+                  border: const OutlineInputBorder(),
                 ),
                 child: Text(
                   _formatTimeOfDay(_selectedTime),
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-              ),
-            ),
-            const SizedBox(height: 45),
-            DropdownButtonFormField<String>(
-              value: _selectedSubjectId,
-              items: _subjects.map((subject) {
-                return DropdownMenuItem<String>(
-                  value: subject.id,
-                  child: Text(subject.name),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedSubjectId = value;
-                });
-              },
-              decoration: InputDecoration(
-                labelText: 'Matéria',
-                labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
-                enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
             ),
@@ -142,24 +100,25 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
               }).toList(),
               onChanged: (value) {
                 setState(() {
-                  _selectedDayOfWeek = value!;
+                  _selectedDayOfWeek = value;
                 });
               },
               decoration: InputDecoration(
                 labelText: 'Dia da Semana',
-                labelStyle:
-                    AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                labelStyle: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                 enabledBorder: const UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.pink, width: 3.0),
+                  borderSide: BorderSide(color: AppNewColors.textGray, width: 1.0),
                 ),
               ),
             ),
-            const SizedBox(height: 80),
-            CustomPrimaryButton(
+            const SizedBox(height: 30),
+            CustomElevatedButton(
               text: 'Salvar',
-              onPressed: () async {
-                await _editSchedule(context);
+              onPressed: () {
+                _editSchedule(context);
               },
+              buttonColor: AppNewColors.darkBlue,
+              borderColor: AppNewColors.darkBlue,
             ),
           ],
         ),
@@ -167,18 +126,9 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
     );
   }
 
-  Future<void> _fetchSubjects() async {
-    List<SubjectModel> subjects = await SubjectHelper.fetchSubjects();
-    setState(() {
-      _subjects = subjects;
-    });
-  }
-
   Future<void> _editSchedule(BuildContext context) async {
     try {
-      if (_selectedSubjectId == null ||
-          _roomController.text.isEmpty ||
-          _selectedDayOfWeek.isEmpty) {
+      if (_selectedDayOfWeek == null || _roomController.text.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Preencha todos os campos'),
           duration: Duration(seconds: 2),
@@ -188,30 +138,30 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
 
       ScheduleModel updatedSchedule = ScheduleModel(
         id: widget.schedule.id,
-        dayWeek: _selectedDayOfWeek,
+        dayWeek: _selectedDayOfWeek!,
         room: _roomController.text,
-        time:
-            '${_selectedTime.hour}:${_selectedTime.minute.toString().padLeft(2, '0')}',
-        subjectId: _selectedSubjectId!,
+        time: '${_selectedTime.hour}:${_selectedTime.minute.toString().padLeft(2, '0')}',
+        subjectId: widget.schedule.subjectId,
       );
 
       await _performUpdate(updatedSchedule);
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.scheduleUpdateSuccess);
-
-      Navigator.of(context).pop(true);
+      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.scheduleUpdateSuccess);
+      Navigator.pop(context);
     } catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(AppSnackBar.scheduleUpdateError);
+      ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.scheduleUpdateError);
     }
   }
 
   Future<void> _performUpdate(ScheduleModel updatedSchedule) async {
-    final ScheduleRepository scheduleRepository =
-        ScheduleRepository(client: _httpClient);
-    String? token = await AppStrings.secureStorage.read(key: 'token');
-    await scheduleRepository.updateSchedule(updatedSchedule, token);
+    try {
+      final ScheduleRepository scheduleRepository = ScheduleRepository(client: _httpClient);
+      String? token = await AppStrings.secureStorage.read(key: 'token');
+
+      await scheduleRepository.updateSchedule(updatedSchedule, token);
+    } catch (e) {
+      throw Exception("Erro ao atualizar horário no servidor.");
+    }
   }
 
   Future<void> _selectTime(BuildContext context) async {
@@ -247,13 +197,4 @@ class _EditScheduleModalState extends State<EditScheduleModal> {
     }
     return TimeOfDay.now().replacing(minute: 0);
   }
-}
-
-void showEditScheduleModal(BuildContext context, ScheduleModel schedule) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return EditScheduleModal(schedule: schedule);
-    },
-  );
 }

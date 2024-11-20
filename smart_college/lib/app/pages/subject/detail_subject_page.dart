@@ -9,6 +9,7 @@ import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:smart_college/app/data/helpers/fetch_tasks.dart';
 import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/pages/subject/subject_page.dart';
+import 'package:smart_college/app/data/stores/schedule_store.dart';
 import 'package:smart_college/app/data/models/schedule_model.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -16,8 +17,10 @@ import 'package:smart_college/app/data/helpers/fetch_schedules.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/subject_repository.dart';
+import 'package:smart_college/app/data/repositories/schedule_repository.dart';
 import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 import 'package:smart_college/app/common/widgets/modals/schedule/new_schedule_modal.dart';
+import 'package:smart_college/app/common/widgets/modals/schedule/edit_schedule_modal.dart';
 
 class DetailSubjectPage extends StatefulWidget {
   final SubjectModel subject;
@@ -31,12 +34,15 @@ class DetailSubjectPage extends StatefulWidget {
 class _DetailSubjectPageState extends State<DetailSubjectPage> {
   late TextEditingController _nameController;
   late TextEditingController _acronymController;
-  late TextEditingController _gradesController;
-  late TextEditingController _absenceController;
   late TextEditingController _notesController;
   late Future<List<ScheduleModel>> _scheduleFuture;
   late IHttpClient _httpClient;
   Future<int>? _pendingOrOngoingTaskCount;
+  final ScheduleStore store = ScheduleStore(
+    repository: ScheduleRepository(
+      client: HttpClient(),
+    ),
+  );
 
   bool _isExpanded = false;
 
@@ -54,8 +60,6 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
   void dispose() {
     _nameController.dispose();
     _acronymController.dispose();
-    _gradesController.dispose();
-    _absenceController.dispose();
     _notesController.dispose();
     super.dispose();
   }
@@ -105,26 +109,11 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
     try {
       String newName = _nameController.text;
       String newAcronym = _acronymController.text;
-      List<int>? newGrades;
-      int? newAbsence;
-      String? newNotes = _notesController.text;
-
-      if (_gradesController.text.isNotEmpty) {
-        newGrades = _gradesController.text.split(',').map((grade) {
-          return int.parse(grade.trim());
-        }).toList();
-      }
-
-      if (_absenceController.text.isNotEmpty) {
-        newAbsence = int.parse(_absenceController.text);
-      }
 
       SubjectModel updatedSubject = SubjectModel(
-        id: widget.subject.id,
-        name: newName,
-        acronym: newAcronym,
-        notes: newNotes,
-      );
+          id: widget.subject.id, 
+          name: newName, 
+          acronym: newAcronym);
 
       await _performUpdate(updatedSubject);
 
@@ -172,7 +161,6 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
                 _navigateToTasksPage(widget.subject.id);
               },
               child: FutureBuilder<int>(
-
                 future: _pendingOrOngoingTaskCount,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -194,8 +182,8 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
                   return _buildCard(
                     title: 'Tarefas',
                     content: Text(
-                      'Você possui $taskCount tarefas pendentes e/ou Em progresso.',
-                      style: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray)),
+                        'Você possui $taskCount tarefas pendentes e/ou Em progresso.',
+                        style: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray)),
                   );
                 },
               ),
@@ -258,11 +246,23 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
 
         String scheduleDisplay = 'Nenhum horário encontrado';
         bool showAddScheduleIcon = false;
+        bool showDeleteScheduleIcon = false;
+        ScheduleModel? scheduleToDelete;
 
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          scheduleDisplay = _getScheduleDisplay(snapshot.data!);
-        } else if (snapshot.hasError) {
-          scheduleDisplay = 'Erro ao carregar horários';
+          List<ScheduleModel> subjectSchedules =
+              snapshot.data!.where((schedule) {
+            return schedule.subjectId == widget.subject.id;
+          }).toList();
+
+          if (subjectSchedules.isNotEmpty) {
+            scheduleDisplay = _getScheduleDisplay(subjectSchedules);
+            showDeleteScheduleIcon = true;
+            scheduleToDelete = subjectSchedules.first;
+          } else {
+            scheduleDisplay = 'Nenhum horário encontrado para esta matéria.';
+            showAddScheduleIcon = true;
+          }
         } else {
           showAddScheduleIcon = true;
         }
@@ -287,10 +287,17 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
                 const SizedBox(width: 20),
                 SizedBox(
                   width: 150,
-                  child: _buildField(
-                    title: 'Horário',
-                    value: scheduleDisplay,
-                    isClickable: true,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (scheduleToDelete != null) {
+                        showEditScheduleModal(context, scheduleToDelete);
+                      }
+                    },
+                    child: _buildField(
+                      title: 'Horário',
+                      value: scheduleDisplay,
+                      isClickable: true,
+                    ),
                   ),
                 ),
                 if (showAddScheduleIcon)
@@ -298,10 +305,13 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
                     icon: const Icon(Icons.add, color: AppNewColors.lightBlue),
                     onPressed: () {
                       showNewScheduleModal(context, widget.subject.id);
-
-                      setState(() {
-                        _isExpanded = !_isExpanded;
-                      });
+                    },
+                  ),
+                if (showDeleteScheduleIcon && scheduleToDelete != null)
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: AppNewColors.red),
+                    onPressed: () {
+                      _deleteSchedule(scheduleToDelete!.id);
                     },
                   ),
               ],
@@ -309,32 +319,6 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildExpandedScheduleForm() {
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-      child: _isExpanded
-          ? Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  const TextField(
-                    decoration: InputDecoration(labelText: 'Adicionar Horário'),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Lógica para adicionar horário
-                    },
-                    child: const Text('Salvar'),
-                  ),
-                ],
-              ),
-            )
-          : const SizedBox.shrink(),
     );
   }
 
@@ -360,12 +344,13 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-          style: AppNewTextStyles.poppinsMedium.copyWith(color: AppNewColors.textGray)),
+            style: AppNewTextStyles.poppinsMedium.copyWith(color: AppNewColors.textGray)),
         const SizedBox(height: 2),
         TextField(
           controller: controller,
           decoration: const InputDecoration(border: InputBorder.none),
-          style: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
+          style: AppNewTextStyles.smallExtraLight
+              .copyWith(color: AppNewColors.textGray),
         ),
       ],
     );
@@ -377,7 +362,7 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-          style: AppNewTextStyles.poppinsMedium.copyWith(color: AppNewColors.textGray)),
+            style: AppNewTextStyles.poppinsMedium.copyWith(color: AppNewColors.textGray)),
         const SizedBox(height: 2),
         GestureDetector(
           child: Container(
@@ -386,13 +371,13 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
             child: RichText(
               text: TextSpan(
                 children: [
-                  if (isScheduleNotEmpty) 
+                  if (isScheduleNotEmpty)
                     TextSpan(
                       text: 'Sala: ',
                       style: AppNewTextStyles.smallExtraLight.copyWith(
                         color: isClickable
-                          ? AppNewColors.textGray
-                          : AppNewColors.textGray,
+                            ? AppNewColors.textGray
+                            : AppNewColors.textGray,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -400,8 +385,8 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
                     text: value,
                     style: AppNewTextStyles.smallExtraLight.copyWith(
                       color: isClickable
-                        ? AppNewColors.black
-                        : AppNewColors.textGray,
+                          ? AppNewColors.black
+                          : AppNewColors.textGray,
                     ),
                   ),
                 ],
@@ -448,6 +433,7 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
           ),
           child: Container(
             color: AppNewColors.white,
+            constraints: const BoxConstraints(maxHeight: 600),
             child: NewScheduleModal(
               parentContext: context,
               subjectId: subjectId,
@@ -455,7 +441,9 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
           ),
         );
       },
-    );
+    ).whenComplete(() {
+      _updateAndReloadPage();
+    });
   }
 
   void _navigateToTasksPage(String subjectId) {
@@ -483,5 +471,45 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
         builder: (context) => const SubjectPage(),
       ),
     );
+  }
+
+  void _deleteSchedule(String subjectId) {
+    store.deleteSchedule(subjectId).then((_) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(AppSnackBar.subjectDeletedSuccess);
+
+      setState(() {
+        _scheduleFuture = ScheduleHelper.fetchSchedules();
+      });
+    }).catchError((error) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(AppSnackBar.subjectDeletedError);
+    });
+  }
+
+  void showEditScheduleModal(
+      BuildContext context, ScheduleModel scheduleToEdit) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: Container(
+            color: AppNewColors.white,
+            constraints: const BoxConstraints(maxHeight: 600),
+            child: EditScheduleModal(
+              schedule: scheduleToEdit,
+            ),
+          ),
+        );
+      },
+    ).whenComplete(() {
+      _updateAndReloadPage();
+    });
   }
 }

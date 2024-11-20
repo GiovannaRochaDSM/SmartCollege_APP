@@ -1,17 +1,20 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
-import 'package:intl/intl.dart';
-import 'package:smart_college/app/common/widgets/modals/task/edit_task_modal.dart';
-import 'package:smart_college/app/common/widgets/modals/task/new_task_modal.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/task_model.dart';
-import 'package:smart_college/app/data/repositories/task_repository.dart';
-import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/data/stores/task_store.dart';
 import 'package:smart_college/app/data/helpers/fetch_tasks.dart';
 import 'package:smart_college/app/data/models/schedule_model.dart';
+import 'package:smart_college/app/data/services/auth_service.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/data/helpers/fetch_schedules.dart';
+import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/data/repositories/task_repository.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
+import 'package:smart_college/app/common/widgets/modals/task/new_task_modal.dart';
+import 'package:smart_college/app/common/widgets/modals/task/edit_task_modal.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({super.key});
@@ -91,34 +94,13 @@ class _TaskPageState extends State<TaskPage> {
     return deadline.isBefore(today);
   }
 
-  Future<void> _updateAndReloadPage() async {
-    setState(() {
-      futureTasks = getFilteredTasks();
-    });
-  }
-
-  void _showAddTaskModal() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return const NewTaskModal();
-      },
-    ).then((result) {
-      if (result != null && result == true) {
-        _updateAndReloadPage();
-      }
-    });
-  }
-
   Future<void> _completeTask(TaskModel task, int index) async {
     if (token == null) await _loadToken();
     await store.updateTaskStatus(task.id, 'Concluída', token!);
     setState(() {
       futureTasks = getFilteredTasks();
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tarefa concluída!')),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.taskCompleted);
   }
 
   Future<void> _deleteTask(TaskModel task, int index) async {
@@ -127,8 +109,88 @@ class _TaskPageState extends State<TaskPage> {
     setState(() {
       futureTasks = getFilteredTasks();
     });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tarefa excluída!')),
+     ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.taskDeletedSuccess); 
+  }
+
+void _showClassificationAlert() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        backgroundColor: AppNewColors.white,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
+        ),
+        title: Text(
+          'Classificação de Tarefas',
+          style: AppNewTextStyles.balooTitle
+              .copyWith(color: AppNewColors.lightBlue),
+          textAlign: TextAlign.center,
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 10),
+              _buildClassificationItem(
+                  text: 'Vermelho: Prioridade ALTA',
+                  color: AppNewColors.red),
+              _buildClassificationItem(
+                  text: 'Amarelo: Prioridade MÉDIA',
+                  color: Colors.yellow),
+              _buildClassificationItem(
+                  text: 'Verde: Prioridade BAIXA',
+                  color: Colors.green),
+              _buildClassificationItem(text: '\nAV: Tarefa de AVALIAÇÃO'),
+              _buildClassificationItem(text: 'AT: Tarefa de ATIVIDADE'),
+              _buildClassificationItem(text: 'ES: Tarefa de ESTUDOS'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            style: TextButton.styleFrom(
+              side: const BorderSide(
+                color: AppNewColors.lightBlue,
+                width: 1,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'OK',
+              style: AppNewTextStyles.smallPoppinsRegular
+                  .copyWith(color: AppNewColors.lightBlue), 
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); 
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+  Widget _buildClassificationItem({required String text, Color? color}) {
+    return Row(
+      children: <Widget>[
+        if (color != null)
+          Icon(
+            Icons.circle,
+            color: color,
+            size: 16,
+          ),
+        if (color != null) const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: AppNewTextStyles.smallPoppinsRegular
+                .copyWith(color: AppNewColors.textGray),
+          ),
+        ),
+      ],
     );
   }
 
@@ -137,27 +199,43 @@ class _TaskPageState extends State<TaskPage> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 78,
-        iconTheme: const IconThemeData(color: Colors.white, size: 25),
-        title: const Text(
-          'TAREFAS',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
+        title: Text(
+          'Agenda',
+          style: AppNewTextStyles.balooTitle.copyWith(color: AppColors.white),
+          textAlign: TextAlign.center,
         ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.purple, Colors.pink],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+        centerTitle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(50),
           ),
         ),
+        backgroundColor: AppNewColors.darkBlue,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: IconButton(
+              icon: const Icon(
+                Icons.help_outline_rounded,
+                color: AppColors.white,
+                size: 25,
+              ),
+              onPressed: _showClassificationAlert,
+            ),
+          ),
+        ],
       ),
       drawer: const CustomDrawer(),
       body: Column(
         children: [
-          EasyDateTimeLine(
-            initialDate: selectedDate,
-            onDateChange: _onDateChanged,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: EasyDateTimeLine(
+              initialDate: selectedDate,
+              onDateChange: _onDateChanged,
+              activeColor: AppNewColors.darkGray,
+            ),
           ),
           const SizedBox(height: 20),
           FutureBuilder<List<ScheduleModel>>(
@@ -172,40 +250,40 @@ class _TaskPageState extends State<TaskPage> {
                 final schedules = snapshot.data!;
                 return Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 10.0),
+                      horizontal: 20.0, vertical: 1.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: schedules.map((schedule) {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 10.0),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF64B7CC),
-                          borderRadius: BorderRadius.circular(10),
+                        decoration: const BoxDecoration(
+                          color:Color(0xFF64B7CC),
+                          borderRadius: BorderRadius.zero,
                         ),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 10.0),
+                            horizontal: 16.0, vertical: 5.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               schedule.time ?? 'Sem horário',
-                              style: const TextStyle(
+                              style: AppNewTextStyles.smallerPoppinsRegular
+                                  .copyWith(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
                               schedule.room ?? 'Sem sala',
-                              style: const TextStyle(
+                              style: AppNewTextStyles.smallerPoppinsRegular
+                                  .copyWith(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
                               schedule.subjectName ?? 'Sem matéria',
-                              style: const TextStyle(
+                              style: AppNewTextStyles.smallerPoppinsRegular
+                                  .copyWith(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
@@ -274,29 +352,45 @@ class _TaskPageState extends State<TaskPage> {
                             final confirmDelete = await showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
-                                title: const Text(
+                                title:  Text(
                                   'Excluir tarefa',
-                                  style: TextStyle(color: Colors.purple),
                                   textAlign: TextAlign.center,
+                                   style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.darkBlue),
                                 ),
                                 content: Text(
                                   'Tem certeza que deseja excluir a tarefa "${task.name}"?',
-                                  textAlign: TextAlign.center,
+                                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
                                 ),
                                 actions: [
                                   TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                    child: const Text('Cancelar'),
+                                    onPressed: () => Navigator.of(context).pop(false),
+                                    child: Text(
+                                      'Cancelar',
+                                      style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
+                                    ),
                                   ),
                                   TextButton(
                                     onPressed: () async {
                                       Navigator.of(context).pop(true);
                                       await _deleteTask(task, index);
                                     },
-                                    child: const Text('Excluir'),
+                                    style: TextButton.styleFrom(
+                                    side: const BorderSide(
+                                      color: AppNewColors.red,
+                                      width: 1),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                    child: Text(
+                                      'Excluir', 
+                                      style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.red),),
                                   ),
                                 ],
+                                backgroundColor: Colors.white,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
                               ),
                             );
                             return confirmDelete ?? false;
@@ -305,23 +399,17 @@ class _TaskPageState extends State<TaskPage> {
                         },
                         child: GestureDetector(
                           onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => EditTaskModal(task: task),
-                            ).then((result) {
-                              if (result == true) {
-                                _updateAndReloadPage();
-                              }
-                            });
+                            showEditTaskPage(context, task);
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
+                              color: AppNewColors.lightGray,
+                              borderRadius: BorderRadius.zero,
                               border: Border.all(color: Colors.grey.shade300),
                             ),
                             margin: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 16),
-                            padding: const EdgeInsets.all(15.0),
+                                vertical: 8, horizontal: 20),
+                            padding: const EdgeInsets.all(10.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -331,13 +419,10 @@ class _TaskPageState extends State<TaskPage> {
                                   children: [
                                     Text(
                                       task.name,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        decoration: isCompleted
-                                            ? TextDecoration.lineThrough
-                                            : null,
+                                      style: AppNewTextStyles
+                                          .mediumPoppinsMedium
+                                          .copyWith(
+                                        color: AppNewColors.textGray,
                                       ),
                                     ),
                                     Container(
@@ -350,19 +435,16 @@ class _TaskPageState extends State<TaskPage> {
                                       ),
                                       child: Text(
                                         categoryInitials,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
+                                        style: AppNewTextStyles
+                                            .mediumPoppinsMedium
+                                            .copyWith(
+                                                color: AppNewColors.white),
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 2),
+                                const SizedBox(height: 6),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Column(
@@ -371,59 +453,63 @@ class _TaskPageState extends State<TaskPage> {
                                         children: [
                                           Text(
                                             task.description ?? '',
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                            style: AppNewTextStyles
+                                                .smallExtraLight
+                                                .copyWith(
+                                                    color:
+                                                        AppNewColors.textGray),
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                           ),
-                                          const SizedBox(height: 4),
+                                          const SizedBox(height: 6),
                                           Text(
                                             formattedDeadline,
-                                            style: const TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          Container(
-                                            margin:
-                                                const EdgeInsets.only(top: 5),
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 5),
-                                            decoration: BoxDecoration(
-                                              color: Colors.purple
-                                                  .withOpacity(0.1),
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                            child: Text(
-                                              task.subjectName ?? '',
-                                              style: const TextStyle(
-                                                color: Colors.purple,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
+                                            style: AppNewTextStyles
+                                                .smallExtraLight
+                                                .copyWith(
+                                                    color:
+                                                        AppNewColors.textGray),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 5),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Text(
-                                    isCompleted ? 'CONCLUÍDA' : 'NÃO CONCLUÍDA',
-                                    style: TextStyle(
-                                      color: isCompleted
-                                          ? Colors.green
-                                          : Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 6),
+                                      decoration: BoxDecoration(
+                                        color: AppNewColors.lightBlue,
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
+                                      ),
+                                      child: Text(
+                                        task.subjectName ?? '',
+                                        style: AppNewTextStyles
+                                            .smallPoppinsRegular
+                                            .copyWith(
+                                                color: AppNewColors.white),
+                                      ),
                                     ),
-                                  ),
+                                    const Spacer(),
+                                    if (isCompleted)
+                                      Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green.withOpacity(0.4),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: const Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                          size: 30,
+                                        ),
+                                      ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -438,11 +524,86 @@ class _TaskPageState extends State<TaskPage> {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddTaskModal,
-        child: const Icon(Icons.add),
+      floatingActionButton: Positioned(
+        bottom: 55.0,
+        right: 55.0,
+        child: GestureDetector(
+          onTap: () async {
+            showAddTaskModal(context);
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppNewColors.darkBlue,
+            ),
+            child: const Icon(
+              Icons.add_rounded,
+              size: 50,
+              color: AppColors.white,
+            ),
+          ),
+        ),
       ),
     );
   }
+
+  void showEditTaskPage(BuildContext context, TaskModel task) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: Container(
+            color: AppNewColors.white,
+            constraints: const BoxConstraints(maxHeight: 920),
+            child: EditTaskModal(task: task),
+          ),
+        );
+      },
+    ).whenComplete(() {
+      _updateAndReloadPage();
+    });
+  }
+
+  void showAddTaskModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: Container(
+            color: AppNewColors.white,
+            constraints: const BoxConstraints(maxHeight: 920),
+            child: const NewTaskModal(),
+          ),
+        );
+      },
+    ).whenComplete(() {
+      _updateAndReloadPage();
+    });
+  }
+
+  Future<void> _updateAndReloadPage() async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const TaskPage(),
+      ),
+    );
+
+    setState(() {
+      futureTasks = TaskHelper.fetchAllTasks();
+    });
+  }
 }
- 
