@@ -49,7 +49,7 @@ Future<void> _createNotificationChannel() async {
         importance: Importance.max,
         priority: Priority.high,
         showWhen: true,
-        icon: 'ic_notification',
+        icon: 'logo',
       );
 
       const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);

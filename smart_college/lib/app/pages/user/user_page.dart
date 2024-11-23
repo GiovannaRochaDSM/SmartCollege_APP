@@ -384,16 +384,52 @@ class _UserPageState extends State<UserPage> {
                                   },
                                 ),
                                 const SizedBox(height: 10),
-                                Text(
-                                  'Instituição',
-                                  style: AppNewTextStyles.mediumPoppinsMedium.copyWith(
-                                      color: AppNewColors.textGray),
-                                  textAlign: TextAlign.left,
-                                ),
-                                CustomTextField(
-                                  controller: _universityController,
-                                  keyboardType: TextInputType.text,
-                                  readOnly: true,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      'Instituição',
+                                      style: AppNewTextStyles.mediumPoppinsMedium.copyWith(color: AppNewColors.textGray),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: CustomTextField(
+                                            controller: _universityController,
+                                            keyboardType: TextInputType.text,
+                                            readOnly: true,
+                                          ),
+                                        ),
+                                        if (_universityController.text.isNotEmpty)
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.clear_rounded,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () async {
+                                              String? token = await AppStrings.secureStorage.read(key: 'token');
+                                              try {
+                                                final success = await UserRepository(client: HttpClient()).cancelBond(user.id, token);
+
+                                                if (success) {
+                                                  ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.cancelBondSuccess);
+
+                                                  setState(() {
+                                                    _universityController.clear();
+                                                  });
+                                                } else {
+                                                  ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.cancelBondError);
+                                                }
+                                              } catch (e) {
+                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text('Erro: $e')),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 20),
                                 Text(

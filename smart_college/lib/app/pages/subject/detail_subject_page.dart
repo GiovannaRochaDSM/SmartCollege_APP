@@ -49,6 +49,7 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
   @override
   void initState() {
     super.initState();
+    _httpClient = HttpClient();
     _nameController = TextEditingController(text: widget.subject.name);
     _acronymController = TextEditingController(text: widget.subject.acronym);
     _notesController = TextEditingController(text: widget.subject.notes ?? '');
@@ -109,11 +110,14 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
     try {
       String newName = _nameController.text;
       String newAcronym = _acronymController.text;
+      String newNotes = _notesController.text;
 
       SubjectModel updatedSubject = SubjectModel(
           id: widget.subject.id, 
           name: newName, 
-          acronym: newAcronym);
+          acronym: newAcronym,
+          notes: newNotes
+      );
 
       await _performUpdate(updatedSubject);
 

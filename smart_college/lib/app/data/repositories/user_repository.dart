@@ -9,6 +9,7 @@ abstract class IUserRepository {
   Future<bool> addUser(UserModel user, String? token);
   Future<void> forgotPassword(String email);
   Future<void> resetPassword(String token, String email, String password);
+  Future<bool> cancelBond(String userId, String? token);
 }
 
 class UserRepository implements IUserRepository {
@@ -103,6 +104,27 @@ class UserRepository implements IUserRepository {
       }
     } catch (e) {
       throw Exception('Erro ao redefinir senha: $e');
+    }
+  }
+
+  @override
+  Future<bool> cancelBond(String userId, String? token) async {
+    try {
+      final response = await client.put(
+        url: '${AppRoutes.me}unbind',
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        throw Exception('Erro ao rejeitar vínculo: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Erro na requisição ao rejeitar vínculo: $e');
     }
   }
 }

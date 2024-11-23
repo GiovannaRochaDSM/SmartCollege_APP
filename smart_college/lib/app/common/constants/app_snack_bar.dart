@@ -549,4 +549,22 @@ class AppSnackBar {
     duration: Duration(seconds: 2),
     backgroundColor: Colors.green,
   );
+
+  static const cancelBondError = SnackBar(
+    content: Text(
+      'Erro ao rejeitar vínculo.',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.redAccent,
+  );
+
+  static const cancelBondSuccess = SnackBar(
+    content: Text(
+      'Vínculo cancelado com sucesso',
+      textAlign: TextAlign.center,
+    ),
+    duration: Duration(seconds: 2),
+    backgroundColor: Colors.green,
+  );
 }
