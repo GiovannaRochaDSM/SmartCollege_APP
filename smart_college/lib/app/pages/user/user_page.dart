@@ -226,6 +226,7 @@ class _UserPageState extends State<UserPage> {
           IconButton(
             icon: const Icon(Icons.vpn_key_rounded, size: 25),
             onPressed: () {
+              showResetPasswordModal(context);
               (
                 context: context,
                 isScrollControlled: true,
@@ -238,7 +239,6 @@ class _UserPageState extends State<UserPage> {
                     padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom,
                     ),
-                    child: const ResetPasswordModal(),
                   );
                 },
               );
@@ -397,9 +397,11 @@ class _UserPageState extends State<UserPage> {
                                 ),
                                 const SizedBox(height: 20),
                                 Text(
-                                  'Ainda não possui vínculo com a sua instituição?',
+                                  user.universityId != null && user.universityId!.isNotEmpty
+                                      ? 'Deseja se vincular a uma outra instituição?'
+                                      : 'Ainda não possui vínculo com a sua instituição?',
                                   style: AppTextStyles.smallerText.copyWith(
-                                      color: AppColors.lightBlack),
+                                    color: AppColors.lightBlack),
                                   textAlign: TextAlign.center,
                                 ),
                                 TextButton(

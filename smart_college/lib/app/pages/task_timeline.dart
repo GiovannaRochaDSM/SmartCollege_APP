@@ -5,14 +5,18 @@ import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/data/models/task_model.dart';
 import 'package:smart_college/app/data/stores/task_store.dart';
 import 'package:smart_college/app/data/helpers/fetch_tasks.dart';
+import 'package:smart_college/app/data/models/subject_model.dart';
 import 'package:smart_college/app/data/models/schedule_model.dart';
 import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
+import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/data/helpers/fetch_schedules.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/task_repository.dart';
+import 'package:smart_college/app/pages/subject/detail_subject_page.dart';
 import 'package:smart_college/app/common/widgets/drawer/custom_drawer.dart';
+import 'package:smart_college/app/data/repositories/subject_repository.dart';
 import 'package:smart_college/app/common/widgets/modals/task/new_task_modal.dart';
 import 'package:smart_college/app/common/widgets/modals/task/edit_task_modal.dart';
 
@@ -26,6 +30,7 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   late Future<List<TaskModel>> futureTasks;
   late Future<List<ScheduleModel>> futureSchedules;
+  late IHttpClient _httpClient;
   final TaskStore store = TaskStore(
     repository: TaskRepository(
       client: HttpClient(),
@@ -40,6 +45,7 @@ class _TaskPageState extends State<TaskPage> {
     _loadToken();
     futureTasks = getFilteredTasks();
     futureSchedules = fetchSchedulesForDay(selectedDate);
+    _httpClient = HttpClient();
   }
 
   Future<void> _loadToken() async {
@@ -109,69 +115,76 @@ class _TaskPageState extends State<TaskPage> {
     setState(() {
       futureTasks = getFilteredTasks();
     });
-     ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.taskDeletedSuccess); 
+    ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.taskDeletedSuccess);
   }
 
-void _showClassificationAlert() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        backgroundColor: AppNewColors.white,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.zero,
-        ),
-        title: Text(
-          'Classificação de Tarefas',
-          style: AppNewTextStyles.balooTitle
-              .copyWith(color: AppNewColors.lightBlue),
-          textAlign: TextAlign.center,
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              const SizedBox(height: 10),
-              _buildClassificationItem(
-                  text: 'Vermelho: Prioridade ALTA',
-                  color: AppNewColors.red),
-              _buildClassificationItem(
-                  text: 'Amarelo: Prioridade MÉDIA',
-                  color: Colors.yellow),
-              _buildClassificationItem(
-                  text: 'Verde: Prioridade BAIXA',
-                  color: Colors.green),
-              _buildClassificationItem(text: '\nAV: Tarefa de AVALIAÇÃO'),
-              _buildClassificationItem(text: 'AT: Tarefa de ATIVIDADE'),
-              _buildClassificationItem(text: 'ES: Tarefa de ESTUDOS'),
-            ],
+  Future<SubjectModel> _getSubject(String subjectId) async {
+    final SubjectRepository subjectRepository =
+        SubjectRepository(client: _httpClient);
+    String? token = await AppStrings.secureStorage.read(key: 'token');
+    return await subjectRepository.getSubjectById(subjectId, token);
+  }
+
+  void _showClassificationAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppNewColors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              side: const BorderSide(
-                color: AppNewColors.lightBlue,
-                width: 1,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: Text(
-              'OK',
-              style: AppNewTextStyles.smallPoppinsRegular
-                  .copyWith(color: AppNewColors.lightBlue), 
-            ),
-            onPressed: () {
-              Navigator.of(context).pop(); 
-            },
+          title: Text(
+            'Classificação de Tarefas',
+            style: AppNewTextStyles.balooTitle
+                .copyWith(color: AppNewColors.lightBlue),
+            textAlign: TextAlign.center,
           ),
-        ],
-      );
-    },
-  );
-}
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                const SizedBox(height: 10),
+                _buildClassificationItem(
+                    text: 'Vermelho: Prioridade ALTA', 
+                    color: AppNewColors.red),
+                _buildClassificationItem(
+                    text: 'Amarelo: Prioridade MÉDIA', 
+                    color: Colors.yellow),
+                _buildClassificationItem(
+                    text: 'Verde: Prioridade BAIXA', 
+                    color: Colors.green),
+                _buildClassificationItem(text: '\nAV: Tarefa de AVALIAÇÃO'),
+                _buildClassificationItem(text: 'AT: Tarefa de ATIVIDADE'),
+                _buildClassificationItem(text: 'ES: Tarefa de ESTUDOS'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                side: const BorderSide(
+                  color: AppNewColors.lightBlue,
+                  width: 1,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'OK',
+                style: AppNewTextStyles.smallPoppinsRegular
+                    .copyWith(color: AppNewColors.lightBlue),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Widget _buildClassificationItem({required String text, Color? color}) {
     return Row(
@@ -254,39 +267,55 @@ void _showClassificationAlert() {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: schedules.map((schedule) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 10.0),
-                        decoration: const BoxDecoration(
-                          color:Color(0xFF64B7CC),
-                          borderRadius: BorderRadius.zero,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              schedule.time ?? 'Sem horário',
-                              style: AppNewTextStyles.smallerPoppinsRegular
-                                  .copyWith(
-                                color: Colors.white,
+                      return
+                       GestureDetector(
+                        onTap: () async {
+                          SubjectModel subject =
+                              await _getSubject(schedule.subjectId);
+                          if (mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    DetailSubjectPage(subject: subject),
                               ),
-                            ),
-                            Text(
-                              schedule.room ?? 'Sem sala',
-                              style: AppNewTextStyles.smallerPoppinsRegular
-                                  .copyWith(
-                                color: Colors.white,
+                            );
+                          }
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 10.0),
+                          decoration: const BoxDecoration(
+                            color:Color(0xFF64B7CC),
+                            borderRadius: BorderRadius.zero,
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                schedule.time ?? 'Sem horário',
+                                style: AppNewTextStyles.smallerPoppinsRegular
+                                    .copyWith(
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            Text(
-                              schedule.subjectName ?? 'Sem matéria',
-                              style: AppNewTextStyles.smallerPoppinsRegular
-                                  .copyWith(
-                                color: Colors.white,
+                              Text(
+                                schedule.room ?? 'Sem sala',
+                                style: AppNewTextStyles.smallerPoppinsRegular
+                                    .copyWith(
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                          ],
+                              Text(
+                                schedule.subjectName ?? 'Sem matéria',
+                                  style: AppNewTextStyles.smallerPoppinsRegular
+                                      .copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
                       );
                     }).toList(),
@@ -355,7 +384,7 @@ void _showClassificationAlert() {
                                 title:  Text(
                                   'Excluir tarefa',
                                   textAlign: TextAlign.center,
-                                   style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.darkBlue),
+                                  style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.darkBlue),
                                 ),
                                 content: Text(
                                   'Tem certeza que deseja excluir a tarefa "${task.name}"?',
@@ -375,15 +404,15 @@ void _showClassificationAlert() {
                                       await _deleteTask(task, index);
                                     },
                                     style: TextButton.styleFrom(
-                                    side: const BorderSide(
-                                      color: AppNewColors.red,
-                                      width: 1),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                      side: const BorderSide(
+                                          color: AppNewColors.red,
+                                           width: 1),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
-                                  ),
                                     child: Text(
-                                      'Excluir', 
+                                      'Excluir',
                                       style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.red),),
                                   ),
                                 ],

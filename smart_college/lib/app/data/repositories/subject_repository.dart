@@ -35,6 +35,28 @@ class SubjectRepository implements ISubjectRepository {
     }
   }
 
+  Future<SubjectModel> getSubjectById(String subjectId, String? token) async {
+    if (token == null || token.isEmpty) {
+      throw Exception('Token de autenticação não fornecido.');
+    }
+
+    final response = await client.get(
+      url: '${AppRoutes.subjects}$subjectId',
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> body = jsonDecode(response.body);
+      return SubjectModel.fromMap(body);
+    } else {
+      throw Exception(
+      'Não foi possível carregar a matéria com ID $subjectId. Status code: ${response.statusCode}');
+    }
+  }
+
   @override
   Future<bool> updateSubject(SubjectModel subject, String? token) async {
     final response = await client.put(
@@ -43,7 +65,7 @@ class SubjectRepository implements ISubjectRepository {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
       },
-
+      
       body: jsonEncode(subject.toMap()),
     );
 
