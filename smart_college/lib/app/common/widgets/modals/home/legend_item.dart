@@ -23,7 +23,7 @@ class LegendItem extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           label,
-          style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppColors.inputText),
+          style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
         ),
       ],
     );

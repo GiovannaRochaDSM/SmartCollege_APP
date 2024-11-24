@@ -36,116 +36,125 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Scaffold(
+      backgroundColor: AppNewColors.white,
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            Column(
               children: [
-                Text(
-                  'Redefinir senha',
-                  style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.lightBlue),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'Crie uma nova senha de acordo com nossos parâmetros',
-                  style: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 30),
-                Text(
-                  'Nova Senha',
-                  style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                CustomTextFormField(
-                  controller: _passwordController,
-                  keyboardType: TextInputType.text,
-                  validator: (password) {
-                    if (password == null || password.isEmpty) {
-                      return 'Por favor, digite sua nova senha';
-                    }
-                    return null;
-                  },
-                  obscureText: !_isPasswordVisible,
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                    icon: Icon(
-                      _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.gray,
-                    ),
+                const SizedBox(height: 5),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 60, 20, 10),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Redefinir senha',
+                        style: AppNewTextStyles.bigBalooTitle.copyWith(color: AppNewColors.lightBlue),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Crie uma nova senha de acordo com nossos parâmetros',
+                        style: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 30),
+                      Text(
+                        'Nova Senha',
+                        style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 10),
+                      CustomTextFormField(
+                        controller: _passwordController,
+                        keyboardType: TextInputType.text,
+                        validator: (password) {
+                          if (password == null || password.isEmpty) {
+                            return 'Por favor, digite sua nova senha';
+                          }
+                          return null;
+                        },
+                        obscureText: !_isPasswordVisible,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          icon: Icon(
+                            _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                            color: AppNewColors.darkGray,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Text(
+                        'Confirmar Senha',
+                        style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 10),
+                      CustomTextFormField(
+                        controller: _passwordConfirmController,
+                        keyboardType: TextInputType.text,
+                        validator: (password) {
+                          if (password == null || password.isEmpty) {
+                            return 'Por favor, confirme sua nova senha';
+                          } else if (password != _passwordController.text) {
+                            return 'As senhas não coincidem';
+                          }
+                          return null;
+                        },
+                        obscureText: !_isConfirmPasswordVisible,
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                            });
+                          },
+                          icon: Icon(
+                            _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                            color: AppNewColors.darkGray,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      CustomPrimaryButton(
+                        text: 'Alterar',
+                        onPressed: () {
+                          _changePassword(context);
+                        },
+                        textColor: AppNewColors.white,
+                        borderColor: AppNewColors.lightBlue,
+                        buttonColor: AppNewColors.lightBlue,
+                      ),
+                      const SizedBox(height: 10),
+                      CustomTextButton(
+                        text: 'Cancelar',
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 30),
-                Text(
-                  'Confirmar Senha',
-                  style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                CustomTextFormField(
-                  controller: _passwordConfirmController,
-                  keyboardType: TextInputType.text,
-                  validator: (password) {
-                    if (password == null || password.isEmpty) {
-                      return 'Por favor, confirme sua nova senha';
-                    } else if (password != _passwordController.text) {
-                      return 'As senhas não coincidem';
-                    }
-                    return null;
-                  },
-                  obscureText: !_isConfirmPasswordVisible,
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                      });
-                    },
-                    icon: Icon(
-                      _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.gray,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 50),
-                CustomPrimaryButton(
-                  text: 'Alterar',
-                  onPressed: () {
-                    _changePassword(context);
-                  },
-                  textColor: AppNewColors.white,
-                  borderColor: AppNewColors.lightBlue,
-                  buttonColor: AppNewColors.lightBlue,
-                ),
-                const SizedBox(height: 10),
-                CustomTextButton(
-                  text: 'Cancelar',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
                 ),
               ],
             ),
-          ),
-          Positioned(
-            top: 20,
-            right: 18,
-            child: IconButton(
-              icon: const Icon(Icons.help_outline_rounded, color: AppNewColors.darkGray),
-              onPressed: _showPasswordPolicyAlert,
-              iconSize: 30.0,
+            Positioned(
+              top: 50,
+              right: 18,
+              child: IconButton(
+                icon: const Icon(Icons.help_outline_rounded, color: AppNewColors.darkGray),
+                onPressed: _showPasswordPolicyAlert,
+                iconSize: 20.0,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -155,29 +164,44 @@ class _ResetPasswordModalState extends State<ResetPasswordModal> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Política de Senha',
-              style: AppTextStyles.mediumTextBold.copyWith(color: AppColors.titlePurple),
-              textAlign: TextAlign.center),
+          backgroundColor: AppNewColors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+          title: Text(
+            'Política de Senha',
+            style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.lightBlue), 
+            textAlign: TextAlign.center,
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text('A senha deve conter:',
-                    style: AppTextStyles.smallerText.copyWith(color: AppColors.inputText)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 Text('- Pelo menos uma letra maiúscula',
-                    style: AppTextStyles.smallerText.copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 Text('- Pelo menos um caractere especial',
-                    style: AppTextStyles.smallerText.copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 Text('- Pelo menos 8 caracteres',
-                    style: AppTextStyles.smallerText.copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK', style: AppTextStyles.smallerTextBold.copyWith(color: AppColors.titlePurple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              style: TextButton.styleFrom(
+                side: const BorderSide(
+                  color: AppNewColors.lightBlue,
+                  width: 1,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text('OK', style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.lightBlue)),
             ),
           ],
         );

@@ -11,6 +11,7 @@ import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_routes.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
 import 'package:smart_college/app/common/widgets/buttons/custom_primary_button.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -35,16 +36,15 @@ class _RegisterPageState extends State<RegisterPage> {
     final String email = _emailController.text.trim();
     final String password = _passwordController.text.trim();
     final String nickname = _nicknameController.text.trim();
+    String? base64Image;
 
     if (name.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.fillFields);
       return;
     }
 
-    String? base64Image;
     if (_imageFile != null) {
-      final resizedImage =
-          await _resizeImage(_imageFile!, maxWidth: 800, maxHeight: 600);
+      final resizedImage = await _resizeImage(_imageFile!, maxWidth: 800, maxHeight: 600);
       List<int> imageBytes = resizedImage.readAsBytesSync();
       base64Image = base64Encode(imageBytes);
     }
@@ -98,17 +98,6 @@ class _RegisterPageState extends State<RegisterPage> {
     return tempFile;
   }
 
-  Future<void> _getImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      setState(() {
-        _imageFile = File(image.path);
-      });
-    }
-  }
-
   Future<void> pickImage(ImageSource source) async {
     final pickedFile = await _imagePicker.pickImage(source: source);
 
@@ -123,11 +112,12 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.purple,
+        backgroundColor: AppNewColors.pink,
+        toolbarHeight: 78,
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: AppColors.white,
+            Icons.arrow_back,
+            color: AppNewColors.white,
           ),
           onPressed: () {
             Navigator.pushReplacement(
@@ -139,11 +129,19 @@ class _RegisterPageState extends State<RegisterPage> {
           },
         ),
         title: Text('Cadastro',
-            style: AppTextStyles.normalText.copyWith(color: AppColors.white)),
+          style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.white),
+        ),
+        centerTitle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.circular(35),
+          ),
+        ),
         actions: [
           IconButton(
-            icon:
-                const Icon(Icons.help_outline_rounded, color: AppColors.white),
+            icon: const Icon(Icons.help_outline_rounded, 
+              color: AppNewColors.white
+            ),
             onPressed: _showPasswordPolicyAlert,
           ),
         ],
@@ -162,21 +160,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppColors.purple,
+                        color: AppNewColors.darkGray,
                         width: 5,
                       ),
                     ),
                     child: CircleAvatar(
-                      radius: 100,
-                      backgroundColor: Colors.grey[200],
-                      backgroundImage:
-                          _imageFile != null ? FileImage(_imageFile!) : null,
+                      radius: 130,
+                      backgroundColor: AppNewColors.lightGray,
+                      backgroundImage: _imageFile != null ? FileImage(_imageFile!) : null,
                       child: _imageFile == null
-                          ? const Icon(
-                              Icons.camera_alt,
-                              size: 60,
-                              color: AppColors.purple,
-                            )
+                          ? const Icon(Icons.camera_alt, size: 60, color: AppNewColors.darkGray)
                           : null,
                     ),
                   ),
@@ -188,12 +181,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         _showOptionsBottomSheet();
                       },
                       child: const CircleAvatar(
-                        backgroundColor: AppColors.purple,
-                        radius: 30,
+                        backgroundColor: AppNewColors.darkGray,
+                        radius: 35,
                         child: Icon(
                           Icons.camera_alt,
-                          color: Colors.white,
-                          size: 30,
+                          color: AppNewColors.white,
+                          size: 35,
                         ),
                       ),
                     ),
@@ -201,59 +194,34 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
               const SizedBox(height: 40),
+              Text(
+                'Apelido',
+                style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.textGray),
+                textAlign: TextAlign.left,
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
+                child: CustomTextFormField(
                   controller: _nicknameController,
                   keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    labelText: 'Apelido',
-                    labelStyle: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray),
-                    prefixIcon: const Icon(Icons.alternate_email_rounded,
-                        color: AppColors.purple),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(color: AppColors.gray),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(color: AppColors.gray),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
-                  ),
+                  validator: (nickname) {
+                    if (nickname == null || nickname.isEmpty) {
+                      return 'Por favor, digite seu apelido';
+                    }
+                    return null;
+                  },
+                  prefixIcon: const Icon(Icons.alternate_email_rounded, color: AppNewColors.darkGray),
                 ),
               ),
               const SizedBox(height: 30),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
-                  controller: _nameController,
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    labelText: 'Nome',
-                    labelStyle: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray),
-                    prefixIcon:
-                        const Icon(Icons.person, color: AppColors.purple),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(color: AppColors.gray),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(color: AppColors.gray),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
-                  ),
-                ),
+              Text(
+                'E-mail',
+                style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.textGray),
+                textAlign: TextAlign.left,
               ),
-              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
+                child: CustomTextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   validator: (email) {
@@ -266,31 +234,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     }
                     return null;
                   },
-                  decoration: InputDecoration(
-                    labelText: 'E-mail',
-                    labelStyle: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray),
-                    prefixIcon: const Icon(Icons.email_rounded,
-                        color: AppColors.purple),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(color: AppColors.gray),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(color: AppColors.gray),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
-                  ),
+                  prefixIcon: const Icon(Icons.email_rounded, color: AppNewColors.darkGray),
                 ),
               ),
               const SizedBox(height: 30),
+              Text(
+                'Senha',
+                style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.textGray),
+                textAlign: TextAlign.left,
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: TextFormField(
+                child: CustomTextFormField(
                   controller: _passwordController,
                   keyboardType: TextInputType.text,
+                  obscureText: !_isPasswordVisible,
                   validator: (password) {
                     if (password == null || password.isEmpty) {
                       return 'Por favor, digite sua senha';
@@ -302,35 +260,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     }
                     return null;
                   },
-                  obscureText: !_isPasswordVisible,
-                  decoration: InputDecoration(
-                    labelText: 'Senha',
-                    labelStyle: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray),
-                    prefixIcon: const Icon(Icons.key, color: AppColors.purple),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
-                      icon: Icon(
-                        _isPasswordVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                        color: AppColors.purple,
-                      ),
+                  prefixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                      color: AppNewColors.darkGray,
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(color: AppColors.gray),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      borderSide: const BorderSide(color: AppColors.gray),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 20.0),
                   ),
                 ),
               ),
@@ -358,40 +297,17 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Wrap(
             children: [
               ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 3.0),
-                leading: const Icon(
-                  Icons.photo_camera,
-                  color: AppColors.gray,
-                  size: 24,
-                ),
-                title: Padding(
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: Text(
-                    'Tirar uma foto',
-                    style:
-                        AppTextStyles.smallText.copyWith(color: AppColors.gray),
-                  ),
-                ),
-                onTap: () {
-                  pickImage(ImageSource.camera);
-                  Navigator.of(context).pop();
-                },
-              ),
-              ListTile(
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 3.0),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 3.0),
                 leading: const Icon(
                   Icons.photo_library,
-                  color: AppColors.gray,
+                  color: AppNewColors.darkGray,
                   size: 24,
                 ),
                 title: Padding(
                   padding: const EdgeInsets.only(left: 12.0),
                   child: Text(
                     'Escolher da galeria',
-                    style:
-                        AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                    style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                   ),
                 ),
                 onTap: () {
@@ -411,35 +327,44 @@ class _RegisterPageState extends State<RegisterPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Política de Senha',
-              style: AppTextStyles.mediumTextBold
-                  .copyWith(color: AppColors.titlePurple), 
-                  textAlign: TextAlign.center),
+          backgroundColor: AppNewColors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+          title: Text(
+            'Política de Senha',
+            style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.pink), 
+            textAlign: TextAlign.center,
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text('A senha deve conter:',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.inputText)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 Text('- Pelo menos uma letra maiúscula',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 Text('- Pelo menos um caractere especial',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 Text('- Pelo menos 8 caracteres',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK', style: AppTextStyles.smallerTextBold
-                  .copyWith(color: AppColors.titlePurple)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              style: TextButton.styleFrom(
+                side: const BorderSide(
+                  color: AppNewColors.pink,
+                  width: 1,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text('OK', style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.pink)),
             ),
           ],
         );

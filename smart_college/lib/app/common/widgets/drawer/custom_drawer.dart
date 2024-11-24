@@ -107,6 +107,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               return const SizedBox.shrink();
             },
           ),
+          const SizedBox(height: 10),
           ListTile(
             title: Text('Home',
                 style: AppNewTextStyles.mediumPoppinsRegular
@@ -120,19 +121,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
+          const SizedBox(height: 10),
           ListTile(
-            title: Text('Tarefas',
+            title: Text('Agenda',
                 style: AppNewTextStyles.mediumPoppinsRegular
                     .copyWith(color: AppNewColors.textGray)),
             onTap: () {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const TaskPage(),
+                  builder: (context) => const TaskTimelinePage(),
                 ),
               );
             },
           ),
+          const SizedBox(height: 10),
           ListTile(
             title: Text('Matérias',
                 style: AppNewTextStyles.mediumPoppinsRegular
@@ -155,6 +158,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 return Column(
                   children: [
                     if (user.isCoord)
+                      const SizedBox(height: 10),
                       ListTile(
                         title: Text('Vínculos',
                             style: AppNewTextStyles.mediumPoppinsRegular
@@ -169,6 +173,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         },
                       ),
                     if (user.bond)
+                      const SizedBox(height: 10),
                       ListTile(
                         title: Text('Feed',
                             style: AppNewTextStyles.mediumPoppinsRegular
@@ -188,6 +193,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               return const SizedBox.shrink();
             },
           ),
+          const SizedBox(height: 10),
           ListTile(
             title: Text('Meu perfil',
                 style: AppNewTextStyles.mediumPoppinsRegular
@@ -201,7 +207,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
               );
             },
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 200),
           const Divider(),
           ListTile(
             title: Text('Sair',

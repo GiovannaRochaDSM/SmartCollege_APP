@@ -37,7 +37,8 @@ class CustomTextFormField extends StatelessWidget {
         hintStyle: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
         alignLabelWithHint: true,
         suffixIcon: suffixIcon,
-        prefixIcon: prefixIcon
+        prefixIcon: prefixIcon,
+        labelStyle: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
       ),
       controller: controller,
       keyboardType: keyboardType,

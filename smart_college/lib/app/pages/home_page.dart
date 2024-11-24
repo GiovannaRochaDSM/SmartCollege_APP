@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/pages/bond_page.dart';
 import 'package:smart_college/app/pages/task_timeline.dart';
+import 'package:smart_college/app/pages/feed/feed_page.dart';
 import 'package:smart_college/app/pages/user/user_page.dart';
 import 'package:smart_college/app/data/models/task_model.dart';
 import 'package:smart_college/app/data/models/user_model.dart';
@@ -112,14 +114,15 @@ class _HomePageState extends State<HomePage> {
                                 const SizedBox(height: 20),
                                 const Text(
                                   'Descubra no que você pode evoluir hoje.',
-                                  style: AppNewTextStyles.mediumPoppinsRegular,
+                                  style: AppNewTextStyles.mediumExtraLight,
+                                  textAlign: TextAlign.center,
                                 ),
                               ],
                             ),
                           ),
                           SizedBox(
-                            width: 170,
-                            height: 170,
+                            width: 180,
+                            height: 180,
                             child: Image.asset(
                               'assets/images/couple.png',
                             ),
@@ -144,12 +147,12 @@ class _HomePageState extends State<HomePage> {
                           scrollDirection: Axis.horizontal,
                           children: [
                             HomeCard(
-                              title: 'Tarefas',
+                              title: 'Agenda',
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const TaskPage()),
+                                      builder: (context) => const TaskTimelinePage()),
                                 );
                               },
                             ),
@@ -159,18 +162,40 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                      const SubjectPage()),
+                                      builder: (context) =>
+                                          const SubjectPage()),
                                 );
                               },
                             ),
+                            if (user.isCoord)
+                              HomeCard(
+                                title: 'Vínculos',
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const BondPage()),
+                                  );
+                                },
+                              ),
+                            if (user.bond)
+                              HomeCard(
+                                title: 'Feed',
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const FeedPage()),
+                                  );
+                                },
+                              ),
                             HomeCard(
                               title: 'Meu perfil',
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const UserPage()),
+                                      builder: (context) => const UserPage()),
                                 );
                               },
                             ),

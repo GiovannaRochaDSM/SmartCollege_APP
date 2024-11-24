@@ -1,14 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:smart_college/app/pages/user/user_page.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
 import 'package:smart_college/app/common/constants/app_routes.dart';
+import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_strings.dart';
 import 'package:smart_college/app/data/models/university_model.dart';
 import 'package:smart_college/app/common/constants/app_snack_bar.dart';
+import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/data/repositories/bond_repository.dart';
 import 'package:smart_college/app/data/repositories/user_repository.dart';
-import 'package:smart_college/app/pages/user/user_page.dart';
 
 class RequestBondDialog extends StatefulWidget {
   final String userId;
@@ -79,11 +81,12 @@ class _RequestBondDialogState extends State<RequestBondDialog> {
 
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.requestBondSuccess);
+
           Navigator.of(context).pop();
+
           _updateAndReloadPage();
         } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(AppSnackBar.requestBondError);
+          ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.requestBondError);
           throw Exception('Falha ao enviar a solicitação de vínculo.');
         }
       } catch (e) {
@@ -99,7 +102,14 @@ class _RequestBondDialogState extends State<RequestBondDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Solicitar Vínculo'),
+      backgroundColor: AppNewColors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.zero,
+      ),
+      title: Center(
+        child: Text('Solicitar Vínculo',
+            style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.lightBlue)),
+      ),
       content: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -107,7 +117,10 @@ class _RequestBondDialogState extends State<RequestBondDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   DropdownButton<UniversityModel>(
-                    hint: const Text('Selecione uma Universidade'),
+                    hint: Text(
+                      'Selecione uma Universidade',
+                      style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
+                    ),
                     value: selectedUniversity,
                     onChanged: (UniversityModel? newValue) {
                       setState(() {
@@ -118,31 +131,52 @@ class _RequestBondDialogState extends State<RequestBondDialog> {
                       (UniversityModel university) {
                         return DropdownMenuItem<UniversityModel>(
                           value: university,
-                          child: Text(university.name),
+                          child: Text(
+                            university.name,
+                            style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
+                          ),
                         );
                       },
                     ).toList(),
                   ),
                   TextField(
-                    controller: _emailCoordController,
-                    decoration: const InputDecoration(
-                        labelText: 'E-mail do Coordenador'),
-                  ),
+                      controller: _emailCoordController,
+                      decoration: InputDecoration(
+                          labelText: 'E-mail do Coordenador',
+                          labelStyle: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
+                      style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                   TextField(
-                    controller: _userNameController,
-                    decoration: const InputDecoration(labelText: 'Nome do Usuário'),
-                  ),
+                      controller: _userNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Nome do Usuário',
+                        labelStyle: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
+                      ),
+                      style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 ],
               ),
             ),
-      actions: [
+      actions: <Widget>[
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
+          child: Text(
+            'Cancelar',
+            style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
+          ),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
         ),
-        ElevatedButton(
+        TextButton(
           onPressed: _requestBond,
-          child: const Text('Solicitar Vínculo'),
+          style: TextButton.styleFrom(
+            side: const BorderSide(color: AppNewColors.lightBlue, width: 1),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: Text(
+            'Solicitar vínculo',
+            style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.lightBlue),
+          ),
         ),
       ],
     );

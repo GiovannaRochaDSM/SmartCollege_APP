@@ -2,37 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 
-class CustomDropdown extends StatelessWidget {
+class CustomTextEditingController extends StatelessWidget {
+  final TextEditingController controller;
   final String label;
-  final String? value;
-  final List<String> items;
-  final void Function(String?) onChanged;
+  final int maxLines;
+  final TextInputType keyboardType;
+  final bool obscureText;
+  final Icon? prefixIcon;
+  final Icon? suffixIcon;
   final String? Function(String?)? validator;
-  final bool isExpanded;
   final bool enabled;
 
-  const CustomDropdown({
+  const CustomTextEditingController({
     Key? key,
+    required this.controller,
     required this.label,
-    required this.value,
-    required this.items,
-    required this.onChanged,
+    this.maxLines = 1,
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.prefixIcon,
+    this.suffixIcon,
     this.validator,
-    this.isExpanded = true,
     this.enabled = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      value: value,
-      items: items.map((item) {
-        return DropdownMenuItem<String>(
-          value: item,
-          child: Text(item),
-        );
-      }).toList(),
-      onChanged: enabled ? onChanged : null,
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      obscureText: obscureText,
+      enabled: enabled,
       validator: validator,
       style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
       decoration: InputDecoration(
@@ -44,6 +45,8 @@ class CustomDropdown extends StatelessWidget {
         focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: AppNewColors.darkBlue, width: 1.0),
         ),
+        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon,
       ),
     );
   }

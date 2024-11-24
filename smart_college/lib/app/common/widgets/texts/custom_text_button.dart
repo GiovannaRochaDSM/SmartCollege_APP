@@ -5,10 +5,13 @@ import 'package:smart_college/app/common/constants/app_text_styles.dart';
 class CustomTextButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String text;
+  final Color? textColor;
+
   const CustomTextButton({
     super.key,
     required this.text,
     this.onPressed,
+    this.textColor,
   });
 
   @override
@@ -17,7 +20,9 @@ class CustomTextButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         text,
-        style: AppTextStyles.smallText.copyWith(color: AppNewColors.darkBlue),
+        style: AppNewTextStyles.mediumPoppinsRegular.copyWith(
+          color: textColor ?? AppNewColors.darkBlue,
+        ),
       ),
     );
   }

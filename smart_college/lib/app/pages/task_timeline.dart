@@ -19,14 +19,14 @@ import 'package:smart_college/app/data/repositories/subject_repository.dart';
 import 'package:smart_college/app/common/widgets/modals/task/new_task_modal.dart';
 import 'package:smart_college/app/common/widgets/modals/task/edit_task_modal.dart';
 
-class TaskPage extends StatefulWidget {
-  const TaskPage({super.key});
+class TaskTimelinePage extends StatefulWidget {
+  const TaskTimelinePage({super.key});
 
   @override
-  State<TaskPage> createState() => _TaskPageState();
+  State<TaskTimelinePage> createState() => _TaskTimelinePageState();
 }
 
-class _TaskPageState extends State<TaskPage> {
+class _TaskTimelinePageState extends State<TaskTimelinePage> {
   late Future<List<TaskModel>> futureTasks;
   late Future<List<ScheduleModel>> futureSchedules;
   late IHttpClient _httpClient;
@@ -148,7 +148,7 @@ class _TaskPageState extends State<TaskPage> {
             child: IconButton(
               icon: const Icon(
                 Icons.add,
-                color: AppColors.white,
+                color: AppNewColors.white,
                 size: 25,
               ),
               onPressed: () async {
@@ -162,14 +162,14 @@ class _TaskPageState extends State<TaskPage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20.0),
             child: EasyDateTimeLine(
               initialDate: selectedDate,
               onDateChange: _onDateChanged,
               activeColor: AppNewColors.darkBlue,
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
           FutureBuilder<List<ScheduleModel>>(
             future: futureSchedules,
             builder: (context, snapshot) {
@@ -335,11 +335,10 @@ class _TaskPageState extends State<TaskPage> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              border: Border.all(color: AppNewColors.lightGray
+                              border: Border.all(color: AppNewColors.darkBlue
                               ),
                             ),
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 20),
+                            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                             padding: const EdgeInsets.all(10.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,7 +394,7 @@ class _TaskPageState extends State<TaskPage> {
                                         color: AppNewColors.pink,
                                         borderRadius: BorderRadius.circular(6),
                                         border: Border.all(
-                                            color: Colors.grey.shade300),
+                                            color: AppNewColors.pink),
                                       ),
                                       child: Text(
                                         task.subjectName ?? '',
@@ -412,8 +411,8 @@ class _TaskPageState extends State<TaskPage> {
                                           : task.priority == 'Média'
                                               ? 'assets/images/mean-priority.png'
                                               : 'assets/images/low-priority.png',
-                                      width: 30,
-                                      height: 30,
+                                      width: 25,
+                                      height: 25,
                                     ),
                                   ],
                                 ),
@@ -446,7 +445,7 @@ class _TaskPageState extends State<TaskPage> {
           ),
           child: Container(
             color: AppNewColors.white,
-            constraints: const BoxConstraints(maxHeight: 920),
+            constraints: const BoxConstraints(maxHeight: 780),
             child: EditTaskModal(task: task),
           ),
         );
@@ -469,7 +468,7 @@ class _TaskPageState extends State<TaskPage> {
           ),
           child: Container(
             color: AppNewColors.white,
-            constraints: const BoxConstraints(maxHeight: 920),
+            constraints: const BoxConstraints(maxHeight: 760),
             child: const NewTaskModal(),
           ),
         );
@@ -483,7 +482,7 @@ class _TaskPageState extends State<TaskPage> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const TaskPage(),
+        builder: (context) => const TaskTimelinePage(),
       ),
     );
 

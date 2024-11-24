@@ -10,7 +10,8 @@ class TaskProgressChart extends StatelessWidget {
   final int completedTasksCount;
   final int totalTasksCount;
 
-  const TaskProgressChart({super.key, 
+  const TaskProgressChart({
+    super.key,
     required this.pendingTasksCount,
     required this.inProgressTasksCount,
     required this.completedTasksCount,
@@ -20,15 +21,9 @@ class TaskProgressChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool hasTasks = totalTasksCount > 0;
-    double pendingPercentage = hasTasks
-        ? (pendingTasksCount / totalTasksCount) * 100
-        : 0.0;
-    double inProgressPercentage = hasTasks
-        ? (inProgressTasksCount / totalTasksCount) * 100
-        : 0.0;
-    double completedPercentage = hasTasks
-        ? (completedTasksCount / totalTasksCount) * 100
-        : 0.0;
+    double pendingPercentage = hasTasks ? (pendingTasksCount / totalTasksCount) * 100 : 0.0;
+    double inProgressPercentage = hasTasks ? (inProgressTasksCount / totalTasksCount) * 100 : 0.0;
+    double completedPercentage = hasTasks ? (completedTasksCount / totalTasksCount) * 100 : 0.0;
 
     return Row(
       children: [
@@ -53,10 +48,10 @@ class TaskProgressChart extends StatelessWidget {
                       if (hasTasks) ...[
                         PieChartSectionData(
                           value: pendingTasksCount.toDouble(),
-                          color: AppColors.titlePurple,
-                          title: '${pendingPercentage.toStringAsFixed(1)}%',
+                          color: AppNewColors.purple,
+                          title: '${pendingPercentage.toStringAsFixed(0)}%',
                           radius: 60,
-                          titleStyle: AppTextStyles.smallerText.copyWith(color: Colors.white),
+                          titleStyle: AppNewTextStyles.smallerPoppinsRegular.copyWith(color: Colors.white),
                         ),
                       ] else ...[
                         PieChartSectionData(
@@ -64,27 +59,25 @@ class TaskProgressChart extends StatelessWidget {
                           color: AppNewColors.darkGray,
                           title: '0%',
                           radius: 60,
-                          titleStyle: AppTextStyles.smallerText.copyWith(color: Colors.white),
+                          titleStyle: AppNewTextStyles.smallerPoppinsRegular.copyWith(color: Colors.white),
                         ),
                       ],
-
                       if (hasTasks) ...[
                         PieChartSectionData(
                           value: inProgressTasksCount.toDouble(),
-                          color: AppColors.logoPink,
-                          title: '${inProgressPercentage.toStringAsFixed(1)}%',
+                          color: AppNewColors.pinkChart,
+                          title: '${inProgressPercentage.toStringAsFixed(0)}%',
                           radius: 60,
-                          titleStyle: AppTextStyles.smallerText.copyWith(color: Colors.white),
+                          titleStyle: AppNewTextStyles.smallerPoppinsRegular.copyWith(color: Colors.white),
                         ),
                       ],
-
                       if (hasTasks) ...[
                         PieChartSectionData(
                           value: completedTasksCount.toDouble(),
                           color: Colors.green,
-                          title: '${completedPercentage.toStringAsFixed(1)}%',
+                          title: '${completedPercentage.toStringAsFixed(0)}%',
                           radius: 60,
-                          titleStyle: AppTextStyles.smallerText.copyWith(color: Colors.white),
+                          titleStyle: AppNewTextStyles.smallerPoppinsRegular.copyWith(color: Colors.white),
                         ),
                       ],
                     ],
@@ -97,19 +90,29 @@ class TaskProgressChart extends StatelessWidget {
             ],
           ),
         ),
-
         const SizedBox(width: 20),
 
         const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              LegendItem(color: AppColors.titlePurple, label: 'Pendentes'),
-              SizedBox(height: 20),
-              LegendItem(color: AppColors.logoPink, label: 'Em Andamento'),
-              SizedBox(height: 20),
-              LegendItem(color: Colors.green, label: 'Concluídas'),
-            ],
+          flex: 1,
+          child: Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    LegendItem(
+                        color: AppNewColors.purple, label: 'Pendentes'),
+                    SizedBox(height: 20),
+                    LegendItem(
+                        color: AppNewColors.pinkChart, label: 'Em Andamento'),
+                    SizedBox(height: 20),
+                    LegendItem(color: Colors.green, label: 'Concluídas'),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ],

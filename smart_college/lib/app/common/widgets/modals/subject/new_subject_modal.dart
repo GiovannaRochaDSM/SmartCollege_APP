@@ -52,7 +52,7 @@ class _NewSubjectModalState extends State<NewSubjectModal> {
           children: [
             Text(
               'Nova matéria',
-              style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.lightBlue),
+              style: AppNewTextStyles.mediumBalooTitle.copyWith(color: AppNewColors.lightBlue),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),

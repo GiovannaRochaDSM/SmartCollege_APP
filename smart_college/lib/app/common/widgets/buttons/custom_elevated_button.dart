@@ -27,7 +27,7 @@ class CustomElevatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color buttonBackgroundColor = buttonColor ?? AppNewColors.pink;
-    final Color buttonTextColor = textColor ?? AppColors.white;
+    final Color buttonTextColor = textColor ?? AppNewColors.white;
     final Color buttonBorderColor = borderColor ?? AppNewColors.pink;
     final double buttonWidth = width ?? 246.0;
     final double buttonHeight = height ?? 49.0;

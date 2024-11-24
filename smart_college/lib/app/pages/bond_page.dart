@@ -68,7 +68,7 @@ class _BondPageState extends State<BondPage> {
         iconTheme: const IconThemeData(color: Colors.white, size: 30),
         title: Text(
           'Vínculos',
-          style: AppNewTextStyles.balooTitle.copyWith(color: AppColors.white),
+          style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.white),
           textAlign: TextAlign.center,
         ),
         centerTitle: true, 

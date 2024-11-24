@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
 import 'package:smart_college/app/pages/login_page.dart';
 import 'package:smart_college/app/pages/register_page.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
 import 'package:smart_college/app/common/widgets/buttons/custom_elevated_button.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -35,17 +35,15 @@ class _OnboardingPage extends State<OnboardingPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 150),
+                const SizedBox(height: 170),
                 Text(
                   'SmartCollege',
-                  style: AppNewTextStyles.bigBalooTitle
-                      .copyWith(color: AppNewColors.black),
+                  style: AppNewTextStyles.bigBalooTitle.copyWith(color: AppNewColors.black),
                 ),
                 const SizedBox(height: 20),
                 Text(
                   'seu app na organização',
-                  style: AppNewTextStyles.mediumPoppinsRegular
-                      .copyWith(color: AppNewColors.black),
+                  style: AppNewTextStyles.mediumPoppinsRegular.copyWith(color: AppNewColors.black),
                 ),
                 const SizedBox(height: 30),
                 Image.asset(
@@ -58,7 +56,7 @@ class _OnboardingPage extends State<OnboardingPage> {
                   text: 'Entrar',
                   buttonColor: AppNewColors.darkBlue,
                   textColor: AppNewColors.white,
-                  borderColor: AppNewColors.white,
+                  borderColor: AppNewColors.darkBlue,
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
@@ -68,7 +66,7 @@ class _OnboardingPage extends State<OnboardingPage> {
                     );
                   },
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 60),
                 CustomTextButton(
                   text: 'Criar uma conta',
                   onPressed: () {

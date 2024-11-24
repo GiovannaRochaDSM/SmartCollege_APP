@@ -171,7 +171,7 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
             const SizedBox(height: 10),
             GestureDetector(
               onTap: () {
-                _navigateToTasksPage(widget.subject.id);
+                _showTaskListModal();
               },
               child: FutureBuilder<int>(
                 future: _pendingOrOngoingTaskCount,
@@ -303,7 +303,7 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
                   child: GestureDetector(
                     onTap: () {
                       if (scheduleToDelete != null) {
-                        showEditScheduleModal(context, scheduleToDelete);
+                        _showEditScheduleModal(context, scheduleToDelete);
                       }
                     },
                     child: _buildField(
@@ -317,7 +317,7 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
                   IconButton(
                     icon: const Icon(Icons.add, color: AppNewColors.lightBlue),
                     onPressed: () {
-                      showNewScheduleModal(context, widget.subject.id);
+                      _showNewScheduleModal(context, widget.subject.id);
                     },
                   ),
                 if (showDeleteScheduleIcon && scheduleToDelete != null)
@@ -433,7 +433,7 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
     );
   }
 
-  void showNewScheduleModal(BuildContext context, String subjectId) {
+  void _showNewScheduleModal(BuildContext context, String subjectId) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -457,15 +457,6 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
     ).whenComplete(() {
       _updateAndReloadPage();
     });
-  }
-
-  void _navigateToTasksPage(String subjectId) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TaskPage(subjectId: subjectId),
-      ),
-    );
   }
 
   Future<void> _performUpdate(SubjectModel updatedSubject) async {
@@ -500,7 +491,7 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
     });
   }
 
-  void showEditScheduleModal(
+  void _showEditScheduleModal(
       BuildContext context, ScheduleModel scheduleToEdit) {
     showModalBottomSheet(
       context: context,
@@ -525,4 +516,25 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
       _updateAndReloadPage();
     });
   }
+
+  void _showTaskListModal() {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
+        ),
+        child: Container(
+          color: AppNewColors.white,
+          constraints: const BoxConstraints(maxHeight: 600),
+          child: TaskListModal(subjectId: widget.subject.id),
+        ),
+      );
+    },
+  );
+}
 }

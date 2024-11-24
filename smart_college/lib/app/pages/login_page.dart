@@ -54,7 +54,7 @@ class _LoginPage extends State<LoginPage> {
         children: <Widget>[
           Expanded(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -63,7 +63,7 @@ class _LoginPage extends State<LoginPage> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 25.0),
+                padding: const EdgeInsets.only(top: 0.0),
                 child: Form(
                   key: _formkey,
                   child: Column(
@@ -71,25 +71,23 @@ class _LoginPage extends State<LoginPage> {
                     children: [
                       Text(
                         'SmartCollege',
-                        style: AppNewTextStyles.bigBalooTitle
-                            .copyWith(color: AppNewColors.black),
+                        style: AppNewTextStyles.bigBalooTitle.copyWith(color: AppNewColors.black),
                         textAlign: TextAlign.center,
                       ),
                       Text(
                         'seu app na organização',
-                        style: AppNewTextStyles.mediumPoppinsRegular
-                            .copyWith(color: AppNewColors.black),
+                        style: AppNewTextStyles.mediumPoppinsRegular.copyWith(color: AppNewColors.black),
                         textAlign: TextAlign.left,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 70),
                       Text(
                         'Login',
-                        style: AppNewTextStyles.mediumPoppinsRegular
-                            .copyWith(color: AppNewColors.lightGray),
+                        style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.textGray),
+                        textAlign: TextAlign.left,
                       ),
                       const SizedBox(height: 5),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                         child: CustomTextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
@@ -112,8 +110,7 @@ class _LoginPage extends State<LoginPage> {
                       const SizedBox(height: 20),
                       Text(
                         'Senha',
-                        style: AppNewTextStyles.mediumPoppinsRegular
-                            .copyWith(color: AppNewColors.lightGray),
+                        style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.textGray),
                       ),
                       const SizedBox(height: 5),
                       Padding(
@@ -146,22 +143,22 @@ class _LoginPage extends State<LoginPage> {
                               _isPasswordVisible
                                   ? Icons.visibility_off
                                   : Icons.visibility,
-                              color: AppNewColors.lightGray,
+                              color: AppNewColors.darkGray,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 1),
+                      const SizedBox(height: 5),
                       CustomTextButton(
                         text: 'Esqueci minha senha',
                         onPressed: () {
                           _showForgotPasswordModal(context);
                         },
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 50),
                       CustomElevatedButton(
                         buttonColor: AppNewColors.lightBlue,
-                        borderColor: AppNewColors.lightGray,
+                        borderColor: AppNewColors.lightBlue,
                         text: 'Entrar',
                         onPressed: () async {
                           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -173,12 +170,7 @@ class _LoginPage extends State<LoginPage> {
                               currentFocus.unfocus();
                             }
                             if (isLogged) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const AuthCodeModal(),
-                                ),
-                              );
+                              _showAuthCodeModal(context);
                             } else {
                               _passwordController.clear();
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -187,7 +179,7 @@ class _LoginPage extends State<LoginPage> {
                           }
                         },
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 90),
                       Text(
                         'Ainda não possui uma conta?',
                         style: AppNewTextStyles.smallPoppinsRegular
@@ -233,8 +225,7 @@ class _LoginPage extends State<LoginPage> {
       },
     ).then((result) {
       if (result != null && result is String) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(result)),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)),
         );
       }
     });
@@ -245,40 +236,74 @@ class _LoginPage extends State<LoginPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Política de Senha',
-              style: AppTextStyles.mediumTextBold
-                  .copyWith(color: AppColors.titlePurple),
-              textAlign: TextAlign.center),
+          backgroundColor: AppNewColors.white,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.zero,
+          ),
+          title: Text(
+            'Política de Senha',
+            style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.lightBlue), 
+            textAlign: TextAlign.center,
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text('A senha deve conter:',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.inputText)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 Text('- Pelo menos uma letra maiúscula',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 Text('- Pelo menos um caractere especial',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                 Text('- Pelo menos 8 caracteres',
-                    style: AppTextStyles.smallerText
-                        .copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray)),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('OK',
-                  style: AppTextStyles.smallerTextBold
-                      .copyWith(color: AppColors.borderButton)),
               onPressed: () {
                 Navigator.of(context).pop();
               },
+              style: TextButton.styleFrom(
+                side: const BorderSide(
+                  color: AppNewColors.lightBlue,
+                  width: 1,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text('OK', style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.lightBlue)),
             ),
           ],
         );
       },
     );
+  }
+
+  void _showAuthCodeModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: Container(
+            color: Colors.white,
+            constraints: const BoxConstraints(maxHeight: 600),
+            child: const AuthCodeModal(),
+          ),
+        );
+      },
+    ).then((result) {
+      if (result != null && result is String) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)),
+        );
+      }
+    });
   }
 }

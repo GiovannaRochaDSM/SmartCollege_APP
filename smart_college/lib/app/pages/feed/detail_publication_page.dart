@@ -144,6 +144,7 @@ class _DetailPublicationPageState extends State<DetailPublicationPage> {
       context: context,
         builder: (context) {
           return AlertDialog(
+            backgroundColor: Colors.white,
             title: Text(
               'Excluir Publicação',
               textAlign: TextAlign.center,
@@ -177,7 +178,6 @@ class _DetailPublicationPageState extends State<DetailPublicationPage> {
                 ),
               ),
             ],
-            backgroundColor: Colors.white,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.zero,
             ),
@@ -434,7 +434,7 @@ class _DetailPublicationPageState extends State<DetailPublicationPage> {
                                           const SizedBox(width: 4),
                                           Text(
                                             '${publication?.likes ?? 0}',
-                                            style: AppTextStyles.smallerText.copyWith(color: AppColors.gray),
+                                            style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.mediumGray),
                                           ),
                                         ],
                                       ),

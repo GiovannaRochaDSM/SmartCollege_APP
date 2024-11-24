@@ -22,13 +22,12 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 45,
-      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
         validator: validator,
         readOnly: readOnly,
-        style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
+        style: AppNewTextStyles.mediumPoppinsRegular.copyWith(color: AppNewColors.mediumGray),
         decoration: InputDecoration(
           prefixIcon: prefixIcon,
           filled: true,

@@ -193,6 +193,10 @@ class _UserPageState extends State<UserPage> {
                 ),
               ),
             ],
+            backgroundColor: AppNewColors.white,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
           );
         },
       );
@@ -218,15 +222,15 @@ class _UserPageState extends State<UserPage> {
         toolbarHeight: 78,
         title: Text(
           'Meu perfil',
-          style: AppNewTextStyles.balooTitle.copyWith(color: AppColors.white),
-          textAlign: TextAlign.right,
+          style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.white),
+          textAlign: TextAlign.center,
         ),
         centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.vpn_key_rounded, size: 25),
             onPressed: () {
-              showResetPasswordModal(context);
+              _showResetPasswordModal(context);
               (
                 context: context,
                 isScrollControlled: true,
@@ -245,7 +249,7 @@ class _UserPageState extends State<UserPage> {
             },
           ),
         ],
-        iconTheme: const IconThemeData(color: AppColors.white, size: 30),
+        iconTheme: const IconThemeData(color: AppNewColors.white, size: 30),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -436,8 +440,7 @@ class _UserPageState extends State<UserPage> {
                                   user.universityId != null && user.universityId!.isNotEmpty
                                       ? 'Deseja se vincular a uma outra instituição?'
                                       : 'Ainda não possui vínculo com a sua instituição?',
-                                  style: AppTextStyles.smallerText.copyWith(
-                                    color: AppColors.lightBlack),
+                                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.darkGray),
                                   textAlign: TextAlign.center,
                                 ),
                                 TextButton(
@@ -504,6 +507,7 @@ class _UserPageState extends State<UserPage> {
 
   void _showOptionsBottomSheet() {
     showModalBottomSheet(
+      backgroundColor: AppNewColors.white,
       context: context,
       builder: (_) {
         return Padding(
@@ -512,32 +516,26 @@ class _UserPageState extends State<UserPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: AppColors.purple,
-                  child: Icon(
+                leading: const Icon(
                     Icons.photo_library,
-                    color: AppColors.white,
-                  ),
+                    color: AppNewColors.darkGray,
                 ),
                 title: Text('Escolher da galeria',
-                    style: AppTextStyles.smallTextBold
-                        .copyWith(color: AppColors.gray)),
+                    style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.lightGray),
+                ),
                 onTap: () {
                   Navigator.of(context).pop();
                   pickImage(ImageSource.gallery);
                 },
               ),
               ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: AppColors.purple,
-                  child: Icon(
+                leading: const Icon(
                     Icons.delete_outline_rounded,
-                    color: AppColors.white,
-                  ),
+                    color: AppNewColors.darkGray,
                 ),
                 title: Text('Remover foto',
-                    style: AppTextStyles.smallTextBold
-                        .copyWith(color: AppColors.gray)),
+                  style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.lightGray)
+                ),
                 onTap: _removeImage,
               ),
             ],
@@ -547,21 +545,29 @@ class _UserPageState extends State<UserPage> {
     );
   }
 
-  void showResetPasswordModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(50)),
-      ),
-      builder: (BuildContext context) {
-        return SingleChildScrollView(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: const ResetPasswordModal(),
-        );
-      },
-    );
-  }
+  void _showResetPasswordModal(BuildContext context) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
+            child: Container(
+              color: Colors.white,
+              constraints: const BoxConstraints(maxHeight: 600),
+              child: const ResetPasswordModal(),
+            ),
+          );
+        },
+      ).then((result) {
+        if (result != null && result is String) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)),
+          );
+        }
+      });
+    }
 }

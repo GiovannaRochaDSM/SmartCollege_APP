@@ -23,7 +23,7 @@ class CustomPrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color buttonBackgroundColor = buttonColor ?? AppNewColors.pink;
-    final Color buttonTextColor = textColor ?? AppColors.white;
+    final Color buttonTextColor = textColor ?? AppNewColors.white;
     final Color buttonBorderColor = borderColor ?? AppNewColors.pink;
 
     return InkWell(

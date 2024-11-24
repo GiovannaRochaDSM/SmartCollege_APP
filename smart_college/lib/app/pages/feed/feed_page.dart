@@ -181,7 +181,7 @@ class _FeedPageState extends State<FeedPage> {
           padding: const EdgeInsets.only(top: 10),
           child: Text(
             'Feed',
-            style: AppNewTextStyles.balooTitle.copyWith(color: AppColors.white),
+            style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.white),
             textAlign: TextAlign.center,
           ),
         ),
@@ -203,7 +203,7 @@ class _FeedPageState extends State<FeedPage> {
           ),
         ] : null,
         iconTheme: const IconThemeData(
-          color: AppColors.white,
+          color: AppNewColors.white,
           size: 30
         ),
       ),

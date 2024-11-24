@@ -42,7 +42,7 @@ class _SubjectPageState extends State<SubjectPage> {
         iconTheme: const IconThemeData(color: Colors.white, size: 30),
         title: Text(
           'Matérias',
-          style: AppNewTextStyles.balooTitle.copyWith(color: AppColors.white),
+          style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.white),
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
@@ -70,7 +70,8 @@ class _SubjectPageState extends State<SubjectPage> {
                   return Center(
                     child: Text(
                       'Erro ao carregar matérias: ${snapshot.error}',
-                      style: AppTextStyles.mediumText.copyWith(color: Colors.red, fontWeight: FontWeight.w600),
+                      style: AppNewTextStyles.poppinsMedium.copyWith(
+                          color: Colors.red, fontWeight: FontWeight.w600),
                       textAlign: TextAlign.center,
                     ),
                   );
@@ -92,7 +93,7 @@ class _SubjectPageState extends State<SubjectPage> {
                             padding: const EdgeInsets.all(20.0),
                             child: Text(
                               'Ops\nNenhuma matéria cadastrada.',
-                              style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppColors.gray,fontWeight: FontWeight.w600),
+                              style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.lightGray,fontWeight: FontWeight.w600),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -110,7 +111,8 @@ class _SubjectPageState extends State<SubjectPage> {
                           background: Container(
                             color: Colors.red,
                             alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
                             child: const Icon(
                               Icons.delete_outline_rounded,
                               color: Colors.white,
@@ -120,14 +122,18 @@ class _SubjectPageState extends State<SubjectPage> {
                             bool confirmDelete = await showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                                backgroundColor: Colors.white,
                                 title: Text(
                                   'Excluir matéria',
-                                  style: AppTextStyles.normalTextBold.copyWith(color: AppColors.titlePurple),
+                                  style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.darkBlue),
                                   textAlign: TextAlign.center,
                                 ),
                                 content: Text(
-                                  'Tem certeza que deseja excluir a matéria "${item.name}"?',
-                                  style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                                  'Você tem certeza que deseja excluir a matéria "${item.name}"?',
+                                  style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
                                   textAlign: TextAlign.center,
                                 ),
                                 actions: [
@@ -137,8 +143,7 @@ class _SubjectPageState extends State<SubjectPage> {
                                     },
                                     child: Text(
                                       'Cancelar',
-                                      style: AppTextStyles.smallerText
-                                          .copyWith(color: AppColors.gray),
+                                      style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.textGray),
                                     ),
                                   ),
                                   TextButton(
@@ -146,11 +151,16 @@ class _SubjectPageState extends State<SubjectPage> {
                                       Navigator.pop(context, true);
                                     },
                                     style: TextButton.styleFrom(
-                                      backgroundColor: Colors.red,
+                                      side: const BorderSide(
+                                        color: AppNewColors.red,
+                                        width: 1),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
                                     ),
                                     child: Text(
                                       'Excluir',
-                                      style: AppTextStyles.smallerText.copyWith(color: AppColors.white),
+                                      style: AppNewTextStyles.smallPoppinsRegular.copyWith(color: AppNewColors.red),
                                     ),
                                   ),
                                 ],
@@ -167,7 +177,8 @@ class _SubjectPageState extends State<SubjectPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DetailSubjectPage(subject: item),
+                                  builder: (context) =>
+                                      DetailSubjectPage(subject: item),
                                 ),
                               );
                             },
@@ -177,18 +188,18 @@ class _SubjectPageState extends State<SubjectPage> {
                                 borderRadius: BorderRadius.zero,
                               ),
                               margin: const EdgeInsets.symmetric(
-                                horizontal: 15.0,
-                                vertical: 10.0
-                              ), 
+                                  horizontal: 15.0, vertical: 10.0),
                               child: ListTile(
                                 contentPadding: const EdgeInsets.all(16),
                                 title: Text(
                                   item.acronym,
-                                  style: AppNewTextStyles.mediumPoppinsMedium.copyWith(color: AppNewColors.textGray),
+                                  style: AppNewTextStyles.mediumPoppinsMedium
+                                      .copyWith(color: AppNewColors.textGray),
                                 ),
                                 subtitle: Text(
                                   item.name,
-                                  style: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
+                                  style: AppNewTextStyles.smallExtraLight
+                                      .copyWith(color: AppNewColors.textGray),
                                 ),
                               ),
                             ),
@@ -222,7 +233,7 @@ class _SubjectPageState extends State<SubjectPage> {
             child: const Icon(
               Icons.add_rounded,
               size: 50,
-              color: AppColors.white,
+              color: AppNewColors.white,
             ),
           ),
         ),
