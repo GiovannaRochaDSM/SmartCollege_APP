@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:smart_college/app/data/http/http_client.dart';
@@ -125,88 +124,6 @@ class _TaskPageState extends State<TaskPage> {
     return await subjectRepository.getSubjectById(subjectId, token);
   }
 
-  void _showClassificationAlert() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppNewColors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
-          title: Text(
-            'Classificação de Tarefas',
-            style: AppNewTextStyles.balooTitle
-                .copyWith(color: AppNewColors.lightBlue),
-            textAlign: TextAlign.center,
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const SizedBox(height: 10),
-                _buildClassificationItem(
-                    text: 'Vermelho: Prioridade ALTA', 
-                    color: AppNewColors.red),
-                _buildClassificationItem(
-                    text: 'Amarelo: Prioridade MÉDIA', 
-                    color: Colors.yellow),
-                _buildClassificationItem(
-                    text: 'Verde: Prioridade BAIXA', 
-                    color: Colors.green),
-                _buildClassificationItem(text: '\nAV: Tarefa de AVALIAÇÃO'),
-                _buildClassificationItem(text: 'AT: Tarefa de ATIVIDADE'),
-                _buildClassificationItem(text: 'ES: Tarefa de ESTUDOS'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                side: const BorderSide(
-                  color: AppNewColors.lightBlue,
-                  width: 1,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                'OK',
-                style: AppNewTextStyles.smallPoppinsRegular
-                    .copyWith(color: AppNewColors.lightBlue),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildClassificationItem({required String text, Color? color}) {
-    return Row(
-      children: <Widget>[
-        if (color != null)
-          Icon(
-            Icons.circle,
-            color: color,
-            size: 16,
-          ),
-        if (color != null) const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            text,
-            style: AppNewTextStyles.smallPoppinsRegular
-                .copyWith(color: AppNewColors.textGray),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -215,7 +132,7 @@ class _TaskPageState extends State<TaskPage> {
         iconTheme: const IconThemeData(color: Colors.white, size: 30),
         title: Text(
           'Agenda',
-          style: AppNewTextStyles.balooTitle.copyWith(color: AppColors.white),
+          style: AppNewTextStyles.balooTitle.copyWith(color: AppNewColors.white),
           textAlign: TextAlign.center,
         ),
         centerTitle: true,
@@ -230,11 +147,13 @@ class _TaskPageState extends State<TaskPage> {
             padding: const EdgeInsets.only(right: 16.0),
             child: IconButton(
               icon: const Icon(
-                Icons.help_outline_rounded,
+                Icons.add,
                 color: AppColors.white,
                 size: 25,
               ),
-              onPressed: _showClassificationAlert,
+              onPressed: () async {
+                showAddTaskModal(context);
+              },
             ),
           ),
         ],
@@ -247,7 +166,7 @@ class _TaskPageState extends State<TaskPage> {
             child: EasyDateTimeLine(
               initialDate: selectedDate,
               onDateChange: _onDateChanged,
-              activeColor: AppNewColors.darkGray,
+              activeColor: AppNewColors.darkBlue,
             ),
           ),
           const SizedBox(height: 20),
@@ -285,7 +204,7 @@ class _TaskPageState extends State<TaskPage> {
                         child: Container(
                           margin: const EdgeInsets.only(bottom: 10.0),
                           decoration: const BoxDecoration(
-                            color:Color(0xFF64B7CC),
+                            color: AppNewColors.lightBlue,
                             borderRadius: BorderRadius.zero,
                           ),
                           padding: const EdgeInsets.symmetric(
@@ -309,11 +228,11 @@ class _TaskPageState extends State<TaskPage> {
                               ),
                               Text(
                                 schedule.subjectName ?? 'Sem matéria',
-                                  style: AppNewTextStyles.smallerPoppinsRegular
-                                      .copyWith(
-                                    color: Colors.white,
-                                  ),
+                                style: AppNewTextStyles.smallerPoppinsRegular
+                                    .copyWith(
+                                  color: Colors.white,
                                 ),
+                              ),
                             ],
                           ),
                         ),
@@ -341,22 +260,6 @@ class _TaskPageState extends State<TaskPage> {
                     itemBuilder: (_, index) {
                       final task = snapshot.data![index];
                       bool isCompleted = task.status == 'Concluída';
-                      String categoryInitials =
-                          task.category != null && task.category!.isNotEmpty
-                              ? task.category!.substring(0, 2).toUpperCase()
-                              : '';
-
-                      Color priorityColor = Colors.black;
-                      if (task.priority == 'Alta') {
-                        priorityColor = Colors.red;
-                      } else if (task.priority == 'Média') {
-                        priorityColor = const Color.fromARGB(255, 231, 210, 18);
-                      } else if (task.priority == 'Baixa') {
-                        priorityColor = Colors.green;
-                      }
-                      String formattedDeadline = task.deadline != null
-                          ? DateFormat('dd/MM/yyyy').format(task.deadline!)
-                          : 'Sem data';
 
                       return Dismissible(
                         key: Key(task.id),
@@ -405,8 +308,8 @@ class _TaskPageState extends State<TaskPage> {
                                     },
                                     style: TextButton.styleFrom(
                                       side: const BorderSide(
-                                          color: AppNewColors.red,
-                                           width: 1),
+                                          color: AppNewColors.red, 
+                                          width: 1),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
                                       ),
@@ -432,12 +335,11 @@ class _TaskPageState extends State<TaskPage> {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: AppNewColors.lightGray,
-                              borderRadius: BorderRadius.zero,
-                              border: Border.all(color: Colors.grey.shade300),
+                              border: Border.all(color: AppNewColors.lightGray
+                              ),
                             ),
                             margin: const EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 20),
+                                vertical: 5, horizontal: 20),
                             padding: const EdgeInsets.all(10.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -449,30 +351,20 @@ class _TaskPageState extends State<TaskPage> {
                                     Text(
                                       task.name,
                                       style: AppNewTextStyles
-                                          .mediumPoppinsMedium
+                                      .poppinsMedium
                                           .copyWith(
                                         color: AppNewColors.textGray,
                                       ),
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 13, vertical: 4),
-                                      margin: const EdgeInsets.only(left: 8),
-                                      decoration: BoxDecoration(
-                                        color: priorityColor.withOpacity(0.8),
-                                        borderRadius: BorderRadius.circular(25),
+                                    if (isCompleted)
+                                      const Icon(
+                                        Icons.check,
+                                        color: Colors.green,
+                                        size: 30,
                                       ),
-                                      child: Text(
-                                        categoryInitials,
-                                        style: AppNewTextStyles
-                                            .mediumPoppinsMedium
-                                            .copyWith(
-                                                color: AppNewColors.white),
-                                      ),
-                                    ),
                                   ],
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: 1),
                                 Row(
                                   children: [
                                     Expanded(
@@ -481,20 +373,9 @@ class _TaskPageState extends State<TaskPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            task.description ?? '',
+                                            task.category!,
                                             style: AppNewTextStyles
-                                                .smallExtraLight
-                                                .copyWith(
-                                                    color:
-                                                        AppNewColors.textGray),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          const SizedBox(height: 6),
-                                          Text(
-                                            formattedDeadline,
-                                            style: AppNewTextStyles
-                                                .smallExtraLight
+                                                .smallerPoppinsRegular
                                                 .copyWith(
                                                     color:
                                                         AppNewColors.textGray),
@@ -509,35 +390,31 @@ class _TaskPageState extends State<TaskPage> {
                                   children: [
                                     Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 6),
+                                          horizontal: 4, vertical: 3),
                                       decoration: BoxDecoration(
-                                        color: AppNewColors.lightBlue,
-                                        borderRadius: BorderRadius.circular(12),
+                                        color: AppNewColors.pink,
+                                        borderRadius: BorderRadius.circular(6),
                                         border: Border.all(
                                             color: Colors.grey.shade300),
                                       ),
                                       child: Text(
                                         task.subjectName ?? '',
                                         style: AppNewTextStyles
-                                            .smallPoppinsRegular
+                                            .smallerPoppinsRegular
                                             .copyWith(
                                                 color: AppNewColors.white),
                                       ),
                                     ),
                                     const Spacer(),
-                                    if (isCompleted)
-                                      Container(
-                                        padding: const EdgeInsets.all(6),
-                                        decoration: BoxDecoration(
-                                          color: Colors.green.withOpacity(0.4),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.check,
-                                          color: Colors.white,
-                                          size: 30,
-                                        ),
-                                      ),
+                                    Image.asset(
+                                      task.priority == 'Alta'
+                                          ? 'assets/images/high-priority.png'
+                                          : task.priority == 'Média'
+                                              ? 'assets/images/mean-priority.png'
+                                              : 'assets/images/low-priority.png',
+                                      width: 30,
+                                      height: 30,
+                                    ),
                                   ],
                                 ),
                               ],
@@ -552,27 +429,6 @@ class _TaskPageState extends State<TaskPage> {
             ),
           )
         ],
-      ),
-      floatingActionButton: Positioned(
-        bottom: 55.0,
-        right: 55.0,
-        child: GestureDetector(
-          onTap: () async {
-            showAddTaskModal(context);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(10.0),
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppNewColors.darkBlue,
-            ),
-            child: const Icon(
-              Icons.add_rounded,
-              size: 50,
-              color: AppColors.white,
-            ),
-          ),
-        ),
       ),
     );
   }

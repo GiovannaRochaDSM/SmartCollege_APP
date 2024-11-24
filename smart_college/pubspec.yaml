@@ -46,6 +46,10 @@ flutter:
     - assets/images/feed.png
     - assets/images/home.png
     - assets/images/download.png
+    - assets/images/low-priority.png
+    - assets/images/mean-priority.png
+    - assets/images/high-priority.png
+    - assets/images/onboarding-background.png
     
   fonts:
     - family: Nunito

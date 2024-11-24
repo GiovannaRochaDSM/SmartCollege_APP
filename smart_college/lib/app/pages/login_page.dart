@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_college/app/common/widgets/buttons/custom_elevated_button.dart';
+import 'package:smart_college/app/pages/onboarding_page.dart';
 import 'package:smart_college/app/pages/register_page.dart';
 import 'package:smart_college/app/data/services/auth_service.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
@@ -7,6 +7,8 @@ import 'package:smart_college/app/common/constants/app_snack_bar.dart';
 import 'package:smart_college/app/common/constants/app_text_styles.dart';
 import 'package:smart_college/app/common/widgets/modals/user/auth_code.dart';
 import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_form_field.dart';
+import 'package:smart_college/app/common/widgets/buttons/custom_elevated_button.dart';
 import 'package:smart_college/app/common/widgets/modals/user/forgot_password_modal.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,19 +27,25 @@ class _LoginPage extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.pink,
+      backgroundColor: AppNewColors.lightBlue,
       appBar: AppBar(
-        backgroundColor: AppColors.filledTextField,
+        backgroundColor: AppNewColors.lightBlue,
         automaticallyImplyLeading: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.white),
+          icon: const Icon(Icons.arrow_back, color: AppNewColors.white),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const OnboardingPage(),
+              ),
+            );
           },
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.help_outline_rounded, color: AppColors.gray),
+            icon: const Icon(Icons.help_outline_rounded, color: AppNewColors.white),
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
             onPressed: _showPasswordPolicyAlert,
           ),
         ],
@@ -47,9 +55,9 @@ class _LoginPage extends State<LoginPage> {
           Expanded(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20.0),
                   topRight: Radius.circular(20.0),
                 ),
@@ -63,18 +71,26 @@ class _LoginPage extends State<LoginPage> {
                     children: [
                       Text(
                         'SmartCollege',
-                        style: AppTextStyles.bigText.copyWith(color: AppColors.gray),
+                        style: AppNewTextStyles.bigBalooTitle
+                            .copyWith(color: AppNewColors.black),
                         textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'seu app na organização',
+                        style: AppNewTextStyles.mediumPoppinsRegular
+                            .copyWith(color: AppNewColors.black),
+                        textAlign: TextAlign.left,
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'E-MAIL',
-                        style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                        'Login',
+                        style: AppNewTextStyles.mediumPoppinsRegular
+                            .copyWith(color: AppNewColors.lightGray),
                       ),
                       const SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: TextFormField(
+                        child: CustomTextFormField(
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
                           validator: (email) {
@@ -87,32 +103,22 @@ class _LoginPage extends State<LoginPage> {
                             }
                             return null;
                           },
-                          decoration: InputDecoration(
-                            labelStyle:
-                            AppTextStyles.smallerText.copyWith(color: AppColors.gray),
-                            prefixIcon: const Icon(Icons.email_rounded, color: AppColors.purple),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide: const BorderSide(color: AppColors.gray),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide: const BorderSide(color: AppColors.gray),
-                            ),
-                            contentPadding:
-                            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
-                          ),
+                            prefixIcon: const Icon(Icons.person,
+                                color: AppNewColors.black),   
+                                suffixIcon:
+                              const Icon(Icons.lock, color: AppNewColors.lightGray),                    
                         ),
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'SENHA',
-                        style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
+                        'Senha',
+                        style: AppNewTextStyles.mediumPoppinsRegular
+                            .copyWith(color: AppNewColors.lightGray),
                       ),
                       const SizedBox(height: 5),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: TextFormField(
+                        child: CustomTextFormField(
                           controller: _passwordController,
                           keyboardType: TextInputType.text,
                           validator: (password) {
@@ -121,38 +127,27 @@ class _LoginPage extends State<LoginPage> {
                             } else if (password.length < 8) {
                               return 'Por favor, digite uma senha válida';
                             } else if (!RegExp(
-                              r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$')
+                                    r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,}$')
                                 .hasMatch(password)) {
                               return 'Por favor, digite uma senha válida';
                             }
                             return null;
                           },
                           obscureText: !_isPasswordVisible,
-                          decoration: InputDecoration(
-                            labelStyle:
-                            AppTextStyles.smallerText.copyWith(color: AppColors.gray),
-                            prefixIcon: const Icon(Icons.key, color: AppColors.purple),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
-                              icon: Icon(
-                                _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                                color: AppColors.purple,
-                              ),
+                          prefixIcon:
+                              const Icon(Icons.lock, color: AppNewColors.black),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              color: AppNewColors.lightGray,
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide: const BorderSide(color: AppColors.gray),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                              borderSide: const BorderSide(color: AppColors.gray),
-                            ),
-                            contentPadding: 
-                            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
                           ),
                         ),
                       ),
@@ -165,15 +160,18 @@ class _LoginPage extends State<LoginPage> {
                       ),
                       const SizedBox(height: 20),
                       CustomElevatedButton(
+                        buttonColor: AppNewColors.lightBlue,
+                        borderColor: AppNewColors.lightGray,
                         text: 'Entrar',
                         onPressed: () async {
                           FocusScopeNode currentFocus = FocusScope.of(context);
-                        if (_formkey.currentState!.validate()) {
-                             bool isLogged = await AuthService.login(
-                              _emailController.text, _passwordController.text);
-                          if (!currentFocus.hasPrimaryFocus) {
-                            currentFocus.unfocus();
-                          }
+                          if (_formkey.currentState!.validate()) {
+                            bool isLogged = await AuthService.login(
+                                _emailController.text,
+                                _passwordController.text);
+                            if (!currentFocus.hasPrimaryFocus) {
+                              currentFocus.unfocus();
+                            }
                             if (isLogged) {
                               Navigator.pushReplacement(
                                 context,
@@ -183,16 +181,17 @@ class _LoginPage extends State<LoginPage> {
                               );
                             } else {
                               _passwordController.clear();
-                             ScaffoldMessenger.of(context).showSnackBar(
-                                AppSnackBar.invalidEmailOrPassword);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  AppSnackBar.invalidEmailOrPassword);
                             }
                           }
                         },
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 20),
                       Text(
                         'Ainda não possui uma conta?',
-                        style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
+                        style: AppNewTextStyles.smallPoppinsRegular
+                            .copyWith(color: AppNewColors.black),
                       ),
                       CustomTextButton(
                         text: 'Cadastre-se aqui',
@@ -214,32 +213,32 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-void _showForgotPasswordModal(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (context) {
-      return ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(25),
-          topRight: Radius.circular(25),
-        ),
-        child: Container(
-          color: Colors.white,
-          constraints: const BoxConstraints(maxHeight: 600),
-          child: const ForgotPasswordModal(),
-        ),
-      );
-    },
-  ).then((result) {
-    if (result != null && result is String) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result)),
-      );
-    }
-  });
-}
+  void _showForgotPasswordModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: Container(
+            color: Colors.white,
+            constraints: const BoxConstraints(maxHeight: 600),
+            child: const ForgotPasswordModal(),
+          ),
+        );
+      },
+    ).then((result) {
+      if (result != null && result is String) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result)),
+        );
+      }
+    });
+  }
 
   void _showPasswordPolicyAlert() {
     showDialog(

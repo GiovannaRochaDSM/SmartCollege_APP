@@ -157,7 +157,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     if (user.isCoord)
                       ListTile(
                         title: Text('Vínculos',
-                            style: AppTextStyles.normalText
+                            style: AppNewTextStyles.mediumPoppinsRegular
                                 .copyWith(color: AppNewColors.textGray)),
                         onTap: () {
                           Navigator.pushReplacement(
@@ -171,7 +171,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     if (user.bond)
                       ListTile(
                         title: Text('Feed',
-                            style: AppTextStyles.normalText
+                            style: AppNewTextStyles.mediumPoppinsRegular
                                 .copyWith(color: AppNewColors.textGray)),
                         onTap: () {
                           Navigator.pushReplacement(

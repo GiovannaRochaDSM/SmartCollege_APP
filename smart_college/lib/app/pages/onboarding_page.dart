@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_college/app/common/widgets/texts/custom_text_button.dart';
 import 'package:smart_college/app/pages/login_page.dart';
 import 'package:smart_college/app/pages/register_page.dart';
 import 'package:smart_college/app/common/constants/app_colors.dart';
@@ -13,70 +14,51 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPage extends State<OnboardingPage> {
-  @override
+    @override
   void initState() {
     super.initState();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 50.0, horizontal: 16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 20),
-              Text(
-                'SmartCollege',
-                style: AppTextStyles.biggerText
-                    .copyWith(color: AppColors.titlePurple),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Sua rotina de estudos de forma simples.',
-                style: AppTextStyles.smallText.copyWith(color: AppColors.gray),
-              ),
-              const SizedBox(height: 20),
-              Image.asset(
-                'assets/images/logo.png',
-                width: 190,
-                height: 190,
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Ainda não possui uma conta?',
-                style: AppTextStyles.normalText.copyWith(color: AppColors.gray),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomElevatedButton(
-                  text: 'Cadastre-se',
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RegisterPage(),
-                      ),
-                    );
-                  },
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/onboarding-background.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 150),
+                Text(
+                  'SmartCollege',
+                  style: AppNewTextStyles.bigBalooTitle
+                      .copyWith(color: AppNewColors.black),
                 ),
-              ),
-              const SizedBox(height: 30),
-              Text(
-                'Já se organiza conosco?',
-                style: AppNewTextStyles.smallPoppinsRegular
-                    .copyWith(color: AppColors.gray),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomElevatedButton(
-                  text: 'Entre',
+                const SizedBox(height: 20),
+                Text(
+                  'seu app na organização',
+                  style: AppNewTextStyles.mediumPoppinsRegular
+                      .copyWith(color: AppNewColors.black),
+                ),
+                const SizedBox(height: 30),
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: 180,
+                  height: 180,
+                ),
+                const SizedBox(height: 40),
+                CustomElevatedButton(
+                  text: 'Entrar',
+                  buttonColor: AppNewColors.darkBlue,
+                  textColor: AppNewColors.white,
+                  borderColor: AppNewColors.white,
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
@@ -86,10 +68,22 @@ class _OnboardingPage extends State<OnboardingPage> {
                     );
                   },
                 ),
-              ),
-            ],
+                const SizedBox(height: 30),
+                CustomTextButton(
+                  text: 'Criar uma conta',
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const RegisterPage(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

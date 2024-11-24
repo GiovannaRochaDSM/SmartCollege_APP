@@ -113,11 +113,11 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
       String newNotes = _notesController.text;
 
       SubjectModel updatedSubject = SubjectModel(
-          id: widget.subject.id, 
-          name: newName, 
+          id: widget.subject.id,
+          name: newName,
           acronym: newAcronym,
           notes: newNotes
-      );
+          );
 
       await _performUpdate(updatedSubject);
 
@@ -151,7 +151,16 @@ class _DetailSubjectPageState extends State<DetailSubjectPage> {
             bottomRight: Radius.circular(50),
           ),
         ),
-        iconTheme: const IconThemeData(color: AppColors.white, size: 30),
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: AppNewColors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SubjectPage(),
+                ),
+              );
+            }),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

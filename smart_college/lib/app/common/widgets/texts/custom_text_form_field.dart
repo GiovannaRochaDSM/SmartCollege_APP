@@ -8,6 +8,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool obscureText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
 
   const CustomTextFormField({
     super.key,
@@ -16,6 +17,7 @@ class CustomTextFormField extends StatelessWidget {
     this.validator,
     this.obscureText = false,
     this.suffixIcon,
+    this.prefixIcon
   });
 
   @override
@@ -35,6 +37,7 @@ class CustomTextFormField extends StatelessWidget {
         hintStyle: AppNewTextStyles.smallExtraLight.copyWith(color: AppNewColors.textGray),
         alignLabelWithHint: true,
         suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon
       ),
       controller: controller,
       keyboardType: keyboardType,
