@@ -521,7 +521,7 @@ class _UserPageState extends State<UserPage> {
                     color: AppNewColors.darkGray,
                 ),
                 title: Text('Escolher da galeria',
-                    style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.lightGray),
+                    style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray),
                 ),
                 onTap: () {
                   Navigator.of(context).pop();
@@ -534,7 +534,7 @@ class _UserPageState extends State<UserPage> {
                     color: AppNewColors.darkGray,
                 ),
                 title: Text('Remover foto',
-                  style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.lightGray)
+                  style: AppNewTextStyles.mediumExtraLight.copyWith(color: AppNewColors.textGray)
                 ),
                 onTap: _removeImage,
               ),

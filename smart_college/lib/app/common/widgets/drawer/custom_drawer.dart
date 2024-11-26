@@ -20,14 +20,23 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  late Future<UserModel> futureUser;
+  late Future<UserModel> _futureUser;
   Image? imagemReal;
 
   @override
   void initState() {
     super.initState();
-    futureUser = UserHelper.fetchUser();
-    futureUser.then((value) => readImage(value.photo));
+    _futureUser = fetchUser();
+    _futureUser.then((value) => readImage(value.photo));
+  }
+
+  Future<UserModel> fetchUser() async {
+    try {
+      UserModel user = await UserHelper.fetchUser();
+      return user;
+    } catch (e) {
+      throw Exception('Erro ao carregar dados do usuário: $e');
+    }
   }
 
   Future<void> readImage(String? foto) async {
@@ -46,7 +55,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
         padding: EdgeInsets.zero,
         children: [
           FutureBuilder<UserModel>(
-            future: futureUser,
+            future: _futureUser,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const DrawerHeader(
@@ -73,7 +82,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   ),
                 );
               } else if (snapshot.hasData) {
-                final user = snapshot.data!;
+                UserModel user = snapshot.data!;
                 final displayName = user.nickname;
                 return DrawerHeader(
                   decoration: const BoxDecoration(
@@ -150,43 +159,36 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           FutureBuilder<UserModel>(
-            future: futureUser,
+            future: _futureUser,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                final user = snapshot.data!;
-
+                UserModel user = snapshot.data!;
                 return Column(
                   children: [
-                    if (user.isCoord)
+                    if (user.isCoord) ...[
                       const SizedBox(height: 10),
                       ListTile(
-                        title: Text('Vínculos',
-                            style: AppNewTextStyles.mediumPoppinsRegular
-                                .copyWith(color: AppNewColors.textGray)),
+                        title: Text('Vínculos', style: AppNewTextStyles.mediumPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                         onTap: () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const BondPage(),
-                            ),
+                            MaterialPageRoute(builder: (context) => const BondPage()),
                           );
                         },
                       ),
-                    if (user.bond)
+                    ],
+                    if (user.bond) ...[
                       const SizedBox(height: 10),
                       ListTile(
-                        title: Text('Feed',
-                            style: AppNewTextStyles.mediumPoppinsRegular
-                                .copyWith(color: AppNewColors.textGray)),
+                        title: Text('Feed', style: AppNewTextStyles.mediumPoppinsRegular.copyWith(color: AppNewColors.textGray)),
                         onTap: () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => const FeedPage(),
-                            ),
+                            MaterialPageRoute(builder: (context) => const FeedPage()),
                           );
                         },
                       ),
+                    ],
                   ],
                 );
               }

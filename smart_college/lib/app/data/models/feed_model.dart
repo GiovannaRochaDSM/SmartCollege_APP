@@ -39,7 +39,7 @@ class FeedModel {
       likes: map['likes'] ?? 0,
       likedBy: List<String>.from(map['likedBy'] ?? []),
       userId: map['user']?['_id'] ?? '',
-      userName: map['user']?['name'] ?? '',
+      userName: map['user']?['nickname'] ?? '',
       userEmail: map['user']?['email'],
       userPhoto: map['user']?['photo'],
       universityId: map['university']?['_id'] ?? '',
@@ -58,7 +58,7 @@ class FeedModel {
       'likedBy': likedBy,
       'user': {
         '_id': userId,
-        'name': userName,
+        'nickname': userName,
         'email': userEmail,
         'photo': userPhoto,
       },

@@ -44,7 +44,7 @@ class _BondPageState extends State<BondPage> {
     final success = await bondRepository.acceptBond(userId, universityId, token);
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.bondAcceptedSuccess);
-      _loadBonds();
+      _updateAndReloadPage();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.bondAcceptedError);
     }
@@ -54,7 +54,7 @@ class _BondPageState extends State<BondPage> {
     final success = await bondRepository.rejectBond(userId, token);
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.bondRejectedSuccess);
-      _loadBonds();
+      _updateAndReloadPage();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.bondRejectedError);
     }
@@ -120,7 +120,7 @@ class _BondPageState extends State<BondPage> {
                           icon: const Icon(Icons.check_rounded,
                             color: Colors.green),
                             iconSize: 33,
-                          onPressed: () =>acceptBond(bond.userId, bond.universityId),
+                          onPressed: () => acceptBond(bond.userId, bond.universityId),
                         ),
                         IconButton(
                           icon: const Icon(Icons.clear_rounded,
@@ -136,6 +136,15 @@ class _BondPageState extends State<BondPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Future<void> _updateAndReloadPage() async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const BondPage(),
       ),
     );
   }
