@@ -1,6 +1,6 @@
 class UserModel {
   final String id;
-  final String name;
+  final String? name;
   final String studentRecord;
   final String nickname;
   final String? photo;
@@ -16,7 +16,7 @@ class UserModel {
 
   UserModel({
     required this.id,
-    required this.name,
+    this.name,
     required this.studentRecord,
     required this.nickname,
     this.photo,

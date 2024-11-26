@@ -285,7 +285,7 @@ class _UserPageState extends State<UserPage> {
                       );
                     } else if (snapshot.hasData) {
                       user = snapshot.data!;
-                      _nameController.text = user.name;
+                      _nameController.text = user.name!;
                       _emailController.text = user.email;
                       _nicknameController.text = user.nickname;
                       _passwordController.text = user.password;

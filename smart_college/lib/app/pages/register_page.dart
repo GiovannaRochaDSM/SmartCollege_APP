@@ -38,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final String nickname = _nicknameController.text.trim();
     String? base64Image;
 
-    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+    if (nickname.isEmpty || email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(AppSnackBar.fillFields);
       return;
     }
